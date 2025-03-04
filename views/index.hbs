@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Registration</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #9b87f5;
+            --secondary-color: #7E69AB;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #f3f0ff, #ffffff, #f3f0ff);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        header {
+            position: fixed;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        header .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        header .button-group a {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        header .button-group a:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        main {
+            padding: 8rem 2rem 5rem;
+            text-align: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            margin-top: 100px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        label {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            padding: 0.7rem;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: rgba(241, 241, 241, 0.9);
+            margin-top: 2rem;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=2070&q=80');
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+
+    <header>
+        <h1>{{appName}}</h1>
+        <div class="button-group">
+            <a href="login">Login</a>
+            <a href="{{signupUrl}}">Sign Up</a>
+        </div>
+    </header>
+
+    <main>
+        <h2>Register for {{appName}}</h2>
+        <form action="/signup" method="post" enctype="multipart/form-data">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phoneNumber">Phone Number</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" required pattern="[0-9]{10}" placeholder="Enter 10-digit number">
+
+            <label for="adhar">Aadhar</label>
+            <input type="text" id="adhar" name="adhar" required pattern="[0-9]{12}" placeholder="Enter 12-digit Aadhar number">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="idUpload">Upload ID</label>
+            <input type="file" id="idUpload" name="idUpload" accept="image/*,application/pdf" required>
+
+            <button type="submit">Register</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
+    </footer>
+</body>
+</html>

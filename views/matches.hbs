@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Details</title>
+</head>
+<body>
+    <h1>Volunteer and Patient Matches</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Volunteer Name</th>
+                <th>Patient Name</th>
+                <th> Date</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each match}} <!-- Loops through the 'match' array -->
+                <tr>
+                    <td>{{this.volunteerName}}</td>
+                    <td>{{this.patientName}}</td>
+                    <td>{{this.date}}</td>
+                    <td>{{this.time}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>
+</html>

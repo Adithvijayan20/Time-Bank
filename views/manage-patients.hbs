@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{appName}}</h1>
+    <h2>Manage Patients</h2>
+       
+                <form action="/logout" method="POST" style="display: inline;">
+    <button type="submit" class="btn btn-outline">
+        <i class='bx bx-log-out'></i>
+        Logout
+    </button>
+</form>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each patients}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    <td>{{this.fullName}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.phone}}</td>
+                    <td>{{this.gender}}</td>
+                    <td>{{this.dob}}</td>
+                    <td>
+                        <a href="/view-patient/{{this._id}}">View</a>
+                        <a href="/delete-patient/{{this._id}}">reject</a>
+                        
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>
+</html>

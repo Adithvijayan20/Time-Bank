@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .volunteer-profile {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .volunteer-profile h2 {
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            color: #007BFF;
+        }
+
+        .volunteer-details {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .volunteer-details div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .volunteer-details label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        .uploaded-file {
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #f1f1f1;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>{{appName}}</h1>
+    </header>
+
+    <div class="volunteer-profile">
+        <h2>Volunteer Profile</h2>
+
+        <div class="volunteer-details">
+            <div>
+                <label for="fullName">Full Name:</label>
+                <span>{{volunteer.fullName}}</span>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <span>{{volunteer.email}}</span>
+            </div>
+            <div>
+                <label for="phone">Phone Number:</label>
+                <span>{{volunteer.phoneNumber}}</span>
+            </div>
+            <div>
+                <label for="gender">Gender:</label>
+                <span>{{volunteer.gender}}</span>
+            </div>
+            <div>
+                <label for="dob">Date of Birth:</label>
+                <span>{{volunteer.dob}}</span>
+            </div>
+            <div>
+                <label for="address">Address:</label>
+                <span>{{volunteer.address}}</span>
+            </div>
+        </div>
+
+        {{#if uploadedFileBase64}}
+<div class="uploaded-file">
+    <h3>Uploaded ID Document:</h3>
+    <img src="{{uploadedFileBase64}}" alt="Uploaded ID" style="max-width: 100%; border-radius: 8px;">
+</div>
+{{else}}
+<p>No uploaded document found.</p>
+{{/if}}
+
+      <div>
+        <a href="/manage-volunteers" class="btn">Back to Volunteer List</a>
+    </div>
+
+    <footer>
+        <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

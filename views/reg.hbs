@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeBank - Registrations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('1m.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+        header {
+            background-color: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        header .button-group {
+            display: flex;
+            gap: 1rem;
+        }
+        header .button-group a {
+            background-color: white;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        header .button-group a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        main {
+            padding: 2rem;
+            max-width: 800px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .registration-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .registration-buttons a {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+        .registration-buttons a:hover {
+            background-color: #45a049;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: rgba(241, 241, 241, 0.9);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TimeBank</h1>
+        <div class="button-group">
+            <a href="login">Login</a>
+            <a href="reg/signup">Sign Up</a>
+        </div>
+    </header>
+    <main>
+        <h2>Welcome to TimeBank Registrations</h2>
+        <p>Select the type of registration you would like to proceed with:</p>
+        <div class="registration-buttons">
+            <a href="institutional_registration">Institutional Registration</a>
+            <a href="/patient">Patient Registration</a>
+            <a href="/signup">Volunteer Registration</a>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 TimeBank. All rights reserved.</p>
+    </footer>
+</body>
+</html>

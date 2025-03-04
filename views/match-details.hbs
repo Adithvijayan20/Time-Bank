@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Details</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <header>
+        <h1>Match Details</h1>
+    </header>
+    <section>
+        <script>
+           
+        </script>
+        <div class="card">
+            
+            {{#each data}}
+            
+            <h2>Match Information</h2>
+            <p><strong>Volunteer Name:</strong> {{volunteerName}}</p>
+            <p><strong>Patient Name:</strong> {{patientName}}</p>
+            <p><strong>Match Date:</strong> {{date}}</p>
+            <p><strong>Match Time:</strong> {{time}}</p>
+            <p><strong>Work:</strong> {{work}}</p>
+            <p><strong>Active:</strong> {{active}}</p>
+            <hr>
+            {{/each}}
+        </div>
+    </section>
+    <footer>
+        <p>&copy; {{currentYear}} Volunteer Management System</p>
+    </footer>
+</body>
+</html>

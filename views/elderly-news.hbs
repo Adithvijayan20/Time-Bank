@@ -1,0 +1,32 @@
+{{! elderly-news.hbs }}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elderly News</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Include a CSS file if needed -->
+</head>
+<body>
+    <header>
+        <h1>Elderly News Headlines</h1>
+    </header>
+    
+    <main>
+        {{#if headlines.length}}
+            <ul>
+                {{#each headlines}}
+                    <li>{{this}}</li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <p>No relevant news found.</p>
+        {{/if}}
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Elderly News Portal</p>
+    </footer>
+</body>
+</html>

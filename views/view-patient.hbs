@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .patient-profile {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .patient-profile h2 {
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            color: #007BFF;
+        }
+
+        .patient-details {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .patient-details div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .patient-details label {
+            font-weight: bold;
+            width: 150px;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #f1f1f1;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>{{appName}}</h1>
+    </header>
+
+    <div class="patient-profile">
+        <h2>Patient Profile</h2>
+
+        <div class="patient-details">
+            <div>
+                <label for="fullName">Full Name:</label>
+                <span>{{patient.fullName}}</span>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <span>{{patient.email}}</span>
+            </div>
+            <div>
+                <label for="phoneNumber">Phone Number:</label>
+                <span>{{patient.phone}}</span>
+            </div>
+            <div>
+                <label for="gender">Gender:</label>
+                <span>{{patient.gender}}</span>
+            </div>
+            <div>
+                <label for="dob">Date of Birth:</label>
+                <span>{{patient.dob}}</span>
+            </div>
+            <div>
+                <label for="address"><address></address>:</label>
+                <span>{{patient.address}}</span>
+            </div>
+        </div>
+
+        <a href="/manage-patients" class="btn">Back to Patient List</a>
+    </div>
+
+    <footer>
+        <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

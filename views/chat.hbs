@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Bank Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        #chatbox { width: 50%; margin: auto; height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+        #user-input { width: 40%; padding: 10px; margin-top: 10px; }
+        button { padding: 10px; cursor: pointer; }
+    </style>
+    <script>
+        async function sendMessage() {
+            const userMessage = document.getElementById("user-input").value;
+            if (!userMessage) return;
+
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            const data = await response.json();
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML += `<p><b>You:</b> ${userMessage}</p><p><b>Bot:</b> ${data.reply}</p>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+            document.getElementById("user-input").value = "";
+        }
+    </script>
+</head>
+<body>
+    <h1>Time Bank Assistant</h1>
+    <div id="chatbox">
+        {{#each chatHistory}}
+            <p><b>You:</b> {{this.message}}</p>
+            <p><b>Bot:</b> {{this.response}}</p>
+        {{/each}}
+    </div>
+    <input type="text" id="user-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
