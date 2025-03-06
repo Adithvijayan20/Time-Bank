@@ -5,7 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+var patientRouter = require('./routes/patient');
 var usersRouter = require('./routes/users');
+var volunteerRouter = require('./routes/volunteer');
+var adminRouter = require('./routes/admin');
+var matchRouter = require('./routes/match');
 
 var app = express();
 var db=require('./config/connection')
@@ -19,10 +23,10 @@ hbs.registerHelper('join', function (array, separator) {
 3
 
 app.use(session({
-    secret: 'yourSecretKey',
+    secret: '281298jwkqwi2wjoq',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Set `true` if using HTTPS
+    cookie: { secure: false }
 }));
 
 // view engine setup
@@ -41,10 +45,14 @@ db.connect((err)=>{
     
 })
 app.use('/', indexRouter);
-app.use('/users', usersRouter); // Direct access at /volunteer-profile
+app.use('/', patientRouter);
+app.use('/', volunteerRouter);
+app.use('/', adminRouter);
+app.use('/', matchRouter);
+app.use('/users', usersRouter);
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: 'your-secret-key', // Replace with a secure key
+    secret: 'isjkajskakshajh',
     resave: false,
     saveUninitialized: true,
 }));

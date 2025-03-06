@@ -317,13 +317,18 @@
     <main class="main-content">
         <aside class="sidebar">
             <div class="profile-card">
-                <div class="avatar-circle">
-                    <i class='bx bx-user'></i>
-                </div>
-                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Welcome, {{fullName}}</h3>
-                <p style="color: var(--text-secondary); font-size: 1.25rem;">Volunteer</p>
-            </div>
+    {{#if profileImageUrl}}
+        <img src="{{profileImageUrl}}" alt="Profile Picture" style="width: 160px; height: 160px; border-radius: 50%;">
+    {{else}}
+        <div class="avatar-circle">
+            <i class='bx bx-user'></i>
+        </div>
+    {{/if}}
+    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Welcome, {{fullName}}</h3>
+    <p style="color: var(--text-secondary); font-size: 1.25rem;">Volunteer</p>
+</div>
 
+             
             <nav class="nav-menu">
                 <button class="nav-button active" data-section="dashboard">
                     <i class='bx bx-home'></i>

@@ -1,112 +1,110 @@
+{{!-- Layout for Patient Registration Page --}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}} - Patient Registration</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --primary-color: #9b87f5;
+            --secondary-color: #7E69AB;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+        }
+        * {
             margin: 0;
             padding: 0;
-            background: url('{{backgroundImage}}') no-repeat center center fixed;
-            background-size: cover;
-            color: #333333;
-            position: relative;
+            box-sizing: border-box;
         }
-        header {
-            background-color: rgba(76, 175, 80, 0.9);
-            color: #ffffff;
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #f3f0ff, #ffffff, #f3f0ff);
+            overflow-x: hidden;
+        }
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url('{{backgroundImage}}');
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+        .navbar {
+            position: fixed;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
             padding: 1rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            top: 0;
+        }
+        .navbar-content {
+            max-width: 1280px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-        header .button-group {
-            display: flex;
-            gap: 1rem;
-        }
-        header .button-group a {
-            background-color: #ffffff;
-            color: #4CAF50;
-            border: 2px solid #4CAF50;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            text-decoration: none;
+        .logo {
+            font-size: 3rem;
             font-weight: bold;
-            transition: background-color 0.3s, color 0.3s;
+            color: var(--primary-color);
         }
-        header .button-group a:hover {
-            background-color: #4CAF50;
-            color: #000000;
+        .hero {
+            padding: 8rem 2rem 5rem;
+            text-align: center;
         }
-        main {
-            padding: 2rem;
+        .hero h1 {
+            font-size: 4.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+        .registration-section {
+            padding: 5rem 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            position: relative;
             max-width: 800px;
             margin: auto;
-            background: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
         }
         form {
             display: flex;
             flex-direction: column;
         }
-        label {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-        input, select {
-            padding: 0.5rem;
+        label, input, select {
             margin-bottom: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 0.5rem;
         }
-        button {
-            background-color: #4CAF50;
+        .button {
+            background-color: var(--primary-color);
             color: white;
-            border: none;
-            padding: 0.7rem 1rem;
+            padding: 0.75rem;
             border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        footer {
             text-align: center;
-            padding: 1rem;
-            background-color: rgba(241, 241, 241, 0.9);
-            margin-top: 2rem;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: var(--secondary-color);
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>{{appName}}</h1>
-        <div class="button-group">
-            <a href="{{loginUrl}}">Login</a>
-            <a href="{{signupUrl}}">Sign Up</a>
+    <div class="background-overlay"></div>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">{{appName}}</div>
+            <a href="{{loginUrl}}" class="button">Login</a>
         </div>
-    </header>
-    <main>
-         <select name="role">
-        
-        <option value="patient">Patient</option>
-    </select>
-        <h2>Register as a Patient for {{appName}}</h2>
-        <form action="/patient" method="post"  enctype="multipart/form-data">
-       
-
+    </nav>
+    <section class="hero">
+        <h1>Register as a Patient</h1>
+    </section>
+    <section class="registration-section">
+        <form action="/patient" method="post" enctype="multipart/form-data">
             <label for="fullName">Full Name</label>
             <input type="text" id="fullName" name="fullName" required>
 
@@ -136,9 +134,9 @@
             <label for="idUpload">Upload ID</label>
             <input type="file" id="idUpload" name="idUpload" accept="image/*,application/pdf" required>
 
-            <button type="submit">Register</button>
+            <button type="submit" class="button">Register</button>
         </form>
-    </main>
+    </section>
     <footer>
         <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
     </footer>
