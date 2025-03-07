@@ -17,7 +17,7 @@ const { ObjectId } = require('mongodb');
 const { Collection } = require('mongoose');
 const axios = require('axios'); 
 const cheerio = require('cheerio');
-const User = require('../models/user');
+//const User = require('../models/user');
 const matchFunction=require('../helpers/helper')
 
 //**************************************************************************************************************************************
@@ -116,6 +116,8 @@ router.post('/volunteer-profile/:id', ensureAuthenticated, upload.single('profil
             phoneNumber: req.body.phoneNumber,
             address: req.body.address,
             adhar: req.body.adhar,
+            latitude: parseFloat(req.body.latitude) || null,
+            longitude: parseFloat(req.body.longitude) || null,
         };
 
         // Handle profile image upload

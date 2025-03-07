@@ -405,48 +405,87 @@
                 </div>
             </section>
             
-            <section id="profile" class="section">
-                <h3 style="font-size: 1.75rem; margin-bottom: 2rem; text-align: center;">Complete Your Profile</h3>
-                <form id="profileForm" action="/patient-profile/{{id}}" method="POST" enctype="multipart/form-data">
-    <div class="form-grid">
+          <section id="profile" class="section">
+    <h3 style="font-size: 1.75rem; margin-bottom: 2rem; text-align: center;">Complete Your Profile</h3>
+    <form id="profileForm" action="/volunteer-profile/{{id}}" method="POST" enctype="multipart/form-data">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" value="{{fullName}}" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{email}}" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Mobile Number</label>
+                <input type="tel" id="phone" name="phoneNumber" value="{{phoneNumber}}" required>
+            </div>
+            <div class="form-group">
+                <label for="aadhaar">Aadhaar Number</label>
+                <input type="text" id="aadhaar" name="adhar" value="{{adhar}}" required>
+            </div>
+        </div>
+
         <div class="form-group">
-            <label for="fullName">Full Name</label>
-            <input type="text" id="fullName" name="fullName" value="{{fullName}}" required>
+            <label for="address">Address</label>
+            <textarea id="address" name="address" rows="4">{{address}}</textarea>
         </div>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="{{email}}" required>
+
+        <div class="upload-box">
+            <h4 style="font-size: 1.25rem; margin-bottom: 1rem;">Upload Your Profile Picture</h4>
+            <input type="file" id="profileImage" name="profileImage">
         </div>
-        <div class="form-group">
-            <label for="phone">Mobile Number</label>
-            <input type="tel" id="phone" name="phoneNumber" value="{{phoneNumber}}" required>
+
+        <div class="map-container">
+            <h4 style="font-size: 1.5rem;">Your Location on Map</h4>
+            <input type="hidden" id="latitude" name="latitude" value="{{latitude}}">
+            <input type="hidden" id="longitude" name="longitude" value="{{longitude}}">
+            <div id="map" style="width: 100%; height: 300px; border: 1px solid #ccc;"></div>
+            <button type="button" onclick="getLocation()">Use My Current Location</button>
         </div>
-        <div class="form-group">
-            <label for="aadhaar">Aadhaar Number</label>
-            <input type="text" id="aadhaar" name="adhar" value="{{adhar}}" required>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <label for="address">Address</label>
-        <textarea id="address" name="address" rows="4">{{address}}</textarea>
-    </div>
+        <button type="submit" class="btn" style="margin-top: 2rem;">Save Changes</button>
+    </form>
+</section>
 
-    <div class="upload-box">
-        <h4 style="font-size: 1.25rem; margin-bottom: 1rem;">Upload Your Profile Picture</h4>
-        <input type="file" id="profileImage" name="profileImage">
-    </div>
+<script>
+    function initMap() {
+        let lat = parseFloat(document.getElementById('latitude').value) || 10.8505;
+        let lng = parseFloat(document.getElementById('longitude').value) || 76.2711;
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat, lng },
+            zoom: 10,
+        });
 
-    <div class="map-container">
-        <h4 style="font-size: 1.5rem;">Your Location on Map</h4>
-        <!-- Add map integration if required -->
-    </div>
+        const marker = new google.maps.Marker({
+            position: { lat, lng },
+            map,
+            draggable: true
+        });
 
-    <button type="submit" class="btn" style="margin-top: 2rem;">Save Changes</button>
-</form>
+        // Update hidden fields when marker is dragged
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+    }
 
-            </section>
-        </div>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                document.getElementById('latitude').value = position.coords.latitude;
+                document.getElementById('longitude').value = position.coords.longitude;
+                initMap();
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5MQdwuxFIG6Msf_At0bV2vPXuFwEkVkI" async defer></script>
+
     </main>
 
     <script>

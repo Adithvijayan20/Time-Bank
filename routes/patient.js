@@ -21,7 +21,7 @@ const { ObjectId } = require('mongodb');
 const { Collection } = require('mongoose');
 const axios = require('axios'); // Import Axios
 const cheerio = require('cheerio');
-const User = require('../models/user');
+//const User = require('../models/user');
 const matchFunction=require('../helpers/helper')
 //**************************************************************************************************************************************
 
@@ -117,6 +117,8 @@ router.post('/patient-profile/:id', ensureAuthenticated, upload.single('profileI
             phoneNumber: req.body.phoneNumber,
             address: req.body.address,
             adhar: req.body.adhar,
+            latitude: parseFloat(req.body.latitude) || null,
+            longitude: parseFloat(req.body.longitude) || null,
         };
 
         // Handle profile image upload
