@@ -42,11 +42,26 @@ router.post('/patient', upload.single('idUpload'), async (req, res) => {
 //************************************patient home
 
 
-router.get('/patienthome', ensureAuthenticated, checkRole('patient'), (req, res) => {
-    res.render('patienthome', { 
+// router.get('/patienthome', ensureAuthenticated, checkRole('patient'), (req, res) => {
+//     const patientId = new ObjectId(req.params.id);
+//     res.render('patienthome/'${req.params.id}, { 
+//         user: req.session.user, 
+//         patientName: req.session.user.fullName,
+//         patientId: req.session.user._id.toString() // Ensure it's a string
+//     });
+// });
+
+router.get('/patienthome/:id', ensureAuthenticated, checkRole('patient'), (req, res) => {
+    const patientId = req.params.id; 
+    
+    console.log('tthis is myran',patientId);
+    
+    // Get patient ID from URL
+
+    res.render('patienthome', {  // Render the correct existing template
         user: req.session.user, 
         patientName: req.session.user.fullName,
-        patientId: req.session.user._id.toString() // Ensure it's a string
+        patientId: patientId // Keep it as a string
     });
 });
 
@@ -138,6 +153,9 @@ router.post('/patient-profile/:id', ensureAuthenticated, upload.single('profileI
         }
 
         console.log('Profile updated successfully:', updatedData);
+        console.log('thi sis new test',patientId);
+        console.log('thi sis id',req.params.id);
+        
         res.redirect(`/patient-profile/${req.params.id}`);
 
     } catch (error) {
@@ -174,9 +192,11 @@ router.post('/patient-services',async (req, res) => {
             }
           const matchedValue=  await userHelpers.addMatching(matchDetails)
           console.log('matched details',matchedValue);
-          res.redirect(`/patient-profile/${ patientData.patientId}`)
+          res.redirect(`/nearest-volunteers/${ patientData.patientId}`)
           
         });
+
+
 
 
 

@@ -288,7 +288,8 @@
             </div>
         </div>
     </nav>
-
+     
+     
     <section class="hero" id="home">
         <span class="welcome-badge">Login to TimeBank</span>
         <h1>Welcome Back!</h1>
@@ -302,6 +303,14 @@
             <p>Login with your email and password to access your account.</p>
         </div>
         <div class="form-container">
+
+
+    <div class="form-container">
+        {{#if message}}
+            <div class="alert">
+                {{message}}
+            </div>
+        {{/if}}
             <form action="/login" method="post">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
@@ -313,6 +322,19 @@
             </form>
         </div>
     </section>
+
+<style>
+    .alert {
+        background-color: #ffdddd;
+        color: #d8000c;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid #d8000c;
+    }
+</style>
 
     <footer>
         <p>&copy; {{currentYear}} TimeBank. All rights reserved.</p>
@@ -341,5 +363,7 @@
             });
         });
     </script>
+ 
+
 </body>
 </html>

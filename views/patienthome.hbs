@@ -113,7 +113,7 @@
     </header>
     <main>
         <h2>Services Provided</h2>
-        <form action="/patient-services" method="post">
+        <form action="/patient-services/{{id}}" method="post">
         <input type="hidden" name="patientName" value="{{patientName}}">
             <input type="hidden" name="patientId" value="{{patientId}}">
             <label>Select Services:</label>
@@ -138,7 +138,7 @@
             <label for="time">Available Time:</label>
             <input type="time" id="time" name="time" required>
             
-            <button type="submit">Submit</button>
+            <button type="submit">Save</button>
         </form>
     </main>
     <footer>

@@ -16,6 +16,8 @@ const { ObjectId } = require('mongodb');
 const { Collection } = require('mongoose');
 const axios = require('axios'); 
 const cheerio = require('cheerio');
+const session = require('express-session');
+const flash = require('express-flash');
 //const User = require('../models/user');
 //***************************************************************************************** 
 // Handle admin registration
@@ -106,6 +108,32 @@ router.get('/delete-volunteer/:id', ensureAuthenticated, checkRole('admin'), asy
         res.status(500).send('Error deleting volunteer');
     }
 });
+router.post('/toggle-activation/:id', ensureAuthenticated, checkRole('admin'), async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const volunteer = await db.get().collection(collection.USER_COLLECTION).findOne({ _id: new ObjectId(userId) });
+
+        if (!volunteer) {
+            req.flash('error', 'User not found');
+            return res.redirect('/manage-volunteers');
+        }
+
+        const newStatus = !volunteer.isActive; // Toggle the status
+        await db.get().collection(collection.USER_COLLECTION).updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: { isActive: newStatus } }
+        );
+
+        req.flash('success', `User ${newStatus ? 'activated' : 'deactivated'} successfully.`);
+        res.redirect(`/view-volunteer/${userId}`); // Reload the volunteer profile page
+    } catch (error) {
+        console.error('Error updating activation status:', error);
+        req.flash('error', 'Error updating user status.');
+        res.redirect(`/view-volunteer/${req.params.id}`);
+    }
+});
+
+
 
 //**************************************** patient manage
 
@@ -147,17 +175,55 @@ router.get('/manage-patients', ensureAuthenticated, checkRole('admin'), async (r
 
 router.get('/view-patient/:id', ensureAuthenticated, checkRole('admin'), async (req, res) => {
     try {
-        // Fetch the patient using their unique ID
-        const patient = await db.get().collection(collection.USER_COLLECTION).findOne({ _id: req.params.id });
-        res.render('view-patient', { 
-            title: 'Patient Profile',
+        const patient = await db
+            .get()
+            .collection(collection.USER_COLLECTION)
+            .findOne({ _id: new ObjectId(req.params.id) });
+
+        if (!patient) {
+            return res.status(404).send('Volunteer not found');
+        }
+
+        // Convert fileBuffer to base64 if idUpload exists
+        let uploadedFileBase64 = null;
+        if (patient.idUpload && patient.idUpload.fileBuffer) {
+            uploadedFileBase64 = `data:${patient.idUpload.fileType};base64,${patient.idUpload.fileBuffer.toString('base64')}`;
+        }
+
+        res.render('view-patient', {
+            title: 'patient Profile',
             patient,
-            appName: 'Patient Registration System',
-            currentYear: new Date().getFullYear()
+            uploadedFileBase64, // Pass the base64 file to the template
+            appName: 'patient Registration System',
+            currentYear: new Date().getFullYear(),
         });
     } catch (error) {
         console.error('Error fetching patient:', error);
         res.status(500).send('Error fetching patient details');
+    }
+});
+router.post('/toggle-activationn/:id', ensureAuthenticated, checkRole('admin'), async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const patient = await db.get().collection(collection.USER_COLLECTION).findOne({ _id: new ObjectId(userId) });
+
+        if (!patient) {
+            req.flash('error', 'User not found');
+            return res.redirect('/manage-patient');
+        }
+
+        const newStatus = !patient.isActive; // Toggle the status
+        await db.get().collection(collection.USER_COLLECTION).updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: { isActive: newStatus } }
+        );
+
+        req.flash('success', `User ${newStatus ? 'activated' : 'deactivated'} successfully.`);
+        res.redirect(`/view-patient/${userId}`); // Reload the volunteer profile page
+    } catch (error) {
+        console.error('Error updating activation status:', error);
+        req.flash('error', 'Error updating user status.');
+        res.redirect(`/view-patient/${req.params.id}`);
     }
 });
 

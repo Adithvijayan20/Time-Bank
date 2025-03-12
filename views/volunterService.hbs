@@ -102,17 +102,18 @@
 </head>
 <body>
     <header>
-         <h2>Welcome, {{fullName}}</h2>
-    <p>Patient ID: {{patientId}}</p> <!-- Display unique ID -->
+         <h2> {{fullName}}</h2>
+         
+   
     <h1>{{appName}}</h1>
     <div class="button-group">
-        <a href="{{loginUrl}}">Login</a>
-        <a href="{{signupUrl}}">Sign Up</a>
+       
     </div>
         
     </header>
     <main>
         <h2>Services Provided</h2>
+         <p>Volunteer ID: {{id}}</p> 
         <form action="/volunteer-services" method="post">
         <input type="hidden" name="fullName" value="{{fullName}}">
             <input type="hidden" name="id" value="{{id}}">

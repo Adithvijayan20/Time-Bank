@@ -32,62 +32,176 @@ router.get('/volunteerhome', ensureAuthenticated, checkRole('volunteer'), (req, 
     });
 });
 
-router.get('/volunteer-Job', async(req, res) => {
-    const availableJob=await db.get().collection(collection.MATCH_COLLECTION).find({active:true}).toArray()
-    console.log('available jobs are',availableJob);
 
-   
-    res.render('volunteerhome',{availableJob})
+// router.get('/volunteer-job', async (req, res) => {
+//     try {
+//         // Fetch all notifications where status is "unread" (active jobs)
+//         const availableJobs = await db.get()
+//             .collection(collection.NOTIFICATIONS_COLLECTION)
+//             .find({ status: "unread" }) // Filtering based on status instead of 'active'
+//             .toArray();
 
-    // userHelpers.addVolunteerHome(volunteerData).then((response) => {
-    //     console.log(response);
-    //     res.redirect('/'); // Redirect back to patient home
-    // });
+//         console.log('📢 Available Jobs:', availableJobs);
+
+//         // If no jobs are available, render message
+//         if (!availableJobs || availableJobs.length === 0) {
+//             return res.render('volunteerhome', { availableJobs: [], message: "No new job notifications available." });
+//         }
+
+//         // Render volunteer home page with available jobs
+//         res.render('volunteerhome', { availableJobs });
+
+//     } catch (error) {
+//         console.error("❌ Error fetching job notifications:", error);
+//         res.status(500).render('error', { message: "Internal Server Error" });
+//     }
+// });
+//   router.get('/volunteer-job', async (req, res) => {
+//   try {
+//         // Fetch all unread job notifications
+//         const availableJobs = await db.get()
+//             .collection(collection.NOTIFICATIONS_COLLECTION)
+//             .find({ status: "unread" })
+//             .toArray();
+
+//         if (!availableJobs || availableJobs.length === 0) {
+//             return res.render('volunteerhome', { availableJobs: [], message: "podraa." });
+//         }
+
+//         // Fetch patient names based on patientId
+//         const patientIds = availableJobs.map(job => new ObjectId(job.patientId)); 
+//         const patients = await db.get()
+//             .collection(collection.USER_COLLECTION)
+//             .find({ _id: { $in: patientIds } })
+//             .toArray();
+
+//         // Create a lookup object for patient names
+//         const patientNameMap = {};
+//         patients.forEach(patient => {
+//             patientNameMap[patient._id.toString()] = patient.fullName;
+//         });
+
+//         // Replace patientId with patientName in the available jobs list
+//         const jobsWithPatientNames = availableJobs.map(job => ({
+//             ...job,
+//             patientName: patientNameMap[job.patientId] || "Unknown Patient"
+//         }));
+
+//         // Render the page with patient names instead of IDs
+//         res.render('volunteerhome', { availableJobs: jobsWithPatientNames });
+
+//     } catch (error) {
+//         console.error("❌ Error fetching job notifications:", error);
+//         res.status(500).render('error', { message: "Internal Server Error" });
+//     }
+// });
+router.get('/volunteer-job/:id', async (req, res) => {
+    try {
+        const volunteerId = req.query.volunteerId || req.session.volunteerId;
+        if (!volunteerId) {
+            return res.status(400).render('error', { message: "Volunteer ID is required." });
+        }
+
+        const availableJobs = await db.get()
+            .collection(collection.NOTIFICATIONS_COLLECTION)
+            .find({ status: "unread", volunteerId: volunteerId }) // Ensure matching volunteerId
+            .toArray();
+
+        if (!availableJobs || availableJobs.length === 0) {
+            return res.render('volunteerhome', { availableJobs: [], message: "No new job notifications available." });
+        }
+
+        // Fetch patient details
+        const patientIds = availableJobs.map(job => new ObjectId(job.patientId));
+        const patients = await db.get()
+            .collection(collection.USER_COLLECTION)
+            .find({ _id: { $in: patientIds } })
+            .toArray();
+
+        console.log("🔍 Patients from DB:", patients);
+
+        const patientMap = {};
+        patients.forEach(patient => {
+            patientMap[patient._id.toString()] = {
+                fullName: patient.fullName,
+                phone: patient.phone,
+                location: patient.location && patient.location.latitude && patient.location.longitude
+                    ? patient.location
+                    : { latitude: 0, longitude: 0 }
+            };
+        });
+
+        const jobsWithPatientDetails = availableJobs.map(job => ({
+            ...job,
+            patientName: patientMap[job.patientId]?.fullName || "Unknown Patient",
+            phone: patientMap[job.patientId]?.phone || "Not Available",
+            location: patientMap[job.patientId]?.location
+        }));
+
+        console.log("✅ Processed Job Data:", jobsWithPatientDetails);
+
+        res.render('volunteerhome', { availableJobs: jobsWithPatientDetails });
+
+    } catch (error) {
+        console.error("❌ Error fetching job notifications:", error);
+        res.status(500).render('error', { message: "Internal Server Error" });
+    }
 });
+
+
 
 //*******************************volunteer srevice 
 
 
-router.get('/volunteer-services', async(req, res) => {
-    // const availableJob=await db.get().collection(collection.MATCH_COLLECTION).find({active:true}).toArray()
-    // console.log('available jobs are',availableJob);
-    const volunteerId = localStorage.getItem("volunteerId");
-    console.log('volunter ',volunteerId);
-    
-    const volunteer = await db.get()
-    .collection(collection.USER_COLLECTION)
-    .findOne({ _id: new ObjectId(volunteerId) });
-    console.log(volunteer.fullName);
-    console.log(volunteer._id);
-    
-    res.render('volunterService',{fullName:volunteer.fullName,id:volunteer._id})
+// router.get('/volunteer-services', async (req, res) => {
+//    // console.log("Session Data:", req.session); // Debugging session data
 
-    // userHelpers.addVolunteerHome(volunteerData).then((response) => {
-    //     console.log(response);
-    //     res.redirect('/'); // Redirect back to patient home
-    // });
-});
+//     if (!req.session.volunteerId) {
+//         return res.redirect('/login'); // Redirect if session is missing
+//     }
 
-router.post('/volunteer-services',async (req, res) => {
-    console.log('123',req.body);
-    const volunteerId = localStorage.getItem("volunteerId");
-    console.log(volunteerId);
-    
-    
-    const availableService=await userHelpers.addVolunteerHome({...req.body,volunteerId})
-    console.log("available service",availableService);
-    res.redirect('/volunteerhome')
-    
-    // console.log('available jobs are',availableJob);
+//     try {
+//         const volunteer = await db.get()
+//             .collection(collection.USER_COLLECTION)
+//             .findOne({ _id: new ObjectId(req.session.volunteerId) });
 
-   
-    // res.render('volunteerhome',{availableJob})
+//         if (!volunteer) {
+//             return res.status(404).send("Volunteer not found");
+//         }
 
-    // userHelpers.addVolunteerHome(volunteerData).then((response) => {
-    //     console.log(response);
-    //     res.redirect('/'); // Redirect back to patient home
-    // });
-});
+//         res.render('volunterService', { fullName: volunteer.fullName, id: volunteer._id });
+//     } catch (error) {
+//         console.error("Error fetching volunteer:", error);
+//         res.status(500).send("Server error");
+//     }
+// });
+
+
+// router.post('/volunteer-services', async (req, res) => {
+//    // console.log("Session Data:", req.session); // Debugging session data
+
+//     const volunteerId = req.session.volunteerId; // Retrieve from session
+//     if (!volunteerId) {
+//         console.log("Volunteer ID missing in session");
+//         return res.status(401).send("Unauthorized: Volunteer ID missing");
+//     }
+
+//     try {
+//         const availableService = await userHelpers.addVolunteerHome({
+//             ...req.body,
+//             volunteerId: new ObjectId(volunteerId) // Ensure it's stored correctly
+//         });
+
+//         console.log("Service added:", availableService);
+//         res.redirect('/volunteerhome');
+//     } catch (error) {
+//         console.error("Error adding service:", error);
+//         res.status(500).send("Server error");
+//     }
+// });
+
+
+
 
 
 // *********************************volunteer dashboard

@@ -9,14 +9,41 @@ const Grid = require('gridfs-stream');
 const fs = require('fs');
 const path = require('path');
 
+
 module.exports = {
+    // doSignup: (userData, file) => {
+    //     return new Promise(async (resolve, reject) => {
+    //         try {
+    //             // Hash the password for security
+    //             userData.password = await bcrypt.hash(userData.password, 10);
+    //             userData.role = userData.role || 'volunteer'; // Default role if not provided
+
+    //             // Handle file upload
+    //             if (file) {
+    //                 userData.idUpload = {
+    //                     fileName: file.originalname,
+    //                     fileBuffer: file.buffer,
+    //                     fileType: file.mimetype,
+    //                 };
+    //             }
+
+    //             // Insert user data into the database
+    //             let result = await db.get().collection(collection.USER_COLLECTION).insertOne(userData);
+    //             resolve(result);
+    //         } catch (error) {
+    //             reject(error);
+    //         }
+    //     });
+    // },
+
     doSignup: (userData, file) => {
         return new Promise(async (resolve, reject) => {
             try {
                 // Hash the password for security
                 userData.password = await bcrypt.hash(userData.password, 10);
                 userData.role = userData.role || 'volunteer'; // Default role if not provided
-
+                userData.isActive = false; // Default to false, admin will activate
+    
                 // Handle file upload
                 if (file) {
                     userData.idUpload = {
@@ -25,7 +52,7 @@ module.exports = {
                         fileType: file.mimetype,
                     };
                 }
-
+    
                 // Insert user data into the database
                 let result = await db.get().collection(collection.USER_COLLECTION).insertOne(userData);
                 resolve(result);
@@ -34,8 +61,7 @@ module.exports = {
             }
         });
     },
-
-   
+    
 
     doLogin: (userData) => {
         return new Promise(async (resolve, reject) => {
@@ -62,10 +88,24 @@ module.exports = {
         });
     },
    
+        // addVolunteerHome: (volunteerData) => {
+        //     return new Promise(async (resolve, reject) => {
+        //         try {
+        //             volunteerData.volunteerId = volunteerData.volunteerId || new ObjectId(); // Ensure unique ID
+        //             let result = await db.get().collection(collection.VOLUNTEER_COLLECTION).insertOne(volunteerData);
+        //             resolve(result);
+        //         } catch (error) {
+        //             reject(error);
+        //         }
+        //     });
+        // },
         addVolunteerHome: (volunteerData) => {
             return new Promise(async (resolve, reject) => {
                 try {
-                    volunteerData.volunteerId = volunteerData.volunteerId || new ObjectId(); // Ensure unique ID
+                    if (!volunteerData.volunteerId) {
+                        return reject("Volunteer ID is missing");
+                    }
+        
                     let result = await db.get().collection(collection.VOLUNTEER_COLLECTION).insertOne(volunteerData);
                     resolve(result);
                 } catch (error) {
@@ -73,6 +113,7 @@ module.exports = {
                 }
             });
         },
+        
     
 
     addPatientHome: (patientData) => {
@@ -215,3 +256,4 @@ module.exports = {
 //         }
 //     }
 // };
+

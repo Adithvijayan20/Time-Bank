@@ -99,7 +99,7 @@
             </div>
             <div>
                 <label for="phoneNumber">Phone Number:</label>
-                <span>{{patient.phone}}</span>
+                <span>{{patient.phoneNumber}}</span>
             </div>
             <div>
                 <label for="gender">Gender:</label>
@@ -113,7 +113,29 @@
                 <label for="address"><address></address>:</label>
                 <span>{{patient.address}}</span>
             </div>
-        </div>
+            <div>
+                    <label for="status">Account Status:</label>
+                    <span>{{#if patient.isActive}} <b style="color: green;">Active</b> {{else}} <b style="color: red;">Inactive</b> {{/if}}</span>
+                    
+                </div>
+                 <form action="/toggle-activationn/{{patient._id}}" method="post" style="margin-top: 20px;">
+                <button type="submit" class="btn">
+                    {{#if patient.isActive}}Deactivate{{else}}Activate{{/if}} Account
+                </button>
+            </form>
+            
+
+            {{#if uploadedFileBase64}}
+                <div class="uploaded-file">
+                    <h3>Uploaded ID Document:</h3>
+                    <img src="{{uploadedFileBase64}}" alt="Uploaded ID" style="max-width: 100%; border-radius: 8px;">
+                </div>
+            {{else}}
+                <p>No uploaded document found.</p>
+            {{/if}}
+
+            {{!-- Activation/Deactivation Form --}}
+           
 
         <a href="/manage-patients" class="btn">Back to Patient List</a>
     </div>

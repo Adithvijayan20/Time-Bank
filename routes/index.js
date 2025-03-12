@@ -16,7 +16,7 @@ const multer = require('multer');
 const userHelpers = require('../helpers/user_helpers');
 const db = require('../config/connection');
 const { getGFS } = require('../config/connection');
-
+const passport = require('passport');
 const collection = require('../config/collections');
 const { ensureAuthenticated, checkRole } = require('../middleware/auth');
 const upload = multer({ storage: multer.memoryStorage() });
@@ -95,12 +95,18 @@ router.post('/login', async (req, res) => {
     try {
         const loginResponse = await userHelpers.doLogin(req.body);
         if (loginResponse.status) {
+            if ((loginResponse.user.role === 'volunteer' || loginResponse.user.role === 'patient') && !loginResponse.user.isActive) {
+                return res.render('login', { message: "Contact admin" }); 
+            }
+            
             req.session.loggedIn = true;
             req.session.user = loginResponse.user;
+            req.session.userId = loginResponse.user._id;
 
             // Check for user roles and redirect accordingly
             if (loginResponse.user.role === 'volunteer') {
                 localStorage.setItem("volunteerId",loginResponse.user._id)
+                req.session.volunteerId = loginResponse.user._id;
                 res.redirect(`/volunteer-profile/${loginResponse.user._id}`);
             } else if (loginResponse.user.role === 'patient') {
                 localStorage.setItem("patientId",`${loginResponse.user._id}`)
@@ -160,7 +166,7 @@ async function fetchElderlyNews() {
             }
         });
 
-        console.log("📰 ALL HEADLINES:", allHeadlines); // Log all headlines
+       // console.log("📰 ALL HEADLINES:", allHeadlines); // Log all headlines
 
         return allHeadlines; // Return everything for testing
     } catch (error) {
@@ -179,6 +185,7 @@ router.get('/elderly-news', async (req, res) => {
 //puppeteer
 
 const puppeteer = require('puppeteer');
+const { render } = require('../app');
 
 
 (async () => {
@@ -208,7 +215,7 @@ const puppeteer = require('puppeteer');
             }
         });
 
-        console.log("📰 Filtered News Headlines for Elderly:", headlines.length ? headlines : "❌ No relevant news found!");
+        //console.log("📰 Filtered News Headlines for Elderly:", headlines.length ? headlines : "❌ No relevant news found!");
         
         await browser.close();
     } catch (error) {

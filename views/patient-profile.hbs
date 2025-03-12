@@ -357,7 +357,7 @@
                     <a href="/elderly-news/">NEWS</a>
                     </button>
 <!-- New button for redirecting to volunteerhome -->
-<a href="/patienthome" style="text-decoration: none;">
+<a href="/patienthome/{{id}}" style="text-decoration: none;">
     <button class="nav-button">
         <i class='bx bx-home'></i>
     Request Service
@@ -407,7 +407,7 @@
             
           <section id="profile" class="section">
     <h3 style="font-size: 1.75rem; margin-bottom: 2rem; text-align: center;">Complete Your Profile</h3>
-    <form id="profileForm" action="/volunteer-profile/{{id}}" method="POST" enctype="multipart/form-data">
+    <form id="profileForm" action="/patient-profile/{{id}}" method="POST" enctype="multipart/form-data">
         <div class="form-grid">
             <div class="form-group">
                 <label for="fullName">Full Name</label>

@@ -3,14 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const passport = require('passport');
 var indexRouter = require('./routes/index');
 var patientRouter = require('./routes/patient');
 var usersRouter = require('./routes/users');
 var volunteerRouter = require('./routes/volunteer');
 var adminRouter = require('./routes/admin');
 var matchRouter = require('./routes/match');
-
+const flash = require('express-flash');
 var app = express();
 var db=require('./config/connection')
 const session = require('express-session');
@@ -20,7 +20,17 @@ const hbs = require('hbs');
 hbs.registerHelper('join', function (array, separator) {
     return array ? array.join(separator) : '';
 });
+
+
+
 3
+hbs.registerHelper('toFixed', function (number, digits) {
+  return Number(number).toFixed(digits);
+});
+
+hbs.registerHelper('eq', function (a, b) {
+  return a === b;
+});
 
 app.use(session({
     secret: '281298jwkqwi2wjoq',
@@ -28,6 +38,16 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false }
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

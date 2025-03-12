@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nearest Volunteers</title>
+  <style>
+    .volunteer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .volunteer-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      width: 250px;
+      text-align: center;
+    }
+    .profile-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    button {
+      padding: 8px 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- ✅ Corrected Patient Name Display -->
+  <h2>Nearest Volunteers for {{patient.fullName}}</h2>
+
+  {{#if volunteers.length}}
+  <div class="volunteer-list">
+    {{#each volunteers}}
+      <div class="volunteer-card">
+        <img src="{{this.profilePic}}" alt="Volunteer Image" class="profile-image" />
+        <div class="volunteer-info">
+          <div class="volunteer-name"><b>{{this.fullName}}</b></div>
+          <div class="volunteer-distance">{{toFixed this.distance 2}} km away</div>
+        </div>
+        <div class="volunteer-meta">
+          📍 <em>{{this.address}}</em><br/>
+          📞 {{this.phoneNumber}}
+        </div>
+
+        <!-- Form for selecting a volunteer -->
+        <form action="/select-volunteer/{{this.volunteerId}}" method="POST">
+          <input type="hidden" name="volunteerId" value="{{this.volunteerId}}" />
+          <input type="hidden" name="patientId" value="{{this.patientId}}" />
+          <button type="submit">Select</button>
+        </form>
+
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <p>No nearby volunteers found.</p>
+{{/if}}
+  </script>
+</body>
+</html>
