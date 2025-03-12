@@ -33,68 +33,7 @@ router.get('/volunteerhome', ensureAuthenticated, checkRole('volunteer'), (req, 
 });
 
 
-// router.get('/volunteer-job', async (req, res) => {
-//     try {
-//         // Fetch all notifications where status is "unread" (active jobs)
-//         const availableJobs = await db.get()
-//             .collection(collection.NOTIFICATIONS_COLLECTION)
-//             .find({ status: "unread" }) // Filtering based on status instead of 'active'
-//             .toArray();
 
-//         console.log('📢 Available Jobs:', availableJobs);
-
-//         // If no jobs are available, render message
-//         if (!availableJobs || availableJobs.length === 0) {
-//             return res.render('volunteerhome', { availableJobs: [], message: "No new job notifications available." });
-//         }
-
-//         // Render volunteer home page with available jobs
-//         res.render('volunteerhome', { availableJobs });
-
-//     } catch (error) {
-//         console.error("❌ Error fetching job notifications:", error);
-//         res.status(500).render('error', { message: "Internal Server Error" });
-//     }
-// });
-//   router.get('/volunteer-job', async (req, res) => {
-//   try {
-//         // Fetch all unread job notifications
-//         const availableJobs = await db.get()
-//             .collection(collection.NOTIFICATIONS_COLLECTION)
-//             .find({ status: "unread" })
-//             .toArray();
-
-//         if (!availableJobs || availableJobs.length === 0) {
-//             return res.render('volunteerhome', { availableJobs: [], message: "podraa." });
-//         }
-
-//         // Fetch patient names based on patientId
-//         const patientIds = availableJobs.map(job => new ObjectId(job.patientId)); 
-//         const patients = await db.get()
-//             .collection(collection.USER_COLLECTION)
-//             .find({ _id: { $in: patientIds } })
-//             .toArray();
-
-//         // Create a lookup object for patient names
-//         const patientNameMap = {};
-//         patients.forEach(patient => {
-//             patientNameMap[patient._id.toString()] = patient.fullName;
-//         });
-
-//         // Replace patientId with patientName in the available jobs list
-//         const jobsWithPatientNames = availableJobs.map(job => ({
-//             ...job,
-//             patientName: patientNameMap[job.patientId] || "Unknown Patient"
-//         }));
-
-//         // Render the page with patient names instead of IDs
-//         res.render('volunteerhome', { availableJobs: jobsWithPatientNames });
-
-//     } catch (error) {
-//         console.error("❌ Error fetching job notifications:", error);
-//         res.status(500).render('error', { message: "Internal Server Error" });
-//     }
-// });
 router.get('/volunteer-job/:id', async (req, res) => {
     try {
         const volunteerId = req.query.volunteerId || req.session.volunteerId;
@@ -125,7 +64,7 @@ router.get('/volunteer-job/:id', async (req, res) => {
             patientMap[patient._id.toString()] = {
                 fullName: patient.fullName,
                 phone: patient.phone,
-                location: patient.location && patient.location.latitude && patient.location.longitude
+                location: patient.latitude && patient.longitude
                     ? patient.location
                     : { latitude: 0, longitude: 0 }
             };
@@ -153,52 +92,52 @@ router.get('/volunteer-job/:id', async (req, res) => {
 //*******************************volunteer srevice 
 
 
-// router.get('/volunteer-services', async (req, res) => {
-//    // console.log("Session Data:", req.session); // Debugging session data
+router.get('/volunteer-service', async (req, res) => {
+   // console.log("Session Data:", req.session); // Debugging session data
 
-//     if (!req.session.volunteerId) {
-//         return res.redirect('/login'); // Redirect if session is missing
-//     }
+    if (!req.session.volunteerId) {
+        return res.redirect('/login'); // Redirect if session is missing
+    }
 
-//     try {
-//         const volunteer = await db.get()
-//             .collection(collection.USER_COLLECTION)
-//             .findOne({ _id: new ObjectId(req.session.volunteerId) });
+    try {
+        const volunteer = await db.get()
+            .collection(collection.USER_COLLECTION)
+            .findOne({ _id: new ObjectId(req.session.volunteerId) });
 
-//         if (!volunteer) {
-//             return res.status(404).send("Volunteer not found");
-//         }
+        if (!volunteer) {
+            return res.status(404).send("Volunteer not found");
+        }
 
-//         res.render('volunterService', { fullName: volunteer.fullName, id: volunteer._id });
-//     } catch (error) {
-//         console.error("Error fetching volunteer:", error);
-//         res.status(500).send("Server error");
-//     }
-// });
+        res.render('volunterService', { fullName: volunteer.fullName, id: volunteer._id });
+    } catch (error) {
+        console.error("Error fetching volunteer:", error);
+        res.status(500).send("Server error");
+    }
+});
 
 
-// router.post('/volunteer-services', async (req, res) => {
-//    // console.log("Session Data:", req.session); // Debugging session data
+router.post('/volunteer-services', async (req, res) => {
+   // console.log("Session Data:", req.session); // Debugging session data
 
-//     const volunteerId = req.session.volunteerId; // Retrieve from session
-//     if (!volunteerId) {
-//         console.log("Volunteer ID missing in session");
-//         return res.status(401).send("Unauthorized: Volunteer ID missing");
-//     }
+    const volunteerId = req.session.volunteerId; // Retrieve from session
+    if (!volunteerId) {
+        console.log("Volunteer ID missing in session");
+        return res.status(401).send("Unauthorized: Volunteer ID missing");
+    }
 
-//     try {
-//         const availableService = await userHelpers.addVolunteerHome({
-//             ...req.body,
-//             volunteerId: new ObjectId(volunteerId) // Ensure it's stored correctly
-//         });
+    try {
+        const availableService = await userHelpers.addVolunteerHome({
+            ...req.body,
+            volunteerId: new ObjectId(volunteerId) // Ensure it's stored correctly
+        });
 
-//         console.log("Service added:", availableService);
-//         res.redirect('/volunteerhome');
-//     } catch (error) {
-//         console.error("Error adding service:", error);
-//         res.status(500).send("Server error");
-//     }
-// });
+        console.log("Service added:", availableService);
+        res.redirect(`/volunteer-profile/${req.session.volunteerId}`);
+    } catch (error) {
+        console.error("Error adding service:", error);
+        res.status(500).send("Server error");
+    }
+});
 
 
 

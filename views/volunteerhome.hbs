@@ -7,8 +7,8 @@
     <script>
         function initMap() {
             document.querySelectorAll(".map-container").forEach((container) => {
-                const lat = parseFloat(container.dataset.lat);
-                const lng = parseFloat(container.dataset.lng);
+                const lat = parseFloat(container.dataset.lat) || 10.0000; // Default latitude
+                const lng = parseFloat(container.dataset.lng) || 76.0000; // Default longitude
                 const map = new google.maps.Map(container, {
                     center: { lat: lat, lng: lng },
                     zoom: 14,
@@ -32,8 +32,9 @@
     <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px;">
         <p><strong>Patient Name:</strong> {{patientName}}</p>
         <p><strong>Phone Number:</strong> {{phone}}</p>
+        <p><strong>Patient Needs:</strong> {{PatientNeeds}}</p>
         <p><strong>Message:</strong> {{message}}</p>
-         <p>Latitude: {{location.latitude}}, Longitude: {{location.longitude}}</p>
+        <p>Latitude: {{location.latitude}}, Longitude: {{location.longitude}}</p>
 
         <div class="map-container" 
              data-lat="{{location.latitude}}" 
