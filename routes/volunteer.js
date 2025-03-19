@@ -1,5 +1,7 @@
 const { LocalStorage } = require('node-localstorage');
 const path = require('path');
+const otpGenerator=require('../services/otpGenrator')
+const emailService=require('../services/emailService')
 const localStorage = new LocalStorage(path.join(__dirname, 'localStorage'));
 var express = require('express');
 var router = express.Router();
@@ -65,17 +67,23 @@ router.get('/volunteer-job/:id', async (req, res) => {
                 fullName: patient.fullName,
                 phone: patient.phone,
                 location: patient.latitude && patient.longitude
-                    ? patient.location
-                    : { latitude: 0, longitude: 0 }
+                    ? {latitude: patient.latitude, longitude: patient.longitude}
+                    : { latitude: 11.8356082, longitude:  0}
             };
         });
 
-        const jobsWithPatientDetails = availableJobs.map(job => ({
-            ...job,
-            patientName: patientMap[job.patientId]?.fullName || "Unknown Patient",
-            phone: patientMap[job.patientId]?.phone || "Not Available",
-            location: patientMap[job.patientId]?.location
-        }));
+        const jobsWithPatientDetails = availableJobs.map(job => {
+            const patient = patientMap[job.patientId] || {};
+            console.log('matte myran',patient);
+            
+            return {
+                ...job,
+                patientName: patient.fullName || "Unknown Patient",
+                phone: patient.phone || "Not Available",
+                location: patient.location
+            };
+        });
+        
 
         console.log("✅ Processed Job Data:", jobsWithPatientDetails);
 
@@ -128,6 +136,9 @@ router.post('/volunteer-services', async (req, res) => {
     try {
         const availableService = await userHelpers.addVolunteerHome({
             ...req.body,
+            patientNeeds: Array.isArray(req.body.patientNeeds) 
+            ? req.body.patientNeeds 
+            : [req.body.patientNeeds],
             volunteerId: new ObjectId(volunteerId) // Ensure it's stored correctly
         });
 
@@ -169,6 +180,7 @@ router.post('/volunteer-profile/:id', ensureAuthenticated, upload.single('profil
             phoneNumber: req.body.phoneNumber,
             address: req.body.address,
             adhar: req.body.adhar,
+            dob: req.body.dob,
             latitude: parseFloat(req.body.latitude) || null,
             longitude: parseFloat(req.body.longitude) || null,
         };
@@ -223,12 +235,140 @@ router.get('/volunteer-profile/:id', ensureAuthenticated, async (req, res) => {
             phoneNumber: volunteer.phoneNumber,
             address: volunteer.address,
             adhar: volunteer.adhar,
+            dob: volunteer.dob,
             profileImageUrl: volunteer.profileImageUrl,
             currentYear: new Date().getFullYear(),
         });
     } catch (error) {
         console.error('Error fetching volunteer profile:', error.message, error.stack);
         res.status(500).send('Error fetching volunteer profile');
+    }
+});
+// Add this new route to handle the Accept action
+router.post('/volunteer-job/accept/:id', ensureAuthenticated, async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const job = await db.get()
+            .collection(collection.NOTIFICATIONS_COLLECTION)
+            .findOne({ _id: new ObjectId(jobId) });
+
+        if (!job) return res.status(404).json({ message: "Job not found" });
+
+        const patient = await db.get()
+            .collection(collection.USER_COLLECTION)
+            .findOne({ _id: new ObjectId(job.patientId) });
+
+        if (!patient) return res.status(404).json({ message: "Patient not found" });
+
+        const volunteer = req.session.user;
+        if (!volunteer) return res.status(401).json({ message: "Volunteer not authenticated" });
+
+        const otp = otpGenerator.otpgenerator();
+
+        const matchDoc = {
+            start_otp: otp,
+            end_otp: "",
+            volunteerName: volunteer.fullName,
+            volunteerId: volunteer._id,
+            patientId: job.patientId,
+            patientEmail: patient.email,
+            services: job.services || [],
+            location: job.location || patient.location || {},
+            isComplete: false,
+            createdAt: new Date(),
+            startTime: null, // Store start time later
+            endTime: null,   // Store end time later
+        };
+
+        emailService.serviceStartMail(patient.email, patient.fullName, otp);
+
+        const result = await db.get()
+            .collection(collection.MATCHES_COLLECTION)
+            .insertOne(matchDoc);
+
+        await db.get()
+            .collection(collection.NOTIFICATIONS_COLLECTION)
+            .updateOne(
+                { _id: new ObjectId(jobId) },
+                { $set: { status: "accepted" } }
+            );
+console.log('testing ',result.insertedId);
+
+        res.redirect(`/start-job/${result.insertedId}`);
+    } catch (error) {
+        console.error("Error accepting job:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+  //new kunna
+  router.post('/volunteer-job/start-job', ensureAuthenticated, async (req, res) => {
+    try {
+        const { matchId, otp } = req.body;
+
+        const match = await db.get()
+            .collection(collection.MATCHES_COLLECTION)
+            .findOne({ _id: new ObjectId(matchId) });
+
+        if (!match || match.start_otp !== otp) {
+            return res.json({ success: false, message: "Invalid OTP" });
+        }
+
+        await db.get()
+            .collection(collection.MATCHES_COLLECTION)
+            .updateOne(
+                { _id: new ObjectId(matchId) },
+                { $set: { startTime: new Date() } }
+            );
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error verifying start OTP:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
+
+router.post('/volunteer-job/end-job', ensureAuthenticated, async (req, res) => {
+    try {
+        const { matchId, otp } = req.body;
+
+        const match = await db.get()
+            .collection(collection.MATCHES_COLLECTION)
+            .findOne({ _id: new ObjectId(matchId) });
+
+        if (!match || match.end_otp !== otp) {
+            return res.json({ success: false, message: "Invalid OTP" });
+        }
+
+        await db.get()
+            .collection(collection.MATCHES_COLLECTION)
+            .updateOne(
+                { _id: new ObjectId(matchId) },
+                { $set: { endTime: new Date(), isComplete: true } }
+            );
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error verifying end OTP:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+});
+
+router.get('/volunteer-job/start/:matchId', ensureAuthenticated, async (req, res) => {
+    try {
+        const matchId = req.params.matchId;
+console.log('evda ethi');
+
+        const match = await db.get()
+            .collection(collection.MATCHES_COLLECTION)
+            .findOne({ _id: new ObjectId(matchId) });
+
+        if (!match) return res.status(404).send("Match not found");
+
+        res.render('start-job', { match });
+    } catch (error) {
+        console.error("Error fetching job details:", error);
+        res.status(500).send("Internal Server Error");
     }
 });
 

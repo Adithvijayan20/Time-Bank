@@ -28,7 +28,7 @@
             margin: 20px auto;
             padding: 20px;
             background-color: white;
-            max-width: 800px;
+            max-width: 1000px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
@@ -42,17 +42,23 @@
         .patient-details {
             display: flex;
             flex-direction: column;
+            justify-content: space-around;
             gap: 15px;
         }
 
-        .patient-details div {
+        {{!-- .patient-details div {
             display: flex;
             justify-content: space-between;
-        }
+        } --}}
 
         .patient-details label {
             font-weight: bold;
             width: 150px;
+        }
+        .patient-details span {
+            font-weight: normal;
+            margin-left: 10px;
+            {{!-- width: 200px; --}}
         }
 
         footer {
@@ -82,7 +88,7 @@
 <body>
 
     <header>
-        <h1>{{appName}}</h1>
+       
     </header>
 
     <div class="patient-profile">
@@ -110,7 +116,7 @@
                 <span>{{patient.dob}}</span>
             </div>
             <div>
-                <label for="address"><address></address>:</label>
+                <label for="address"><address></address> address:</label>
                 <span>{{patient.address}}</span>
             </div>
             <div>
@@ -139,7 +145,8 @@
 
         <a href="/manage-patients" class="btn">Back to Patient List</a>
     </div>
-
+     
+           
     <footer>
         <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
     </footer>

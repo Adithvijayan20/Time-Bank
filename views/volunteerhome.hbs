@@ -32,15 +32,16 @@
     <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px;">
         <p><strong>Patient Name:</strong> {{patientName}}</p>
         <p><strong>Phone Number:</strong> {{phone}}</p>
-        <p><strong>Patient Needs:</strong> {{PatientNeeds}}</p>
+        
         <p><strong>Message:</strong> {{message}}</p>
-        <p>Latitude: {{location.latitude}}, Longitude: {{location.longitude}}</p>
 
-        <div class="map-container" 
-             data-lat="{{location.latitude}}" 
-             data-lng="{{location.longitude}}" 
-             style="width: 100%; height: 300px; background-color: lightblue;">
-        </div>
+
+       <div class="map-container" 
+     data-lat="{{location.latitude}}" 
+     data-lng="{{location.longitude}}" 
+     style="width: 100%; height: 300px; background-color: lightblue;">
+</div>
+
 
         <br>
         <button onclick="handleJobAction('{{_id}}', 'accept')" style="background: green; color: white; padding: 8px;">✅ Accept</button>
@@ -49,12 +50,13 @@
     {{/each}}
 
     <script>
-        function handleJobAction(jobId, action) {
-            fetch(`/volunteer-job/${action}/${jobId}`, { method: "POST" })
-                .then(response => response.json())
-                .then(data => alert(data.message))
-                .catch(err => console.error("Error:", err));
-        }
+      function handleJobAction(jobId, action) {
+    fetch(`/volunteer-job/${action}/${jobId}`, { method: "POST" })
+        .then(response => response.json())
+        .then(data => alert(data.message))
+        .catch(err => console.error("Error:", err));
+}
+
     </script>
 </body>
 </html>

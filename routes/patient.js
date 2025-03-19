@@ -54,7 +54,7 @@ router.post('/patient', upload.single('idUpload'), async (req, res) => {
 router.get('/patienthome/:id', ensureAuthenticated, checkRole('patient'), (req, res) => {
     const patientId = req.params.id; 
     
-    console.log('tthis is myran',patientId);
+    console.log('id',patientId);
     
     // Get patient ID from URL
 
@@ -166,37 +166,46 @@ router.post('/patient-profile/:id', ensureAuthenticated, upload.single('profileI
 
 //**********************************patient srevice 
 
-router.post('/patient-services',async (req, res) => {
-            const patientData = {
-                ...req.body,
-                patientId: req.session.user._id // Attach unique patient ID
-            };
-        // console.log('sameple data',patientData);
-        
-            userHelpers.addPatientHome(patientData).then((response) => {
-                console.log(response);
-               // Redirect back to patient home
-            });
-            console.log(patientData);
-            
-            const matchDetails={
-                patientName:patientData.patientName,
-                patientId:patientData.patientId,
-                work:patientData.patientNeeds,
-                date:patientData.date,
-                time:patientData.time,
-                active:true,
-                volunteerName:"",
-                volunteerId:""
-                
-            }
-          const matchedValue=  await userHelpers.addMatching(matchDetails)
-          console.log('matched details',matchedValue);
-          res.redirect(`/nearest-volunteers/${ patientData.patientId}`)
-          
-        });
+router.post('/patient-services', async (req, res) => {
+    // Normalize patientNeeds to always be an array
+    const normalizedPatientNeeds = Array.isArray(req.body.patientNeeds)
+        ? req.body.patientNeeds
+        : [req.body.patientNeeds];
+
+    // Build patientData and include currentPatientNeeds field.
+    const patientData = {
+        ...req.body,
+        patientNeeds: normalizedPatientNeeds,         // May hold historic values
+          // New field for the latest requested needs
+        patientId: req.session.user._id                   // Attach unique patient ID from session
+    };
+
+    console.log("Patient Data:", patientData);
+
+    // Update (or add) the patient record. (Ensure that userHelpers.addPatientHome performs an upsert.)
+    await userHelpers.addPatientHome(patientData);
+
+    // Create matching details for later processing
+    const matchDetails = {
+        patientName: patientData.patientName,
+        patientId: patientData.patientId,
+        work: normalizedPatientNeeds,
+        date: patientData.date,
+        time: patientData.time,
+        active: true,
+        volunteerName: "",
+        volunteerId: ""
+    };
+
+    const matchedValue = await userHelpers.addMatching(matchDetails);
+    console.log('Matched details:', matchedValue);
+
+    // Redirect to the nearest-volunteers page using the patientId
+    res.redirect(`/nearest-volunteers/${patientData.patientId}`);
+});
 
 
+    // *******************************************patient logout ****************************************
 
 
 

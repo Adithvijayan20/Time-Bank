@@ -397,6 +397,17 @@
                         <label>Aadhaar Number</label>
                         <p>{{adhar}}</p>
                     </div>
+                    <div class="video-container" style="margin-top: 2rem;">
+            <h4>Introduction Video</h4>
+            <iframe width="560" height="315" 
+                src="https://www.youtube.com/embed/https://youtu.be/HyZvbVf2SSY?si=vYRxDZGaNHPVkTks" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+                   
                 </div>
             </section>
 <section id="profile" class="section">
@@ -425,6 +436,11 @@
             <label for="address">Address</label>
             <textarea id="address" name="address" rows="4">{{address}}</textarea>
         </div>
+       <div class="form-group">
+    <label for="dob">Date of Birth</label>
+    <input type="date" id="dob" name="dob" class="form-control" value="{{dob}}">
+</div>
+
 
         <div class="upload-box">
             <h4 style="font-size: 1.25rem; margin-bottom: 1rem;">Upload Your Profile Picture</h4>

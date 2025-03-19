@@ -3,7 +3,7 @@ module.exports={
 
  VOLUNTEER_COLLECTION: "volunteers",
  PATIENT_COLLECTION: "patients",
- MATCH_COLLECTION:'match',
- NOTIFICATIONS_COLLECTION: "notifications"
+ MATCH_COLLECTION:'matches',
+ NOTIFICATIONS_COLLECTION: "notifications",  MATCHES_COLLECTION: 'matches',
 
 }
