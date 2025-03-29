@@ -21,6 +21,9 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 //const User = require('../models/user');
 const matchFunction=require('../helpers/helper')
+const { createCanvas, loadImage } = require('canvas');
+const bwipjs = require('bwip-js');
+
 
 //**************************************************************************************************************************************
 
@@ -226,6 +229,22 @@ router.get('/volunteer-profile/:id', ensureAuthenticated, async (req, res) => {
             return res.status(404).send('Volunteer not found');
         }
 
+        
+        // Aggregate to calculate the average rating for this volunteer
+        const ratingAggregation = await database.collection(collection.RATING_COLLECTION)
+            .aggregate([
+                { $match: { volunteerId: volunteer._id.toString() } },
+                { $group: { _id: "$volunteerId", avgRating: { $avg: "$rating" } } }
+            ])
+            .toArray();
+
+        // If there are ratings, calculate the average; otherwise, default to 0
+        const avgRating = ratingAggregation.length > 0 ? ratingAggregation[0].avgRating : 0;
+        // Round average to nearest whole number to determine the number of stars
+        const roundedAvgRating = Math.round(avgRating);
+        // Create an array with a length equal to the number of stars
+        const starArr = Array(roundedAvgRating).fill(0);
+
         res.render('volunteer-profile', {
             id: req.params.id,
             title: 'Volunteer Profile',
@@ -238,6 +257,8 @@ router.get('/volunteer-profile/:id', ensureAuthenticated, async (req, res) => {
             dob: volunteer.dob,
             profileImageUrl: volunteer.profileImageUrl,
             currentYear: new Date().getFullYear(),
+            avgRating: avgRating.toFixed(1), // Display average rating with one decimal
+            starArr: starArr
         });
     } catch (error) {
         console.error('Error fetching volunteer profile:', error.message, error.stack);
@@ -245,6 +266,64 @@ router.get('/volunteer-profile/:id', ensureAuthenticated, async (req, res) => {
     }
 });
 // Add this new route to handle the Accept action
+// router.post('/volunteer-job/accept/:id', ensureAuthenticated, async (req, res) => {
+//     try {
+//         const jobId = req.params.id;
+//         const job = await db.get()
+//             .collection(collection.NOTIFICATIONS_COLLECTION)
+//             .findOne({ _id: new ObjectId(jobId) });
+
+//         if (!job) return res.status(404).json({ message: "Job not found" });
+
+//         const patient = await db.get()
+//             .collection(collection.USER_COLLECTION)
+//             .findOne({ _id: new ObjectId(job.patientId) });
+
+//         if (!patient) return res.status(404).json({ message: "Patient not found" });
+
+//         const volunteer = req.session.user;
+//         if (!volunteer) return res.status(401).json({ message: "Volunteer not authenticated" });
+
+//         const otp = otpGenerator.otpgenerator();
+
+//         const matchDoc = {
+//             start_otp: otp,
+//             end_otp: "",
+//             volunteerName: volunteer.fullName,
+//             volunteerId: volunteer._id,
+//             patientId: job.patientId,
+//             patientEmail: patient.email,
+//             services: job.services || [],
+//             location: job.location || patient.location || {},
+//             isComplete: false,
+//             createdAt: new Date(),
+//             startTime: null, // Store start time later
+//             endTime: null,   // Store end time later
+//         };
+
+//         emailService.serviceStartMail(patient.email, patient.fullName, otp);
+
+//         const result = await db.get()
+//             .collection(collection.MATCHES_COLLECTION)
+//             .insertOne(matchDoc);
+
+//         await db.get()
+//             .collection(collection.NOTIFICATIONS_COLLECTION)
+//             .updateOne(
+//                 { _id: new ObjectId(jobId) },
+//                 { $set: { status: "accepted" } }
+//             );
+// console.log('testing ',result.insertedId);
+
+//         res.redirect(`/startjob/${result.insertedId}`);
+//     } catch (error) {
+//         console.error("Error accepting job:", error);
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// });
+
+
+
 router.post('/volunteer-job/accept/:id', ensureAuthenticated, async (req, res) => {
     try {
         const jobId = req.params.id;
@@ -276,8 +355,8 @@ router.post('/volunteer-job/accept/:id', ensureAuthenticated, async (req, res) =
             location: job.location || patient.location || {},
             isComplete: false,
             createdAt: new Date(),
-            startTime: null, // Store start time later
-            endTime: null,   // Store end time later
+            startTime: null,
+            endTime: null,
         };
 
         emailService.serviceStartMail(patient.email, patient.fullName, otp);
@@ -292,17 +371,18 @@ router.post('/volunteer-job/accept/:id', ensureAuthenticated, async (req, res) =
                 { _id: new ObjectId(jobId) },
                 { $set: { status: "accepted" } }
             );
-console.log('testing ',result.insertedId);
 
-        res.redirect(`/start-job/${result.insertedId}`);
+        res.json({ success: true, matchId: result.insertedId });
     } catch (error) {
         console.error("Error accepting job:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
 
-  //new kunna
-  router.post('/volunteer-job/start-job', ensureAuthenticated, async (req, res) => {
+  
+
+
+router.post('/volunteer-job/start-job', ensureAuthenticated, async (req, res) => {
     try {
         const { matchId, otp } = req.body;
 
@@ -311,22 +391,31 @@ console.log('testing ',result.insertedId);
             .findOne({ _id: new ObjectId(matchId) });
 
         if (!match || match.start_otp !== otp) {
-            return res.json({ success: false, message: "Invalid OTP" });
+            return res.json({ success: false, message: "Invalid Start OTP" });
         }
+
+        // Generate End OTP
+        const endOtp = otpGenerator.otpgenerator();
 
         await db.get()
             .collection(collection.MATCHES_COLLECTION)
             .updateOne(
                 { _id: new ObjectId(matchId) },
-                { $set: { startTime: new Date() } }
+                { $set: { startTime: new Date(), end_otp: endOtp } }
             );
 
-        res.json({ success: true });
+        // Send End OTP via Email
+        emailService.serviceEndMail(match.patientEmail, match.volunteerName, endOtp);
+
+        res.json({ success: true, message: "Job started! End OTP sent to email." });
     } catch (error) {
-        console.error("Error verifying start OTP:", error);
+        console.error("Error verifying Start OTP:", error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 });
+
+
+
 
 router.post('/volunteer-job/end-job', ensureAuthenticated, async (req, res) => {
     try {
@@ -337,19 +426,22 @@ router.post('/volunteer-job/end-job', ensureAuthenticated, async (req, res) => {
             .findOne({ _id: new ObjectId(matchId) });
 
         if (!match || match.end_otp !== otp) {
-            return res.json({ success: false, message: "Invalid OTP" });
+            return res.json({ success: false, message: "Invalid End OTP" });
         }
+
+        const endTime = new Date();
+        const duration = (endTime - match.startTime) / 1000; // Duration in seconds
 
         await db.get()
             .collection(collection.MATCHES_COLLECTION)
             .updateOne(
                 { _id: new ObjectId(matchId) },
-                { $set: { endTime: new Date(), isComplete: true } }
+                { $set: { endTime: endTime, isComplete: true, duration: duration } }
             );
 
-        res.json({ success: true });
+        res.json({ success: true, message: "Job completed successfully!" });
     } catch (error) {
-        console.error("Error verifying end OTP:", error);
+        console.error("Error verifying End OTP:", error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 });
@@ -372,6 +464,90 @@ console.log('evda ethi');
     }
 });
 
+//***************************************time tracking
+
+
+
+
+router.get('/volunteer/:volunteerId/time-spent', ensureAuthenticated, async (req, res) => {
+    try {
+        const volunteerId = req.params.volunteerId;
+
+        // Fetch all completed jobs for this volunteer
+        const jobs = await db.get()
+            .collection(collection.MATCHES_COLLECTION)
+            .find({ volunteerId: volunteerId, isComplete: true })
+            .toArray();
+
+        if (!jobs.length) {
+            return res.render('time-tracking', { jobs: [], totalTime: 0, volunteerId });
+        }
+
+        // Convert patientIds to ObjectId (if stored as ObjectId in USER_COLLECTION)
+        const patientIds = jobs.map(job => new ObjectId(job.patientId));
+
+        // Fetch patient names from USER_COLLECTION
+        const patients = await db.get()
+            .collection(collection.USER_COLLECTION)
+            .find({ _id: { $in: patientIds } })
+            .toArray();
+
+        const patientMap = patients.reduce((acc, patient) => {
+            acc[patient._id.toString()] = patient.fullName || "Unknown Patient"; // Convert _id to string for mapping
+            return acc;
+        }, {});
+
+        // Calculate total time spent
+        let totalTime = 0;
+        const jobDetails = jobs.map(job => {
+            const duration = Math.round((job.endTime - job.startTime) / 1000 / 60);
+            totalTime += duration;
+            return {
+                patientName: patientMap[job.patientId.toString()] || "Unknown Patient",
+                startTime: new Date(job.startTime).toLocaleString(),
+                endTime: new Date(job.endTime).toLocaleString(),
+                duration
+            };
+        });
+
+        res.render('time-tracking', { jobs: jobDetails, totalTime, volunteerId });
+    } catch (error) {
+        console.error("Error fetching time logs:", error);
+        res.status(500).render('time-tracking', { jobs: [], totalTime: 0, volunteerId, error: "Internal Server Error" });
+    }
+});
+
+
+//****************************************Id card 
+
+router.get('/volunteer-id/:id', ensureAuthenticated, async (req, res) => {
+    try {
+        const database = db.get();
+        if (!database) {
+            console.error('Database is not initialized');
+            return res.status(500).send('Internal Server Error');
+        }
+
+        const volunteerId = new ObjectId(req.params.id);
+        const volunteer = await database.collection(collection.USER_COLLECTION).findOne({ _id: volunteerId });
+
+        if (!volunteer) {
+            return res.status(404).send('Volunteer not found');
+        }
+
+        res.render('volunteer-id', {
+            id: req.params.id,
+            fullName: volunteer.fullName,
+            email: volunteer.email,
+            phoneNumber: volunteer.phoneNumber,
+            adhar: volunteer.adhar,
+            profileImageUrl: volunteer.profileImageUrl || '/images/default-avatar.png',
+        });
+    } catch (error) {
+        console.error('Error fetching volunteer ID card:', error.message);
+        res.status(500).send('Error generating ID card');
+    }
+});
 
 
 module.exports = router;

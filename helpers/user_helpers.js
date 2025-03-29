@@ -87,11 +87,14 @@ module.exports = {
             }
         });
     },
-   
+
         // addVolunteerHome: (volunteerData) => {
         //     return new Promise(async (resolve, reject) => {
         //         try {
-        //             volunteerData.volunteerId = volunteerData.volunteerId || new ObjectId(); // Ensure unique ID
+        //             if (!volunteerData.volunteerId) {
+        //                 return reject("Volunteer ID is missing");
+        //             }
+        
         //             let result = await db.get().collection(collection.VOLUNTEER_COLLECTION).insertOne(volunteerData);
         //             resolve(result);
         //         } catch (error) {
@@ -99,20 +102,40 @@ module.exports = {
         //         }
         //     });
         // },
+
+
+
+
         addVolunteerHome: (volunteerData) => {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    if (!volunteerData.volunteerId) {
-                        return reject("Volunteer ID is missing");
-                    }
-        
-                    let result = await db.get().collection(collection.VOLUNTEER_COLLECTION).insertOne(volunteerData);
-                    resolve(result);
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        },
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!volunteerData.volunteerId) {
+                return reject("Volunteer ID is missing");
+            }
+
+            const dbInstance = db.get().collection(collection.VOLUNTEER_COLLECTION);
+
+            // Check if the volunteer already has a service entry
+            let existingEntry = await dbInstance.findOne({ volunteerId: volunteerData.volunteerId });
+
+            if (existingEntry) {
+                // Update the existing service entry
+                let updatedResult = await dbInstance.updateOne(
+                    { volunteerId: volunteerData.volunteerId },
+                    { $set: { patientNeeds: volunteerData.patientNeeds, ...volunteerData } }
+                );
+                resolve(updatedResult);
+            } else {
+                // Insert a new service entry
+                let result = await dbInstance.insertOne(volunteerData);
+                resolve(result);
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+},
+
         
     
 

@@ -49,14 +49,23 @@
     </div>
     {{/each}}
 
-    <script>
-      function handleJobAction(jobId, action) {
+   
+     <script>
+  function handleJobAction(jobId, action) {
     fetch(`/volunteer-job/${action}/${jobId}`, { method: "POST" })
-        .then(response => response.json())
-        .then(data => alert(data.message))
-        .catch(err => console.error("Error:", err));
-}
+      .then(response => response.json())
+      .then(data => {
+        if (action === "accept" && data.success) {
+          window.location.href = `/volunteer-job/start/${data.matchId}`;
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(err => console.error("Error:", err));
+  }
+</script>
 
-    </script>
+
+   
 </body>
 </html>

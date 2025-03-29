@@ -16,6 +16,8 @@ var db=require('./config/connection')
 const session = require('express-session');
 const hbs = require('hbs');
 
+//hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
+
 
 hbs.registerHelper('join', function (array, separator) {
     return array ? array.join(separator) : '';
@@ -51,6 +53,7 @@ app.use((req, res, next) => {
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+
 app.set('view engine','hbs');
 
 

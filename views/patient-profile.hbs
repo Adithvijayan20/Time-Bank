@@ -338,15 +338,13 @@
                     <i class='bx bx-user'></i>
                     Complete Profile
                 </button>
-                <button class="nav-button">
-                    <i class='bx bx-star'></i>
-                    Rate Patient Behaviour
-                </button>
+                <a href="/patient-rating/{{id}}" style="text-decoration: none;">
+    <button class="nav-button">
+        <i class='bx bx-star'></i>
+Rating
+    </button>
                 
-                <button class="nav-button">
-                    <i class='bx bx-time'></i>
-                    Time Tracking
-               <!-- Inside the nav-menu -->
+                
 
 <button class="nav-button" >
                     <i class='bx bx-bell'></i>
@@ -450,6 +448,30 @@
         <button type="submit" class="btn" style="margin-top: 2rem;">Save Changes</button>
     </form>
 </section>
+<section id="rate" class="section">
+    <h3 style="font-size: 1.75rem; margin-bottom: 2rem; text-align: center;">Rate Patient Behavior</h3>
+    <form id="ratingForm" action="/matches/{{id}}" method="POST">
+        <div class="form-group" style="text-align: center;">
+            <label for="rating">Select Rating:</label>
+            <div class="star-rating" style="font-size: 2rem;">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <input type="hidden" id="rating" name="rating" value="">
+        </div>
+        
+        <div class="form-group">
+            <label for="comments">Additional Comments:</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Leave a comment..."></textarea>
+        </div>
+
+        <button type="submit" class="btn" style="margin-top: 2rem;">Submit Rating</button>
+    </form>
+</section>
+
 
 <script>
     function initMap() {
@@ -506,6 +528,19 @@
                 button.classList.add('active');
             });
         });
+
+
+
+        document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', function() {
+            let rating = this.getAttribute('data-value');
+            document.getElementById('rating').value = rating;
+            document.querySelectorAll('.star').forEach(s => s.style.color = '#ccc');
+            for (let i = 0; i < rating; i++) {
+                document.querySelectorAll('.star')[i].style.color = '#FFD700';
+            }
+        });
+    });
     </script>
 </body>
 </html>

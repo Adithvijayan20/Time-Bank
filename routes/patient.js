@@ -88,6 +88,7 @@ router.get('/patient-profile/:id', ensureAuthenticated, async (req, res) => {
             return res.status(404).send('patient not found');
         }
 
+       
         res.render('patient-profile', {
             id: req.params.id,
             title: 'patient Profile',
@@ -99,6 +100,7 @@ router.get('/patient-profile/:id', ensureAuthenticated, async (req, res) => {
             dob: patient.dob,
             gender: patient.gender,
             adhar:patient.adhar,
+           
             profileImageUrl: patient.profileImageUrl,
             currentYear: new Date().getFullYear(),
         });
@@ -205,9 +207,195 @@ router.post('/patient-services', async (req, res) => {
 });
 
 
-    // *******************************************patient logout ****************************************
+    // *******************************************rating****************************************
 
 
+    
+
+
+    async function getCompletedWorkDetails(patientId) {
+        try {
+            // Fetch all completed matches for the given patientId
+            const completedMatches = await Match.find({ patientId, isComplete: true });
+    
+            if (!completedMatches.length) {
+                console.log("No completed work found for this patient.");
+                return [];
+            }
+    
+            // Extract volunteer names
+            const volunteerNames = completedMatches.map(match => match.volunteerName);
+            
+            // Print volunteer names
+            console.log("Volunteers who completed work:", volunteerNames);
+    
+            // Return match details
+            return completedMatches;
+        } catch (error) {
+            console.error("Error fetching completed work details:", error);
+            return [];
+        }
+    }
+
+
+
+
+// *************************
+// GET route to list completed matches (volunteers) for rating
+// GET route to list unrated completed matches (volunteers) for rating
+router.get('/patient-rating/:id', ensureAuthenticated, checkRole('patient'), async (req, res) => {
+    try {
+        const patientId = req.params.id;
+        const database = db.get();
+        if (!database) {
+            console.error('Database is not initialized');
+            return res.status(500).send('Internal Server Error');
+        }
+        // Fetch completed matches for this patient from the matches collection
+        const completedMatches = await database.collection(collection.MATCH_COLLECTION)
+            .find({ patientId: patientId, isComplete: true })
+            .toArray();
+        
+        // Fetch all ratings that have been stored for this patient from the rating collection
+        const ratedRatings = await database.collection(collection.RATING_COLLECTION)
+            .find({ patientId: patientId })
+            .toArray();
+        
+        // Extract matchIds from rated records and convert them to strings for comparison
+        const ratedMatchIds = ratedRatings.map(r => r.matchId.toString());
+        
+        // Filter out matches that already have a rating
+        const unratedMatches = completedMatches.filter(match => !ratedMatchIds.includes(match._id.toString()));
+        
+        // Render the view with only unrated matches
+        res.render('rating', { 
+            patientId,
+            completedMatches: unratedMatches
+        });
+    } catch (error) {
+        console.error('Error fetching completed matches for rating:', error);
+        res.status(500).send('Error fetching ratings');
+    }
+});
+
+
+// POST route to submit a rating for a specific match record
+// router.post('/rate-volunteer/:matchId', ensureAuthenticated, checkRole('patient'), async (req, res) => {
+//     try {
+//         const matchId = req.params.matchId;
+//         const ratingValue = Number(req.body.rating);
+//         if (isNaN(ratingValue)) {
+//             console.error('Invalid rating value:', req.body.rating);
+//             return res.status(400).send('Invalid rating value.');
+//         }
+        
+//         const database = db.get();
+//         if (!database) {
+//             console.error('Database is not initialized');
+//             return res.status(500).send('Internal Server Error');
+//         }
+        
+//         console.log(`Fetching match record for matchId: ${matchId}`);
+//         const matchRecord = await database.collection(collection.MATCH_COLLECTION)
+//             .findOne({ _id: new ObjectId(matchId) });
+//         if (!matchRecord) {
+//             console.error(`Match record not found for matchId: ${matchId}`);
+//             return res.status(404).send('Match record not found.');
+//         }
+        
+//         // Build the rating object in the desired format
+//         const ratingData = {
+//             rating: ratingValue,
+//             volunteerName: matchRecord.volunteerName,
+//             volunteerId: matchRecord.volunteerId,
+//             patientName: req.session.user.fullName,
+//             patientId: req.session.user._id,
+//             matchId: new ObjectId(matchId),
+//             createdAt: new Date()
+//         };
+        
+//         console.log("Inserting rating data into collection:", ratingData);
+        
+//         // Insert the rating data into the new ratings collection
+//         const result = await database.collection(collection.RATING_COLLECTION).insertOne(ratingData);
+//         console.log("Insert result:", result);
+        
+//         if (!result.insertedId) {
+//             console.error('No insertedId returned, rating was not stored.');
+//             return res.status(500).send('Rating not stored');
+//         }
+        
+//         console.log('Rating stored successfully with ID:', result.insertedId);
+//         res.redirect(`/patient-profile/${req.session.user._id}`);
+//     } catch (error) {
+//         console.error('Error storing rating:', error);
+//         res.status(500).send('Error storing rating');
+//     }
+// });
+
+
+
+
+router.post('/rate-volunteer/:matchId', ensureAuthenticated, checkRole('patient'), async (req, res) => {
+    try {
+        const matchId = req.params.matchId;
+        const ratingValue = Number(req.body.rating);
+        if (isNaN(ratingValue)) {
+            console.error('Invalid rating value:', req.body.rating);
+            return res.status(400).send('Invalid rating value.');
+        }
+        
+        const database = db.get();
+        if (!database) {
+            console.error('Database is not initialized');
+            return res.status(500).send('Internal Server Error');
+        }
+        
+        // Check if a rating already exists for this match
+        const existingRating = await database.collection(collection.RATING_COLLECTION)
+            .findOne({ matchId: new ObjectId(matchId) });
+        if (existingRating) {
+            console.log('Rating already exists for this match. Not storing again.');
+            return res.redirect(`/patient-profile/${req.session.user._id}`);
+        }
+        
+        console.log(`Fetching match record for matchId: ${matchId}`);
+        const matchRecord = await database.collection(collection.MATCH_COLLECTION)
+            .findOne({ _id: new ObjectId(matchId) });
+        if (!matchRecord) {
+            console.error(`Match record not found for matchId: ${matchId}`);
+            return res.status(404).send('Match record not found.');
+        }
+        
+        // Build the rating object in the desired format
+        const ratingData = {
+            rating: ratingValue,
+            volunteerName: matchRecord.volunteerName,
+            volunteerId: matchRecord.volunteerId,
+            patientName: req.session.user.fullName,
+            patientId: req.session.user._id,
+            matchId: new ObjectId(matchId),
+            createdAt: new Date()
+        };
+        
+        console.log("Inserting rating data into collection:", ratingData);
+        
+        // Insert the rating data into the new ratings collection
+        const result = await database.collection(collection.RATING_COLLECTION).insertOne(ratingData);
+        console.log("Insert result:", result);
+        
+        if (!result.insertedId) {
+            console.error('No insertedId returned, rating was not stored.');
+            return res.status(500).send('Rating not stored');
+        }
+        
+        console.log('Rating stored successfully with ID:', result.insertedId);
+        res.redirect(`/patient-profile/${req.session.user._id}`);
+    } catch (error) {
+        console.error('Error storing rating:', error);
+        res.status(500).send('Error storing rating');
+    }
+});
 
 
 

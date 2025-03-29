@@ -324,6 +324,17 @@
             <i class='bx bx-user'></i>
         </div>
     {{/if}}
+
+    <!-- Display Average Rating as Stars -->
+    <div class="avg-rating" style="text-align: center; margin-top: 1rem;">
+        <p> Rating: {{avgRating}}</p>
+        <div>
+            {{#each starArr}}
+                <i class='bx bxs-star' style="color: gold;"></i>
+            {{/each}}
+        </div>
+    </div>
+    
     <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Welcome, {{fullName}}</h3>
     <p style="color: var(--text-secondary); font-size: 1.25rem;">Volunteer</p>
 </div>
@@ -342,13 +353,8 @@
                     <i class='bx bx-star'></i>
                     Rate Patient Behaviour
                 </button>
-                <button class="nav-button">
-                    <i class='bx bx-bell'></i>
-                    Notifications
-                </button>
-                <button class="nav-button">
-                    <i class='bx bx-time'></i>
-                    Time Tracking
+               
+                
                <!-- Inside the nav-menu -->
 
 <!-- New button for redirecting to volunteerhome -->
@@ -361,10 +367,21 @@
 <a href="/volunteer-Job/{{id}}" style="text-decoration: none;">
     <button class="nav-button">
         <i class='bx bx-home'></i>
-   Available job
+   Notifications
     </button>
 </a>
-
+<a href="/volunteer/{{id}}/time-spent" style="text-decoration: none;">
+    <button class="nav-button">
+        <i class='bx bx-home'></i>
+   Time Tracking
+    </button>
+</a>
+<a href="/volunteer-id/{{id}}" style="text-decoration: none;">
+    <button class="nav-button">
+        <i class='bx bx-user-circle'></i>
+   ID card
+    </button>
+</a>
 
             </nav>
         </aside>

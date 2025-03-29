@@ -3,189 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Start Job</title>
+    <title>Start Job - OTP Verification</title>
     <style>
-        /* General Page Styling */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #A78BFA, #6B7280);
+            color: #fff;
+            text-align: center;
             margin: 0;
-        }
-
-        /* Container */
-        .container {
+            padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            color: #333;
+            max-width: 400px;
             width: 100%;
         }
-
-        /* Job Card */
-        .job-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 350px;
+        h1, h2 {
+            color: #6B7280;
         }
-
-        /* Headings */
-        h2 {
-            color: #333;
-        }
-
-        /* Subtext */
-        .sub-text {
-            color: #777;
-            font-size: 14px;
-        }
-
-        /* Job Details */
-        .details {
-            margin: 10px 0;
-            color: #444;
-        }
-
-        /* Labels */
         label {
-            display: block;
-            margin-top: 10px;
             font-weight: bold;
-            color: #555;
+            display: block;
+            margin: 1rem 0 0.5rem;
         }
-
-        /* Input Fields */
         input {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
         }
-
-        /* Buttons */
         button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
+            background: linear-gradient(135deg, #8B5CF6, #4B5563);
             color: white;
-            font-size: 16px;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: 0.3s;
+            margin-top: 1rem;
+            width: 100%;
         }
-
-        /* Hover effect */
         button:hover {
-            background-color: #0056b3;
+            background: #4B5563;
         }
-
-        /* Disabled Button */
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* Timer Section */
-        .timer-label {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-
-        /* Hidden Class */
-        .hidden {
+        #endOtpSection {
             display: none;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <div class="job-card">
-            <h2>Start Job</h2>
-            <p class="sub-text">Help the patient by completing the service.</p>
-
-            <div class="details">
-                <p><strong>Volunteer:</strong> {{match.volunteerName}}</p>
-                <p><strong>Patient Email:</strong> {{match.patientEmail}}</p>
-            </div>
-
-            <!-- Start OTP Section -->
-            <div id="start-section">
-                <label for="startOtpInput">Enter Start OTP:</label>
-                <input type="text" id="startOtpInput">
-                <button onclick="startJob()">Start Job</button>
-            </div>
-
-            <!-- Timer & End OTP Section (Initially Hidden) -->
-            <div id="timer-section" class="hidden">
-                <p class="timer-label">Timer: <span id="timer">00:00:00</span></p>
-
-                <label for="endOtpInput">Enter End OTP:</label>
-                <input type="text" id="endOtpInput" disabled>
-                <button onclick="endJob()" id="endBtn" disabled>End Job</button>
-            </div>
+        <h1>Enter OTP to Start and End Job</h1>
+        <form id="startOtpForm">
+            <input type="hidden" name="matchId" value="{{match._id}}">
+            <label for="startOtp">Enter Start OTP:</label>
+            <input type="text" id="startOtp" name="otp" required>
+            <button type="submit">Verify Start OTP</button>
+        </form>
+        <div id="endOtpSection">
+            <h2>Enter End OTP</h2>
+            <form id="endOtpForm">
+                <input type="hidden" name="matchId" value="{{match._id}}">
+                <label for="endOtp">Enter End OTP:</label>
+                <input type="text" id="endOtp" name="otp" required>
+                <button type="submit">Verify End OTP</button>
+            </form>
         </div>
     </div>
-
     <script>
-        let timer;
-        let seconds = 0;
-
-        function startJob() {
-            const otp = document.getElementById("startOtpInput").value;
-
+        document.getElementById("startOtpForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
             fetch("/volunteer-job/start-job", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ matchId: "{{match._id}}", otp })
+                body: new URLSearchParams(formData),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    document.getElementById("start-section").classList.add("hidden");
-                    document.getElementById("timer-section").classList.remove("hidden");
-                    document.getElementById("endOtpInput").disabled = false;
-                    document.getElementById("endBtn").disabled = false;
-
-                    timer = setInterval(() => {
-                        seconds++;
-                        document.getElementById("timer").innerText = new Date(seconds * 1000).toISOString().substr(11, 8);
-                    }, 1000);
+                    alert("Job started! End OTP sent to email.");
+                    document.getElementById("endOtpSection").style.display = "block";
                 } else {
-                    alert("Invalid OTP!");
+                    alert(data.message);
                 }
-            });
-        }
+            })
+            .catch(error => console.error("Error:", error));
+        });
 
-        function endJob() {
-            const otp = document.getElementById("endOtpInput").value;
-
+        document.getElementById("endOtpForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
             fetch("/volunteer-job/end-job", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ matchId: "{{match._id}}", otp })
+                body: new URLSearchParams(formData),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    clearInterval(timer);
-                    alert("Job Completed!");
-                    window.location.href = "/volunteer-dashboard";
+                    alert("Job completed successfully!");
+                    window.location.href = `/volunteer-profile/{{match.volunteerId}}`;
                 } else {
-                    alert("Invalid End OTP!");
+                    alert(data.message);
                 }
-            });
-        }
+            })
+            .catch(error => console.error("Error:", error));
+        });
     </script>
-
 </body>
 </html>

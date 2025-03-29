@@ -30,30 +30,27 @@ module.exports.get = function() {
     return state.db;
 };
 //**************************************************************** mongoclinet methode
-
-//mongoos
-// const mongoose = require('mongoose');
+// const { MongoClient } = require('mongodb');
 
 // const state = {
 //     db: null
 // };
 
-// module.exports.connect = function(done) {
-//     const url = 'mongodb://localhost:27017/timebankorg';
+// const uri = 'mongodb+srv://timebank:timebank@cluster0.u9vvvsx.mongodb.net/timebankorg?retryWrites=true&w=majority';
 
-//     mongoose.connect(url, {
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true
-//     })
-//     .then(() => {
-//         state.db = mongoose.connection;
-//         console.log('Connected to the database');
-//         done();
-//     })
-//     .catch(err => {
-//         console.error('Error connecting to the database:', err);
-//         done(err);
-//     });
+// const dbname = 'timebankorg';
+
+// module.exports.connect = function(done) {
+//     MongoClient.connect(uri)
+//         .then(client => {
+//             state.db = client.db(dbname);
+//             console.log('Connected to MongoDB Atlas');
+//             done();
+//         })
+//         .catch(err => {
+//             console.error('Error connecting to MongoDB Atlas:', err);
+//             done(err);
+//         });
 // };
 
 // module.exports.get = function() {

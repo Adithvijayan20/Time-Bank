@@ -5,7 +5,7 @@ const mailConfig = {
     secure: true,
     auth: {
       user: "timebank.gecw@gmail.com",
-      pass: "vyjr rmiz ezpa wuao",
+      pass: "sjyu bftc qrld jlgu",
   },
   };
 

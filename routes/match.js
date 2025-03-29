@@ -370,195 +370,146 @@ router.get('/match-details/:id', async (req, res) => {
 
 //********************************************************************
 
-// const haversineDistance = (lat1, lon1, lat2, lon2) => {
-//     const toRadians = (deg) => (deg * Math.PI) / 180;
-//     const R = 6371; // Earth's radius in km
-
-//     const dLat = toRadians(lat2 - lat1);
-//     const dLon = toRadians(lon2 - lon1);
-//     const a = 
-//         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-//         Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
-//         Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    
-//     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//     return R * c; // Distance in km
-// };
-
-
-// Function to calculate distance between two coordinates using Haversine Formula
-// const calculateDistance = (lat1, lon1, lat2, lon2) => {
-//     const toRadians = (degree) => degree * (Math.PI / 180);
-
-//     const R = 6371; // Radius of Earth in km
-//     const dLat = toRadians(lat2 - lat1);
-//     const dLon = toRadians(lon2 - lon1);
-    
-//     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-//               Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
-//               Math.sin(dLon / 2) * Math.sin(dLon / 2);
-              
-//     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//     return R * c; // Distance in km
-// };
-
-//Route to get volunteers near a patient
-// router.get('/nearest-volunteers/:patientId', async (req, res) => {
+// router.get('/nearest-volunteers/:id', async (req, res) => {
 //     try {
-//         const patientId = req.params.patientId;
-
-//         // Fetch patient details
-//         const patient = await db.get().collection(collection.USER_COLLECTION).findOne(
-//             { _id: new ObjectId(patientId), role: "patient", latitude: { $exists: true }, longitude: { $exists: true } }
-//         );
-
-//         if (!patient) {
-//             return res.status(404).render('error', { message: "Patient not found or location missing" });
-//         }
-
-//         console.log("Patient Location:", patient.latitude, patient.longitude);
-        
-
-        
-
-//         // Fetch all volunteers with valid location data
-//         const volunteers = await db.get().collection(collection.USER_COLLECTION).find({
-//             role: "volunteer",
-//             latitude: { $exists: true },
-//             longitude: { $exists: true }
-//         }).toArray();
-
-//         if (volunteers.length === 0) {
-//             return res.render('error', { message: "No volunteers found with location data" });
-//         }
-
-//         // Calculate distances
-//         const sortedVolunteers = volunteers.map(volunteer => {
-//             return {
-//                 ...volunteer,
-//                 distance: calculateDistance(patient.latitude, patient.longitude, volunteer.latitude, volunteer.longitude)
-//             };
-//         }).sort((a, b) => a.distance - b.distance); // Sort by distance
-
-//        // console.log("Sorted Volunteers:", sortedVolunteers);
-
-//         // Render the page with sorted volunteers
-//         res.render('nearest-volunteers', { volunteers: sortedVolunteers, patient });
-//     } catch (err) {
-//         console.error("Error fetching volunteers:", err);
-//         res.status(500).render('error', { message: "Internal Server Error" });
-//     }
-// });
-
-
-// router.get('/nearest-volunteers/:patientId', async (req, res) => {
-//     try {
-//         const patientId = req.params.patientId;
-
-//         // Fetch patient details from PATIENT_COLLECTION
-//         const patient = await db.get().collection(collection.PATIENT_COLLECTION).findOne({
-//             patientId: patientId
+//       const patientId = req.params.id;
+  
+//       // Fetch the patient record from PATIENT_COLLECTION by patientId.
+//       // This record should be updated with the latest service request.
+//       const patient = await db.get()
+//       .collection(collection.PATIENT_COLLECTION)
+//       .findOne({ patientId }, { sort: { _id: -1 }  }); 
+  
+//       console.log('patient ',patient);
+      
+//       if (!patient) {
+//         return res.status(404).render('error', { message: "Patient not found" });
+//       }
+  
+//       // Use currentPatientNeeds if available (latest request), else fall back to patientNeeds.
+//       const currentNeeds = (Array.isArray(patient.currentPatientNeeds) && patient.currentPatientNeeds.length > 0)
+//         ? patient.currentPatientNeeds
+//         : patient.patientNeeds;
+      
+//       console.log("Using current patient needs:", currentNeeds);
+  
+//       if (!Array.isArray(currentNeeds) || currentNeeds.length === 0) {
+//         return res.render('error', { message: "Patient needs data is missing or incorrect" });
+//       }
+  
+//       // Fetch detailed patient info (like fullName and location) from USER_COLLECTION.
+//       // We assume that the patient _id in the USER_COLLECTION is the same as patientId.
+//       const patientUser = await db.get()
+//         .collection(collection.USER_COLLECTION)
+//         .findOne({
+//           _id: new ObjectId(patientId),
+//           role: "patient",
+//           latitude: { $exists: true, $ne: null },
+//           longitude: { $exists: true, $ne: null }
 //         });
-
-//         if (!patient) {
-//             return res.status(404).render('error', { message: "Patient not found" });
-//         }
-
-//         console.log("Patient Needs:", patient.patientNeeds);
-
-//         // Ensure patientNeeds is a valid array
-//         if (!Array.isArray(patient.patientNeeds) || patient.patientNeeds.length === 0) {
-//             return res.render('error', { message: "Patient needs data is missing or in incorrect format" });
-//         }
-
-//         // Fetch patient's location from USER_COLLECTION
-//         const patientUser = await db.get().collection(collection.USER_COLLECTION).findOne({
-//             _id: new ObjectId(patientId),
-//             role: "patient",
-//             latitude: { $exists: true },
-//             longitude: { $exists: true }
-//         });
-
-//         if (!patientUser) {
-//             return res.status(404).render('error', { message: "Patient location not found" });
-//         }
-
-//         console.log("Patient Location:", patientUser.latitude, patientUser.longitude);
-
-//         // Fetch all volunteers from VOLUNTEER_COLLECTION
-//         const volunteers = await db.get().collection(collection.VOLUNTEER_COLLECTION).find().toArray();
-
-//         if (volunteers.length === 0) {
-//             return res.render('error', { message: "No volunteers found" });
-//         }
-
-//         console.log("Total Volunteers Retrieved:", volunteers.length);
-
-//         // Filter volunteers based on matching `patientNeeds`
-//         console.log('these are volunteers ',volunteers);
-        
-//         const matchedVolunteers = volunteers.filter(volunteer => {
-//             if (!Array.isArray(volunteer.patientNeeds)) {
-//                 console.warn("Skipping volunteer due to invalid patientNeeds:", volunteer);
-//                 return false;
-//             }
-//             console.log("this is a test", volunteer.patientNeeds.some(need => patient.patientNeeds.includes(need)))
-//             return volunteer.patientNeeds.some(need => patient.patientNeeds.includes(need));
-//         });
-// console.log('this is matched volunteer',matchedVolunteers);
-
-//         if (matchedVolunteers.length === 0) {
-//             return res.render('error', { message: "No volunteers match the required services" });
-//         }
-
-//         console.log("Filtered Volunteers:", matchedVolunteers.length);
-
-//         // Fetch volunteers' locations from USER_COLLECTION
-//         const volunteersWithLocation = await Promise.all(matchedVolunteers.map(async (volunteer) => {
-//             const volunteerUser = await db.get().collection(collection.USER_COLLECTION).findOne({
-//                 _id: new ObjectId(volunteer.volunteerId.$oid),
-//                 role: "volunteer",
-//                 latitude: { $exists: true },
-//                 longitude: { $exists: true }
+      
+//       if (!patientUser) {
+//         return res.status(404).render('error', { message: "Patient location not found" });
+//       }
+  
+//       // Attach fullName to the patient object.
+//       patient.fullName = patientUser.fullName;
+//       console.log("✅ Patient Name:", patient.fullName);
+  
+//       // Fetch all volunteers from the VOLUNTEER_COLLECTION.
+//       const volunteers = await db.get()
+//         .collection(collection.VOLUNTEER_COLLECTION)
+//         .find()
+//         .toArray();
+      
+//       console.log("Volunteers from DB:", volunteers);
+  
+//       if (volunteers.length === 0) {
+//         return res.render('error', { message: "No volunteers found" });
+//       }
+  
+//       // Filter volunteers based solely on the current patient needs
+//       // (which are fetched from the patient collection).
+//       const matchedVolunteers = volunteers.filter(volunteer => {
+//         // Ensure volunteer.patientNeeds is an array.
+//         const volunteerNeeds = Array.isArray(volunteer.patientNeeds)
+//           ? volunteer.patientNeeds
+//           : [volunteer.patientNeeds];
+//         return volunteerNeeds.some(need => currentNeeds.includes(need));
+//       });
+  
+//       if (matchedVolunteers.length === 0) {
+//         return res.render('error', { message: "No volunteers match the required services" });
+//       }
+  
+//       // Fetch additional user details for each matched volunteer.
+//       const volunteersWithLocation = await Promise.all(matchedVolunteers.map(async (volunteer) => {
+//         let volunteerId = volunteer.volunteerId;
+//         try {
+//           const volunteerUser = await db.get()
+//             .collection(collection.USER_COLLECTION)
+//             .findOne({
+//               _id: new ObjectId(volunteerId),
+//               role: "volunteer",
+//               latitude: { $exists: true, $ne: null },
+//               longitude: { $exists: true, $ne: null }
 //             });
-
-//             if (!volunteerUser) {
-//                 console.warn("Skipping volunteer with missing location:", volunteer.volunteerId);
-//                 return null;
-//             }
-// console.log('thi is new test samanm',{...volunteer,
-//     latitude: volunteerUser.latitude,
-//     longitude: volunteerUser.longitude,
-//     distance: calculateDistance(patientUser.latitude, patientUser.longitude, volunteerUser.latitude, volunteerUser.longitude)});
-
-//             return {
-//                 ...volunteer,
-//                 latitude: volunteerUser.latitude,
-//                 longitude: volunteerUser.longitude,
-//                 distance: calculateDistance(patientUser.latitude, patientUser.longitude, volunteerUser.latitude, volunteerUser.longitude)
-//             };
-//         }));
-        
-//         // Remove null values and sort by distance
-//         console.log('this si test kunna',volunteersWithLocation);
-//         const finalSortedVolunteers = volunteersWithLocation.filter(v => v !== null).sort((a, b) => a.distance - b.distance);
-//         console.log('this si sorted kunna',finalSortedVolunteers);
-
-//         console.log("Final Sorted Volunteers:", finalSortedVolunteers.map(v => ({ id: v.volunteerId, distance: v.distance })));
-
-//         // Render the page with sorted volunteers
-//         res.render('nearest-volunteers', { volunteers: finalSortedVolunteers, patient });
-
+  
+//           if (!volunteerUser) {
+//             return null;
+//           }
+  
+//           return {
+//             ...volunteer,
+//             latitude: volunteerUser.latitude,
+//             longitude: volunteerUser.longitude,
+//             address: volunteerUser.address,
+//             phoneNumber: volunteerUser.phoneNumber,
+//             profilePic: volunteerUser.profileImageUrl,
+//             fullName: volunteerUser.fullName,
+//             volunteerId: volunteerUser._id.toString(),
+//             patientId: patientUser._id.toString(),
+//             // calculateDistance should be defined elsewhere in your code
+//             distance: calculateDistance(
+//               patientUser.latitude,
+//               patientUser.longitude,
+//               volunteerUser.latitude,
+//               volunteerUser.longitude
+//             )
+//           };
+//         } catch (error) {
+//           console.error(`Error fetching location for volunteerId: ${volunteerId}`, error);
+//           return null;
+//         }
+//       }));
+  
+//       // Remove any null entries and sort by distance (closest first).
+//       const finalSortedVolunteers = volunteersWithLocation
+//         .filter(v => v !== null)
+//         .sort((a, b) => a.distance - b.distance);
+  
+//       if (finalSortedVolunteers.length === 0) {
+//         return res.render('error', { message: "No nearby volunteers found." });
+//       }
+  
+//       // Render the 'nearest-volunteers' page with the list of volunteers and patient info.
+//       res.render('nearest-volunteers', { 
+//         volunteers: finalSortedVolunteers, 
+//         patient 
+//       });
 //     } catch (err) {
-//         console.error("Error fetching volunteers:", err);
-//         res.status(500).render('error', { message: "Internal Server Error" });
+//       console.error("Error fetching volunteers:", err);
+//       res.status(500).render('error', { message: "Internal Server Error" });
 //     }
-// });
+//   });
 
-// // Function to calculate distance between two coordinates (Haversine formula)
+
+
+
+
+
 // function calculateDistance(lat1, lon1, lat2, lon2) {
 //     const toRadians = (degree) => degree * (Math.PI / 180);
-
 //     const R = 6371; // Earth's radius in km
 //     const dLat = toRadians(lat2 - lat1);
 //     const dLon = toRadians(lon2 - lon1);
@@ -569,142 +520,163 @@ router.get('/match-details/:id', async (req, res) => {
               
 //     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 //     return R * c; // Distance in km
+// }
+
+
+
+//**********************************************new 
 router.get('/nearest-volunteers/:id', async (req, res) => {
-    try {
+  try {
       const patientId = req.params.id;
-  
+
       // Fetch the patient record from PATIENT_COLLECTION by patientId.
       // This record should be updated with the latest service request.
       const patient = await db.get()
-      .collection(collection.PATIENT_COLLECTION)
-      .findOne({ patientId }, { sort: { _id: -1 }  }); 
-  
-      console.log('patient ',patient);
-      
+          .collection(collection.PATIENT_COLLECTION)
+          .findOne({ patientId }, { sort: { _id: -1 } });
+
+      console.log('patient ', patient);
+    
       if (!patient) {
-        return res.status(404).render('error', { message: "Patient not found" });
+          return res.status(404).render('error', { message: "Patient not found" });
       }
-  
+
       // Use currentPatientNeeds if available (latest request), else fall back to patientNeeds.
       const currentNeeds = (Array.isArray(patient.currentPatientNeeds) && patient.currentPatientNeeds.length > 0)
-        ? patient.currentPatientNeeds
-        : patient.patientNeeds;
-      
+          ? patient.currentPatientNeeds
+          : patient.patientNeeds;
+    
       console.log("Using current patient needs:", currentNeeds);
-  
+
       if (!Array.isArray(currentNeeds) || currentNeeds.length === 0) {
-        return res.render('error', { message: "Patient needs data is missing or incorrect" });
+          return res.render('error', { message: "Patient needs data is missing or incorrect" });
       }
-  
+
       // Fetch detailed patient info (like fullName and location) from USER_COLLECTION.
       // We assume that the patient _id in the USER_COLLECTION is the same as patientId.
       const patientUser = await db.get()
-        .collection(collection.USER_COLLECTION)
-        .findOne({
-          _id: new ObjectId(patientId),
-          role: "patient",
-          latitude: { $exists: true, $ne: null },
-          longitude: { $exists: true, $ne: null }
-        });
-      
+          .collection(collection.USER_COLLECTION)
+          .findOne({
+              _id: new ObjectId(patientId),
+              role: "patient",
+              latitude: { $exists: true, $ne: null },
+              longitude: { $exists: true, $ne: null }
+          });
+    
       if (!patientUser) {
-        return res.status(404).render('error', { message: "Patient location not found" });
+          return res.status(404).render('error', { message: "Patient location not found" });
       }
-  
+
       // Attach fullName to the patient object.
       patient.fullName = patientUser.fullName;
       console.log("✅ Patient Name:", patient.fullName);
-  
+
       // Fetch all volunteers from the VOLUNTEER_COLLECTION.
       const volunteers = await db.get()
-        .collection(collection.VOLUNTEER_COLLECTION)
-        .find()
-        .toArray();
-      
+          .collection(collection.VOLUNTEER_COLLECTION)
+          .find()
+          .toArray();
+    
       console.log("Volunteers from DB:", volunteers);
-  
+
       if (volunteers.length === 0) {
-        return res.render('error', { message: "No volunteers found" });
+          return res.render('error', { message: "No volunteers found" });
       }
-  
-      // Filter volunteers based solely on the current patient needs
-      // (which are fetched from the patient collection).
+
+      // Filter volunteers based solely on the current patient needs.
       const matchedVolunteers = volunteers.filter(volunteer => {
-        // Ensure volunteer.patientNeeds is an array.
-        const volunteerNeeds = Array.isArray(volunteer.patientNeeds)
-          ? volunteer.patientNeeds
-          : [volunteer.patientNeeds];
-        return volunteerNeeds.some(need => currentNeeds.includes(need));
+          // Ensure volunteer.patientNeeds is an array.
+          const volunteerNeeds = Array.isArray(volunteer.patientNeeds)
+              ? volunteer.patientNeeds
+              : [volunteer.patientNeeds];
+          return volunteerNeeds.some(need => currentNeeds.includes(need));
       });
-  
+
       if (matchedVolunteers.length === 0) {
-        return res.render('error', { message: "No volunteers match the required services" });
+          return res.render('error', { message: "No volunteers match the required services" });
       }
-  
-      // Fetch additional user details for each matched volunteer.
+
+      // Fetch additional user details, average rating, and calculate star HTML for each matched volunteer.
       const volunteersWithLocation = await Promise.all(matchedVolunteers.map(async (volunteer) => {
-        let volunteerId = volunteer.volunteerId;
-        try {
-          const volunteerUser = await db.get()
-            .collection(collection.USER_COLLECTION)
-            .findOne({
-              _id: new ObjectId(volunteerId),
-              role: "volunteer",
-              latitude: { $exists: true, $ne: null },
-              longitude: { $exists: true, $ne: null }
-            });
-  
-          if (!volunteerUser) {
-            return null;
+          let volunteerId = volunteer.volunteerId;
+          try {
+              const volunteerUser = await db.get()
+                  .collection(collection.USER_COLLECTION)
+                  .findOne({
+                      _id: new ObjectId(volunteerId),
+                      role: "volunteer",
+                      latitude: { $exists: true, $ne: null },
+                      longitude: { $exists: true, $ne: null }
+                  });
+
+              if (!volunteerUser) {
+                  return null;
+              }
+
+              // Aggregate to calculate the average rating for this volunteer
+              const ratingAggregation = await db.get()
+                  .collection(collection.RATING_COLLECTION)
+                  .aggregate([
+                      { $match: { volunteerId: volunteerUser._id.toString() } },
+                      { $group: { _id: "$volunteerId", avgRating: { $avg: "$rating" } } }
+                  ])
+                  .toArray();
+
+              const avgRating = ratingAggregation.length > 0 ? ratingAggregation[0].avgRating : 0;
+
+              // Compute star HTML based on the average rating (rounded)
+              const rounded = Math.round(avgRating);
+              let starHtml = '';
+              for (let i = 0; i < rounded; i++) {
+                  starHtml += '<i class="bx bxs-star" style="color: gold;"></i>';
+              }
+
+              return {
+                  ...volunteer,
+                  latitude: volunteerUser.latitude,
+                  longitude: volunteerUser.longitude,
+                  address: volunteerUser.address,
+                  phoneNumber: volunteerUser.phoneNumber,
+                  profilePic: volunteerUser.profileImageUrl,
+                  fullName: volunteerUser.fullName,
+                  volunteerId: volunteerUser._id.toString(),
+                  patientId: patientUser._id.toString(),
+                  avgRating, // Average rating as number
+                  starHtml,  // Star icons as HTML string
+                  distance: calculateDistance(
+                      patientUser.latitude,
+                      patientUser.longitude,
+                      volunteerUser.latitude,
+                      volunteerUser.longitude
+                  )
+              };
+          } catch (error) {
+              console.error(`Error fetching location or rating for volunteerId: ${volunteerId}`, error);
+              return null;
           }
-  
-          return {
-            ...volunteer,
-            latitude: volunteerUser.latitude,
-            longitude: volunteerUser.longitude,
-            address: volunteerUser.address,
-            phoneNumber: volunteerUser.phoneNumber,
-            profilePic: volunteerUser.profileImageUrl,
-            fullName: volunteerUser.fullName,
-            volunteerId: volunteerUser._id.toString(),
-            patientId: patientUser._id.toString(),
-            // calculateDistance should be defined elsewhere in your code
-            distance: calculateDistance(
-              patientUser.latitude,
-              patientUser.longitude,
-              volunteerUser.latitude,
-              volunteerUser.longitude
-            )
-          };
-        } catch (error) {
-          console.error(`Error fetching location for volunteerId: ${volunteerId}`, error);
-          return null;
-        }
       }));
-  
+
       // Remove any null entries and sort by distance (closest first).
       const finalSortedVolunteers = volunteersWithLocation
-        .filter(v => v !== null)
-        .sort((a, b) => a.distance - b.distance);
-  
+          .filter(v => v !== null)
+          .sort((a, b) => a.distance - b.distance);
+
       if (finalSortedVolunteers.length === 0) {
-        return res.render('error', { message: "No nearby volunteers found." });
+          return res.render('error', { message: "No nearby volunteers found." });
       }
-  
+
       // Render the 'nearest-volunteers' page with the list of volunteers and patient info.
       res.render('nearest-volunteers', { 
-        volunteers: finalSortedVolunteers, 
-        patient 
+          volunteers: finalSortedVolunteers, 
+          patient 
       });
-    } catch (err) {
+  } catch (err) {
       console.error("Error fetching volunteers:", err);
       res.status(500).render('error', { message: "Internal Server Error" });
-    }
-  });
-  
+  }
+});
 
-
-// 📌 Function to calculate distance (ADD THIS TO FIX THE ERROR)
+// 📌 Function to calculate distance (in km)
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const toRadians = (degree) => degree * (Math.PI / 180);
     const R = 6371; // Earth's radius in km
@@ -719,7 +691,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c; // Distance in km
 }
 
-
+//**********************************************
 router.post('/select-volunteer/:id', async (req, res) => {
     try {
         const { volunteerId, patientId } = req.body;

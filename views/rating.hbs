@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Rate Completed Volunteer Work</title>
+</head>
+<body>
+  <h1>Rate Your Completed Volunteer Work</h1>
+
+  {{#if completedMatches.length}}
+    <ul>
+      {{#each completedMatches}}
+        <li>
+          <h3>Volunteer: {{volunteerName}}</h3>
+          <p>Service: 
+            {{#if services.length}}
+              {{#each services}}
+                {{this}}{{#unless @last}}, {{/unless}}
+              {{/each}}
+            {{else}}
+              No services listed
+            {{/if}}
+          </p>
+          <form action="/rate-volunteer/{{_id}}" method="POST">
+            <label for="rating-{{_id}}">Your Rating (1-5):</label>
+            <input id="rating-{{_id}}" type="number" name="rating" min="1" max="5" required>
+            <button type="submit">Submit Rating</button>
+          </form>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>No completed volunteer work available for rating.</p>
+  {{/if}}
+</body>
+</html>

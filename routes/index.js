@@ -26,6 +26,7 @@ const { ObjectId } = require('mongodb');
 const { Collection } = require('mongoose');
 const axios = require('axios'); // Import Axios
 const cheerio = require('cheerio');
+
 //************************************
 //const User = require('../models/user');
 
@@ -145,108 +146,201 @@ router.post('/logout', (req, res) => {
 
 
 
-//webscraping
-async function fetchElderlyNews() {
+// // //webscraping
+// async function fetchElderlyNews() {
+//     try {
+//         const url = 'https://www.manoramaonline.com/';
+//         const response = await axios.get(url, {
+//             headers: { 
+//                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+//             }
+//         });
+
+//         const $ = cheerio.load(response.data);
+//         let allHeadlines = [];
+
+//         // Collect all headlines, no filtering yet
+//         $('.story-card a, article a, .news-item a, h2 a, h3 a').each((index, element) => {
+//             let text = $(element).text().trim();
+//             if (text.length > 5) { // Reduce minimum length to see more
+//                 allHeadlines.push(text);
+//             }
+//         });
+
+//        // console.log("📰 ALL HEADLINES:", allHeadlines); // Log all headlines
+
+//         return allHeadlines; // Return everything for testing
+//     } catch (error) {
+//         console.error("❌ Error fetching news:", error.message);
+//         return [];
+//     }
+// }
+
+// // Route to render elderly news page
+// router.get('/elderly-news', async (req, res) => {
+//     const elderlyNews = await fetchElderlyNews();
+//     console.log("🔎 Sending headlines to template:", elderlyNews); // Debugging log
+//     res.render('elderly-news', { headlines: elderlyNews.length ? elderlyNews : ["No elderly news found!"] });
+// });
+
+// //puppeteer
+
+// const puppeteer = require('puppeteer');
+// const { render } = require('../app');
+
+
+// (async () => {
+//     try {
+//         const browser = await puppeteer.launch({
+//             headless: true,
+//             args: ['--no-sandbox', '--disable-setuid-sandbox']
+//         });
+
+//         const page = await browser.newPage();
+
+//         // Increase timeout and handle errors
+//         await page.goto('https://www.manoramaonline.com/', {
+//             waitUntil: 'domcontentloaded', // Load faster, prevents timeout
+//             timeout: 60000 // Increase timeout to 60s
+//         });
+
+//         // Get page content after JS loads
+//         const content = await page.content();
+//         const $ = cheerio.load(content);
+
+//         let headlines = [];
+//         $('article a, .story-card a, h2 a, h3 a').each((index, element) => {
+//             let text = $(element).text().trim();
+//             if (text.length > 10) {
+//                 headlines.push(text);
+//             }
+//         });
+
+//         //console.log("📰 Filtered News Headlines for Elderly:", headlines.length ? headlines : "❌ No relevant news found!");
+        
+//         await browser.close();
+//     } catch (error) {
+//         console.error("❌ Error:", error);
+//     }
+// })();
+
+
+
+
+//******************************
+// // Function to fetch elderly health news from NewsAPI (India & Kerala-specific)
+// async function fetchElderlyNews() {
+//     try {
+//         const apiKey = "0381703ce56f4cc8817d279a869a4098"; // Your API Key
+//         const url = `https://newsapi.org/v2/everything?q=(elderly OR senior citizens OR aging) AND health AND (India OR Kerala)&sortBy=publishedAt&language=en&apiKey=${apiKey}`;
+        
+//         const response = await axios.get(url);
+//         let articles = response.data.articles;
+
+//         if (!articles || articles.length === 0) {
+//             return ["No elderly health news found for India or Kerala!"];
+//         }
+
+//         // Filter Indian and Kerala-specific sources
+//         const indianSources = [
+//             "The Times of India", "Hindustan Times", "NDTV", "The Hindu",
+//             "Indian Express", "India Today", "Deccan Herald", "The Quint", "Scroll.in",
+//             "Mathrubhumi", "Malayala Manorama", "The New Indian Express Kerala"
+//         ];
+//         articles = articles.filter(article => indianSources.includes(article.source.name));
+
+//         if (articles.length === 0) {
+//             return ["No elderly health news from Indian or Kerala sources found!"];
+//         }
+
+//         // Extract necessary fields
+//         return articles.slice(0, 5).map(article => ({
+//             title: article.title,
+//             description: article.description || "No description available.",
+//             url: article.url,
+//             source: article.source.name,
+//             publishedAt: new Date(article.publishedAt).toLocaleString()
+//         }));
+//     } catch (error) {
+//         console.error("❌ Error fetching news:", error.message);
+//         return [];
+//     }
+// }
+
+// // // Route to render elderly health news page (India & Kerala only)
+// router.get("/elderly-news", async (req, res) => {
+//     const elderlyNews = await fetchElderlyNews();
+//     console.log("🔎 Sending Indian & Kerala elderly health news to template:", elderlyNews);
+//     res.render("elderly-news", { articles: elderlyNews });
+// });
+
+
+
+
+//health related***********************************************
+async function fetchHealthcareNews() {
     try {
-        const url = 'https://www.manoramaonline.com/';
-        const response = await axios.get(url, {
-            headers: { 
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            }
-        });
+        const apiKey = "0381703ce56f4cc8817d279a869a4098"; // Your API Key
+        const url = `https://newsapi.org/v2/everything?q=(healthcare OR medical OR hospital OR disease OR treatment OR wellness) AND (India OR Kerala)&sortBy=publishedAt&language=en&apiKey=${apiKey}`;
+        
+        const response = await axios.get(url);
+        let articles = response.data.articles;
 
-        const $ = cheerio.load(response.data);
-        let allHeadlines = [];
+        if (!articles || articles.length === 0) {
+            return ["No healthcare news found for India or Kerala!"];
+        }
 
-        // Collect all headlines, no filtering yet
-        $('.story-card a, article a, .news-item a, h2 a, h3 a').each((index, element) => {
-            let text = $(element).text().trim();
-            if (text.length > 5) { // Reduce minimum length to see more
-                allHeadlines.push(text);
-            }
-        });
+        // Filter Indian and Kerala-specific sources
+        const indianSources = [
+            "The Times of India", "Hindustan Times", "NDTV", "The Hindu",
+            "Indian Express", "India Today", "Deccan Herald", "The Quint", "Scroll.in",
+            "Mathrubhumi", "Malayala Manorama", "The New Indian Express Kerala"
+        ];
+        articles = articles.filter(article => indianSources.includes(article.source.name));
 
-       // console.log("📰 ALL HEADLINES:", allHeadlines); // Log all headlines
+        if (articles.length === 0) {
+            return ["No healthcare news from Indian or Kerala sources found!"];
+        }
 
-        return allHeadlines; // Return everything for testing
+        // Additional filtering to remove unrelated topics
+        const healthKeywords = ["health", "medical", "hospital", "doctor", "disease", "treatment", "medicine", "surgery", "vaccine", "nutrition", "wellness", "COVID", "diabetes", "cancer"];
+
+        articles = articles.filter(article =>
+            healthKeywords.some(keyword =>
+                article.title.toLowerCase().includes(keyword) ||
+                (article.description && article.description.toLowerCase().includes(keyword))
+            )
+        );
+
+        if (articles.length === 0) {
+            return ["No strictly healthcare-related news found!"];
+        }
+
+        // Extract necessary fields
+        return articles.slice(0, 5).map(article => ({
+            title: article.title,
+            description: article.description || "No description available.",
+            url: article.url,
+            source: article.source.name,
+            publishedAt: new Date(article.publishedAt).toLocaleString()
+        }));
     } catch (error) {
         console.error("❌ Error fetching news:", error.message);
         return [];
     }
 }
 
-// Route to render elderly news page
-router.get('/elderly-news', async (req, res) => {
-    const elderlyNews = await fetchElderlyNews();
-    console.log("🔎 Sending headlines to template:", elderlyNews); // Debugging log
-    res.render('elderly-news', { headlines: elderlyNews.length ? elderlyNews : ["No elderly news found!"] });
+// Keep the existing route `/elderly-news`
+router.get("/elderly-news", async (req, res) => {
+    const healthcareNews = await fetchHealthcareNews();
+    console.log("🔎 Sending strictly healthcare news to template:", healthcareNews);
+    res.render("elderly-news", { articles: healthcareNews });
 });
 
-//puppeteer
-
-const puppeteer = require('puppeteer');
-const { render } = require('../app');
 
 
-(async () => {
-    try {
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
-
-        const page = await browser.newPage();
-
-        // Increase timeout and handle errors
-        await page.goto('https://www.manoramaonline.com/', {
-            waitUntil: 'domcontentloaded', // Load faster, prevents timeout
-            timeout: 60000 // Increase timeout to 60s
-        });
-
-        // Get page content after JS loads
-        const content = await page.content();
-        const $ = cheerio.load(content);
-
-        let headlines = [];
-        $('article a, .story-card a, h2 a, h3 a').each((index, element) => {
-            let text = $(element).text().trim();
-            if (text.length > 10) {
-                headlines.push(text);
-            }
-        });
-
-        //console.log("📰 Filtered News Headlines for Elderly:", headlines.length ? headlines : "❌ No relevant news found!");
-        
-        await browser.close();
-    } catch (error) {
-        console.error("❌ Error:", error);
-    }
-})();
 
 
-// const puppeteer = require('puppeteer');
-
-// (async () => {
-//     const browser = await puppeteer.launch({ headless: true });
-//     const page = await browser.newPage();
-//     await page.goto('https://www.manoramaonline.com/', { waitUntil: 'networkidle2' });
-
-//     // Get full page content after JS loads
-//     const content = await page.content();
-//     const cheerio = require('cheerio');
-//     const $ = cheerio.load(content);
-
-//     let headlines = [];
-//     $('article a, .story-card a, h2 a, h3 a').each((index, element) => {
-//         let text = $(element).text().trim();
-//         if (text.length > 10) {
-//             headlines.push(text);
-//         }
-//     });
-
-//     console.log("📰 Filtered News Headlines for Elderly:", headlines.length ? headlines : "❌ No relevant news found!");
-//     await browser.close();
-// })();
 
 module.exports = router;
 
