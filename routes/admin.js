@@ -11,7 +11,9 @@ const collection = require('../config/collections');
 const { ensureAuthenticated, checkRole } = require('../middleware/auth');
 const upload = multer({ storage: multer.memoryStorage() });
 const getPatientVolunteerMatches = require('../helpers/helper'); 
-const bcrypt = require('bcrypt')
+//const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs');
+
 const { ObjectId } = require('mongodb');
 const { Collection } = require('mongoose');
 const axios = require('axios'); 
