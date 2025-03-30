@@ -21,13 +21,15 @@ const collection = require('../config/collections');
 const { ensureAuthenticated, checkRole } = require('../middleware/auth');
 const upload = multer({ storage: multer.memoryStorage() });
 const getPatientVolunteerMatches = require('../helpers/helper'); // Ensure the correct path
-// const bcrypt = require('bcrypt')
-const bcrypt = require('bcryptjs');
+ const bcrypt = require('bcrypt')
+ const twilio = require('twilio');
+
 
 const { ObjectId } = require('mongodb');
 const { Collection } = require('mongoose');
 const axios = require('axios'); // Import Axios
 const cheerio = require('cheerio');
+require('dotenv').config();
 
 //************************************
 //const User = require('../models/user');
@@ -339,10 +341,51 @@ router.get("/elderly-news", async (req, res) => {
     res.render("elderly-news", { articles: healthcareNews });
 });
 
+// ****************************************************************
+// ✅ Declare environment variables FIRST
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
+// ✅ Check if credentials are properly loaded
+if (!accountSid || !authToken || !twilioPhoneNumber) {
+  console.error("Twilio credentials are missing! Check your .env file.");
+  process.exit(1); // Stop execution if credentials are missing
+}
 
+// ✅ Initialize the Twilio client AFTER variables are declared
+const client = twilio(accountSid, authToken);
 
+// Function to make an emergency call
+async function makeEmergencyCall() {
+  try {
+    const call = await client.calls.create({
+      twiml: "<Response><Say voice='alice'>hai adheena please call adith vijayan.</Say></Response>",
+      to: "+916282085045", // Ensure it's in E.164 format
+      from: twilioPhoneNumber, // Your Twilio phone number
+    });
+
+    console.log(`Call initiated successfully! Call SID: ${call.sid}`);
+    return { sid: call.sid, status: "in-progress" };
+  } catch (error) {
+    console.error("Error making emergency call:", error.message);
+    throw error;
+  }
+}
+
+// Express route for making the emergency call
+router.post('/emergency-call', async (req, res) => {
+  try {
+    const call = await makeEmergencyCall();
+    res.json({ 
+      success: true, 
+      callSid: call.sid, 
+      message: "Emergency call initiated."
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error making emergency call." });
+  }
+});
 
 
 module.exports = router;
-

@@ -14,8 +14,8 @@ const collection = require('../config/collections');
 const { ensureAuthenticated, checkRole } = require('../middleware/auth');
 const upload = multer({ storage: multer.memoryStorage() });
 const getPatientVolunteerMatches = require('../helpers/helper');
-// const bcrypt = require('bcrypt')
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt')
+
 
 const { ObjectId } = require('mongodb');
 const { Collection } = require('mongoose');
@@ -550,6 +550,73 @@ router.get('/volunteer-id/:id', ensureAuthenticated, async (req, res) => {
         res.status(500).send('Error generating ID card');
     }
 });
+
+// *******************************************rate-patient-bhe
+// Add new route to list patients for rating
+// Add new route to list patients for rating
+router.get('/volunteer-patient-rating', ensureAuthenticated, checkRole('volunteer'), async (req, res) => {
+    try {
+        const volunteerId = req.session.volunteerId;
+        if (!volunteerId) {
+            return res.redirect('/login');
+        }
+        // Fetch matches where the job is complete and the volunteerId matches the current volunteer
+        const matches = await db.get().collection(collection.MATCHES_COLLECTION)
+            .find({ volunteerId: volunteerId, isComplete: true })
+            .toArray();
+
+        // Extract unique patient IDs from these matches
+        const patientIdSet = new Set(matches.map(match => match.patientId.toString()));
+        const patientIds = Array.from(patientIdSet).map(id => new ObjectId(id));
+
+        // Fetch patient details from the USER_COLLECTION
+        const patients = await db.get().collection(collection.USER_COLLECTION)
+            .find({ _id: { $in: patientIds } })
+            .toArray();
+
+        // Render a view (e.g., patient-rating.hbs) listing the patients for rating
+        res.render('patient-rating', { patients, volunteerId });
+    } catch (error) {
+        console.error("Error fetching patient ratings:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// Add new route to submit a rating for a patient
+router.post('/volunteer-patient-rating/:patientId', ensureAuthenticated, checkRole('volunteer'), async (req, res) => {
+    try {
+        const volunteerId = req.session.volunteerId;
+        const patientId = req.params.patientId;
+        const rating = req.body.rating;  // Expected to be provided in the form submission
+
+        if (!rating) {
+            return res.status(400).send("Rating is required");
+        }
+        
+        // Fetch patient details to get the name
+        const patient = await db.get().collection(collection.USER_COLLECTION)
+            .findOne({ _id: new ObjectId(patientId) });
+        if (!patient) {
+            return res.status(404).send("Patient not found");
+        }
+
+        const ratingDoc = {
+            volunteerId: volunteerId,
+            patientId: patientId,
+            patientName: patient.fullName, // Store the patient's name
+            rating: parseInt(rating),
+            createdAt: new Date()
+        };
+
+        await db.get().collection(collection.RATING_COLLECTION).insertOne(ratingDoc);
+        res.redirect(`/volunteer-profile/${volunteerId}`);
+    } catch (error) {
+        console.error("Error submitting rating:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
 
 
 module.exports = router;

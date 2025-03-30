@@ -1,47 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <!-- Include Boxicons CSS for star icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f5f5f5;
+          margin: 20px;
+          color: #333;
+      }
+      h1, h2 {
+          text-align: center;
+          margin-bottom: 10px;
+      }
+      form {
+          text-align: right;
+          margin-bottom: 20px;
+      }
+      .btn.btn-outline {
+          background-color: #007bff;
+          color: #fff;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+      .btn.btn-outline:hover {
+          background-color: #0056b3;
+      }
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          background-color: #fff;
+          margin-top: 20px;
+      }
+      table thead {
+          background-color: #007bff;
+          color: #fff;
+      }
+      table th, table td {
+          padding: 12px 15px;
+          border: 1px solid #ddd;
+          text-align: left;
+      }
+      table tr:nth-child(even) {
+          background-color: #f2f2f2;
+      }
+      .star {
+          color: gold;
+          font-size: 1.2rem;
+          margin-right: 2px;
+      }
+      .rating-inline {
+          font-size: 0.9rem;
+          color: #555;
+          margin-left: 4px;
+      }
+  </style>
 </head>
 <body>
-    <h1>{{appName}}</h1>
-    <h2>Manage Volunteers</h2>
-         <form action="/logout" method="POST" style="display: inline;">
-    <button type="submit" class="btn btn-outline">
-        <i class='bx bx-log-out'></i>
-        Logout
-    </button>
-</form>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>Gender</th>
-                <th>Date of Birth</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each volunteers}}
-                <tr>
-                    <td>{{this._id}}</td>
-                    <td>{{this.fullName}}</td>
-                    <td>{{this.email}}</td>
-                    <td>{{this.phoneNumber}}</td>
-                    <td>{{this.gender}}</td>
-                    <td>{{this.dob}}</td>
-                    <td>
-                        <a href="/view-volunteer/{{this._id}}">View</a>
-                        <a href="/delete-volunteer/{{this._id}}">reject</a>
-                    </td>
-                </tr>
-            {{/each}}
-        </tbody>
-    </table>
+  <h1>{{appName}}</h1>
+  <h2>Manage Volunteers</h2>
+  <form action="/logout" method="POST" style="display: inline;">
+      <button type="submit" class="btn btn-outline">
+          <i class='bx bx-log-out'></i>
+          Logout
+      </button>
+  </form>
+  <table>
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Phone Number</th>
+              <th>Gender</th>
+              <th>Date of Birth</th>
+              <th>Rating</th>
+              <th>Actions</th>
+          </tr>
+      </thead>
+      <tbody>
+          {{#each volunteers}}
+              <tr>
+                  <td>{{this._id}}</td>
+                  <td style="{{#unless this.isActive}}color:red;{{/unless}}">
+                      {{this.fullName}}
+                  </td>
+                  <td>{{this.email}}</td>
+                  <td>{{this.phoneNumber}}</td>
+                  <td>{{this.gender}}</td>
+                  <td>{{this.dob}}</td>
+                  <td>
+                      {{#if this.starArr.length}}
+                          <span>
+                              {{#each this.starArr}}
+                                  <i class="star bx bxs-star"></i>
+                              {{/each}}
+                              <span class="rating-inline">
+                                  {{#if this.ratingText}}
+                                      ({{this.ratingText}})
+                                  {{else}}
+                                      (No ratings)
+                                  {{/if}}
+                              </span>
+                          </span>
+                      {{else}}
+                          <span>No ratings</span>
+                      {{/if}}
+                  </td>
+                  <td>
+                      <a href="/view-volunteer/{{this._id}}">View</a>
+                      <a href="/delete-volunteer/{{this._id}}">reject</a>
+                  </td>
+              </tr>
+          {{/each}}
+      </tbody>
+  </table>
 </body>
 </html>

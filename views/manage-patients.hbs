@@ -1,49 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <!-- Include Boxicons CSS for star icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9fb;
+      color: #333;
+      margin: 20px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .btn.btn-outline {
+      background: none;
+      border: 1px solid #d9534f;
+      color: #d9534f;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    th {
+      background: #9b87f5;
+      color: #fff;
+    }
+    tr:hover {
+      background: #f1f1f9;
+    }
+    .star {
+      color: gold;
+      font-size: 1.2rem;
+      margin-right: 2px;
+    }
+    .rating-text {
+      display: block;
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 4px;
+    }
+  </style>
 </head>
 <body>
-    <h1>{{appName}}</h1>
-    <h2>Manage Patients</h2>
-       
-                <form action="/logout" method="POST" style="display: inline;">
+  <h1>{{appName}}</h1>
+  <h2>Manage Patients</h2>
+  <form action="/logout" method="POST" style="text-align: right;">
     <button type="submit" class="btn btn-outline">
-        <i class='bx bx-log-out'></i>
-        Logout
+      <i class='bx bx-log-out'></i>
+      Logout
     </button>
-</form>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>Gender</th>
-                <th>Date of Birth</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each patients}}
-                <tr>
-                    <td>{{this._id}}</td>
-                    <td>{{this.fullName}}</td>
-                    <td>{{this.email}}</td>
-                    <td>{{this.phone}}</td>
-                    <td>{{this.gender}}</td>
-                    <td>{{this.dob}}</td>
-                    <td>
-                        <a href="/view-patient/{{this._id}}">View</a>
-                        <a href="/delete-patient/{{this._id}}">reject</a>
-                        
-                    </td>
-                </tr>
-            {{/each}}
-        </tbody>
-    </table>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Gender</th>
+        <th>Date of Birth</th>
+        <th>Rating</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each patients}}
+        <tr>
+          <td>{{this._id}}</td>
+          <!-- Display name in red if inactive -->
+          <td style="{{#unless this.isActive}}color:red;{{/unless}}">{{this.fullName}}</td>
+          <td>{{this.email}}</td>
+          <td>{{this.phone}}</td>
+          <td>{{this.gender}}</td>
+          <td>{{this.dob}}</td>
+          <td>
+            {{#if this.starArr.length}}
+              {{#each this.starArr}}
+                <i class="star bx bxs-star"></i>
+              {{/each}}
+              <span class="rating-text">{{this.ratingText}}</span>
+            {{else}}
+              <span>No ratings</span>
+            {{/if}}
+          </td>
+          <td>
+            <a href="/view-patient/{{this._id}}">View</a>
+            <a href="/delete-patient/{{this._id}}">reject</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </body>
 </html>
