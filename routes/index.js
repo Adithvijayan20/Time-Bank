@@ -43,26 +43,26 @@ router.get('/volunteer-profile-update', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-    res.render('home', { title: 'Express' });
+    res.render('home', { title: 'Time bank private limited.ptv' });
 });
     router.get('/admin', (req, res) => {
-        res.render('admin', { title: 'Express' });
+        res.render('admin', { title: 'Time bank private limited.ptv' });
 });
 router.get('/reg', function(req, res, next) {
     
-  res.render('reg', { title: 'Express' });
+  res.render('reg', { title: 'Time bank private limited.ptv' });
 });
 // 
 router.get('/patient', (req, res) => {
-    res.render('patient', { title: 'Patient Registration' });
+    res.render('patient', { title: 'Time bank private limited.ptv' });
 });
 
 
 router.get('/signup', (req, res) => {
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: 'Time bank private limited.ptv' });
 });
 router.get('/matches', (req, res) => {
-    res.render('matches', { title: 'Express' });
+    res.render('matches', { title: 'Time bank private limited.ptv' });
 });
 
 
@@ -91,7 +91,7 @@ router.post('/signup', upload.single('idUpload'), async (req, res) => {
 
 
 router.get('/login', (req, res) => {
-    res.render('login', { title: 'Express' });
+    res.render('login', { title: 'Time bank private limited.ptv' });
 });
 
 
