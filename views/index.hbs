@@ -7,10 +7,11 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #9b87f5;
-            --secondary-color: #7E69AB;
-            --text-primary: #1a202c;
-            --text-secondary: #4a5568;
+            --primary-color: #6c5ce7;
+            --secondary-color: #4834d4;
+            --text-primary: #2d3436;
+            --text-secondary: #636e72;
+            --bg-gradient: linear-gradient(to right, #a29bfe, #6c5ce7);
         }
 
         * {
@@ -21,137 +22,82 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to bottom, #f3f0ff, #ffffff, #f3f0ff);
+            background: var(--bg-gradient);
             color: var(--text-primary);
-            overflow-x: hidden;
-        }
-
-        header {
-            position: fixed;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
-            padding: 1rem 2rem;
-            z-index: 1000;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            font-size: 2rem;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        header .button-group {
             display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        header .button-group a {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        header .button-group a:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-
-        main {
-            padding: 8rem 2rem 5rem;
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
             text-align: center;
-            position: relative;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
-            margin-top: 100px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         h2 {
-            font-size: 2.5rem;
-            color: var(--text-primary);
+            font-size: 2rem;
+            color: var(--primary-color);
             margin-bottom: 1.5rem;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         label {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            text-align: left;
         }
 
         input {
-            padding: 0.7rem;
+            padding: 0.75rem;
             width: 100%;
-            max-width: 400px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
             font-size: 1rem;
-            color: var(--text-primary);
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
         }
 
         button {
-            background-color: var(--primary-color);
+            background: var(--primary-color);
             color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            padding: 0.75rem;
             border: none;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
         }
 
         button:hover {
-            background-color: var(--secondary-color);
+            background: var(--secondary-color);
             transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: rgba(241, 241, 241, 0.9);
-            margin-top: 2rem;
+        .footer {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
-
-        .background-overlay {
-            position: fixed;
-            inset: 0;
-            background-image: url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=2070&q=80');
-            opacity: 0.05;
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-
     </style>
 </head>
 <body>
-    <div class="background-overlay"></div>
-
-    <header>
-        <h1>{{appName}}</h1>
-        <div class="button-group">
-            <a href="login">Login</a>
-           
-        </div>
-    </header>
-
-
-    <main>
+    <div class="container">
         <h2>Register Here {{appName}}</h2>
         <form action="/signup" method="post" enctype="multipart/form-data">
             <label for="fullName">Full Name</label>
@@ -168,18 +114,15 @@
 
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
-            
 
-            <label for="idUpload">Upload police verification certificate</label>
+            <label for="idUpload">Upload Police Verification Certificate</label>
             <input type="file" id="idUpload" name="idUpload" accept="image/*,application/pdf" required>
 
             <button type="submit">Register</button>
         </form>
-       
-    </main>
-
-    <footer>
-        <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
-    </footer>
+        <div class="footer">
+            <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
+        </div>
+    </div>
 </body>
 </html>

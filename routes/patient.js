@@ -2,7 +2,8 @@ const { LocalStorage } = require('node-localstorage');
 
 // Initialize localStorage
 const path = require('path');
-
+ const twilio = require('twilio');
+ require('dotenv').config();
 // Use a directory within your project or a temporary directory
 const localStorage = new LocalStorage(path.join(__dirname, 'localStorage'));
 var express = require('express');
@@ -398,6 +399,63 @@ router.post('/rate-volunteer/:matchId', ensureAuthenticated, checkRole('patient'
         res.status(500).send('Error storing rating');
     }
 });
+
+// ****************************************************************
+// ✅ Declare environment variables FIRST
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+
+if (!accountSid || !authToken || !twilioPhoneNumber) {
+  console.error("Twilio credentials are missing! Check your .env file.");
+  process.exit(1);
+}
+
+const client = twilio(accountSid, authToken);
+
+// Modified emergency call function to include patient details with phone digits
+async function makeEmergencyCall(patientName, patientPhoneDigits) {
+  try {
+    const twimlMessage = `<Response>
+      <Say voice='alice'>
+        Emergency alert:this is time bank srevice Patient ${patientName} with phone number ${patientPhoneDigits} requires assistance. Please respond immediately.
+      </Say>
+    </Response>`;
+
+    const call = await client.calls.create({
+      twiml: twimlMessage,
+      to: "+916282085045", // Ensure it's in E.164 format; this is the emergency contact number
+      from: twilioPhoneNumber,
+    });
+
+    console.log(`Call initiated successfully! Call SID: ${call.sid}`);
+    return { sid: call.sid, status: "in-progress" };
+  } catch (error) {
+    console.error("Error making emergency call:", error.message);
+    throw error;
+  }
+}
+
+// Protect the emergency-call route so session data is available (e.g., using ensureAuthenticated)
+router.post('/emergency-call', ensureAuthenticated, async (req, res) => {
+  try {
+    // Get patient details from session (ensure these fields exist on your user model)
+    const patientName = req.session.user.fullName;
+    const patientPhone = req.session.user.phoneNumber;
+
+    // Convert the phone number into individual digits separated by spaces (e.g., "1 2 3 ..." instead of words)
+    const patientPhoneDigits = patientPhone.split('').join(' ');
+
+    // Initiate the emergency call with modified phone number
+    await makeEmergencyCall(patientName, patientPhoneDigits);
+
+    // After the call, redirect back to the patient profile page
+    res.redirect(`/patient-profile/${req.session.user._id}`);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error making emergency call." });
+  }
+});
+
 
 
 

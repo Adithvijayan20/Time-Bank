@@ -1,4 +1,4 @@
-//************************************ mongoclint methode
+// //************************************ mongoclint methode
 
 // const { MongoClient } = require('mongodb');
 // const fs = require('fs');
@@ -29,7 +29,7 @@
 //     }
 //     return state.db;
 // };
-//**************************************************************** mongoclinet methode
+// //**************************************************************** mongoclinet methode
 const { MongoClient } = require('mongodb');
 
 const state = {

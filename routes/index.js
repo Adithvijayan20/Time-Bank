@@ -282,45 +282,32 @@ router.post('/logout', (req, res) => {
 
 
 //health related***********************************************
+
+
+
 async function fetchHealthcareNews() {
     try {
-        const apiKey = "0381703ce56f4cc8817d279a869a4098"; // Your API Key
-        const url = `https://newsapi.org/v2/everything?q=(healthcare OR medical OR hospital OR disease OR treatment OR wellness) AND (India OR Kerala)&sortBy=publishedAt&language=en&apiKey=${apiKey}`;
-        
+        const apiKey = process.env.NEWS_API_KEY; // Use environment variable
+        if (!apiKey) throw new Error("API key is missing! Set it in Render.");
+
+        const url = `https://newsapi.org/v2/everything?q=healthcare OR medical OR hospital OR disease OR treatment OR wellness&language=en&sortBy=publishedAt&apiKey=${apiKey}`;
+
         const response = await axios.get(url);
-        let articles = response.data.articles;
+        let articles = response.data.articles || [];
 
-        if (!articles || articles.length === 0) {
-            return ["No healthcare news found for India or Kerala!"];
+        if (articles.length === 0) {
+            console.warn("⚠️ No healthcare news found!");
+            return [];
         }
 
-        // Filter Indian and Kerala-specific sources
-        const indianSources = [
+        const indianSources = new Set([
             "The Times of India", "Hindustan Times", "NDTV", "The Hindu",
-            "Indian Express", "India Today", "Deccan Herald", "The Quint", "Scroll.in",
-            "Mathrubhumi", "Malayala Manorama", "The New Indian Express Kerala"
-        ];
-        articles = articles.filter(article => indianSources.includes(article.source.name));
+            "Indian Express", "India Today", "Deccan Herald", "The Quint",
+            "Scroll.in", "Mathrubhumi", "Malayala Manorama", "The New Indian Express Kerala"
+        ]);
 
-        if (articles.length === 0) {
-            return ["No healthcare news from Indian or Kerala sources found!"];
-        }
+        articles = articles.filter(article => article.source?.name && indianSources.has(article.source.name));
 
-        // Additional filtering to remove unrelated topics
-        const healthKeywords = ["health", "medical", "hospital", "doctor", "disease", "treatment", "medicine", "surgery", "vaccine", "nutrition", "wellness", "COVID", "diabetes", "cancer"];
-
-        articles = articles.filter(article =>
-            healthKeywords.some(keyword =>
-                article.title.toLowerCase().includes(keyword) ||
-                (article.description && article.description.toLowerCase().includes(keyword))
-            )
-        );
-
-        if (articles.length === 0) {
-            return ["No strictly healthcare-related news found!"];
-        }
-
-        // Extract necessary fields
         return articles.slice(0, 5).map(article => ({
             title: article.title,
             description: article.description || "No description available.",
@@ -328,64 +315,92 @@ async function fetchHealthcareNews() {
             source: article.source.name,
             publishedAt: new Date(article.publishedAt).toLocaleString()
         }));
+
     } catch (error) {
         console.error("❌ Error fetching news:", error.message);
         return [];
     }
 }
 
-// Keep the existing route `/elderly-news`
+// Express Route for Elderly News Page
 router.get("/elderly-news", async (req, res) => {
-    const healthcareNews = await fetchHealthcareNews();
-    console.log("🔎 Sending strictly healthcare news to template:", healthcareNews);
-    res.render("elderly-news", { articles: healthcareNews });
+    try {
+        const healthcareNews = await fetchHealthcareNews();
+        res.render("elderly-news", { articles: healthcareNews });
+    } catch (error) {
+        console.error("❌ Error rendering page:", error.message);
+        res.render("elderly-news", { articles: [] });
+    }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ****************************************************************
-// ✅ Declare environment variables FIRST
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+// // ✅ Declare environment variables FIRST
+// const accountSid = process.env.TWILIO_ACCOUNT_SID;
+// const authToken = process.env.TWILIO_AUTH_TOKEN;
+// const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
-// ✅ Check if credentials are properly loaded
-if (!accountSid || !authToken || !twilioPhoneNumber) {
-  console.error("Twilio credentials are missing! Check your .env file.");
-  process.exit(1); // Stop execution if credentials are missing
-}
+// // ✅ Check if credentials are properly loaded
+// if (!accountSid || !authToken || !twilioPhoneNumber) {
+//   console.error("Twilio credentials are missing! Check your .env file.");
+//   process.exit(1); // Stop execution if credentials are missing
+// }
 
-// ✅ Initialize the Twilio client AFTER variables are declared
-const client = twilio(accountSid, authToken);
+// // ✅ Initialize the Twilio client AFTER variables are declared
+// const client = twilio(accountSid, authToken);
 
-// Function to make an emergency call
-async function makeEmergencyCall() {
-  try {
-    const call = await client.calls.create({
-      twiml: "<Response><Say voice='alice'>hai adheena please call adith vijayan.</Say></Response>",
-      to: "+916282085045", // Ensure it's in E.164 format
-      from: twilioPhoneNumber, // Your Twilio phone number
-    });
+// // Function to make an emergency call
+// async function makeEmergencyCall() {
+//   try {
+//     const call = await client.calls.create({
+//       twiml: "<Response><Say voice='alice'>hai adheena please call adith vijayan.</Say></Response>",
+//       to: "+916282085045", // Ensure it's in E.164 format
+//       from: twilioPhoneNumber, // Your Twilio phone number
+//     });
 
-    console.log(`Call initiated successfully! Call SID: ${call.sid}`);
-    return { sid: call.sid, status: "in-progress" };
-  } catch (error) {
-    console.error("Error making emergency call:", error.message);
-    throw error;
-  }
-}
+//     console.log(`Call initiated successfully! Call SID: ${call.sid}`);
+//     return { sid: call.sid, status: "in-progress" };
+//   } catch (error) {
+//     console.error("Error making emergency call:", error.message);
+//     throw error;
+//   }
+// }
 
-// Express route for making the emergency call
-router.post('/emergency-call', async (req, res) => {
-  try {
-    const call = await makeEmergencyCall();
-    res.json({ 
-      success: true, 
-      callSid: call.sid, 
-      message: "Emergency call initiated."
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Error making emergency call." });
-  }
-});
+// // Express route for making the emergency call
+// router.post('/emergency-call', async (req, res) => {
+//   try {
+//     const call = await makeEmergencyCall();
+//     res.json({ 
+//       success: true, 
+//       callSid: call.sid, 
+//       message: "Emergency call initiated."
+//     });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: "Error making emergency call." });
+//   }
+// });
 
 
 module.exports = router;
