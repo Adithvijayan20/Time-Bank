@@ -1,10 +1,17 @@
 <!DOCTYPE html>
+<html>
+  <head>
+    <title>Time bank private limited.ptv</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-  <meta name="google-site-verification" content="QUhwJMeC4PDBYMpBnHttnhuEKagM0np4zi9cWmlbFNs" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}} - Login</title>
+    <meta name="google-site-verification" content="QUhwJMeC4PDBYMpBnHttnhuEKagM0np4zi9cWmlbFNs" />
+
+    <title>TimeBank - Connecting Hearts, Sharing Time</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <style>
         :root {
@@ -34,7 +41,7 @@
         .background-overlay {
             position: fixed;
             inset: 0;
-            background-image: url('{{backgroundImage}}');
+            background-image: url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=2070&q=80');
             opacity: 0.05;
             mix-blend-mode: overlay;
             pointer-events: none;
@@ -92,7 +99,7 @@
             font-size: 1rem;
             font-weight: 500;
             transition: all 0.3s;
-            text-decoration: none;
+            text-decoration: none; /* Remove underline */
         }
 
         .button:hover {
@@ -154,7 +161,7 @@
             animation: fadeDown 1s ease-out 0.4s backwards;
         }
 
-        .login-section {
+        .registration-section {
             padding: 5rem 2rem;
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(8px);
@@ -184,50 +191,77 @@
             margin-bottom: 1rem;
         }
 
-        .form-container {
-            max-width: 48rem;
+        .cards-container {
+            max-width: 1280px;
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
             padding: 2rem;
+        }
+
+        .card {
             background: white;
+            padding: 2rem;
             border-radius: 1rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .form-container label {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-container input {
-            padding: 0.75rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 100%;
-        }
-
-        .form-container button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            width: 100%;
-            font-size: 1.25rem;
+            text-align: center;
             transition: all 0.3s;
+            animation: fadeUp 1s ease-out backwards;
         }
 
-        .form-container button:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+            border: 1px solid var(--primary-color);
+        }
+
+        .card-icon {
+            width: 3rem;
+            height: 3rem;
+            background: rgba(155, 135, 245, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(243, 240, 255, 0.8));
+            backdrop-filter: blur(8px);
+            position: relative;
         }
 
         @keyframes fadeDown {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -281,7 +315,7 @@
             </button>
             <div class="nav-links">
                 <a href="/">Home</a>
-                <a href="reg">Register</a>
+                <a href="login">Admin login</a>
                 <a href="#about">About</a>
                 <a href="login">
                 <button class="button">Login</button>
@@ -289,57 +323,57 @@
             </div>
         </div>
     </nav>
-     
-     
+
     <section class="hero" id="home">
-        <span class="welcome-badge">Login to TimeBank</span>
-        <h1>Welcome Back!</h1>
-        <p>We’re excited to have you back. Please log in to continue sharing time and creating connections.</p>
+        <span class="welcome-badge">Welcome to TimeBank</span>
+        <h1>Connecting Hearts, Sharing Time</h1>
+        <p>Join our community where people over 50 give their time to create meaningful connections and build lasting friendships.</p>
+        <a href="#register" class="button">Get Started</a>
     </section>
 
-    <section class="login-section">
+    <section class="registration-section" id="register">
         <div class="section-header">
-            <span class="section-badge">Log In</span>
-            <h2 class="section-title">Enter Your Credentials</h2>
-            <p>Login with your email and password to access your account.</p>
+            <span class="section-badge">Join Our Community</span>
+            <h2 class="section-title">Choose Your Path</h2>
+            <p>Whether you're seeking companionship, want to volunteer, or represent an institution, we have a place for you.</p>
         </div>
-        <div class="form-container">
-
-
-    <div class="form-container">
-        {{#if message}}
-            <div class="alert">
-                {{message}}
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class='bx bx-heart'></i>
+                </div>
+                <h3>Patient Registration</h3>
+                <p>Join our community to receive support and companionship from caring volunteers.</p>
+                
+                <a href="patient" class="button">Register Now</a>
             </div>
-        {{/if}}
-            <form action="/login" method="post">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-
-                <button type="submit">Login</button>
-            </form>
+            <div class="card">
+                <div class="card-icon">
+                    <i class='bx bx-group'></i>
+                </div>
+                <h3>Volunteer Registration</h3>
+                <p>Make a difference in someone's life by sharing your time and kindness.</p>
+                
+                <a href="signup" class="button">Register Now</a>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class='bx bx-building-house'></i>
+                </div>
+                <h3>Institution Registration</h3>
+                <p>Partner with us to expand our network of care and support.</p>
+                <button class="button">Register Now</button>
+            </div>
         </div>
     </section>
 
-<style>
-    .alert {
-        background-color: #ffdddd;
-        color: #d8000c;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 15px;
-        text-align: center;
-        font-weight: bold;
-        border: 1px solid #d8000c;
-    }
-</style>
-
-    <footer>
-        <p>&copy; {{currentYear}} TimeBank. All rights reserved.</p>
-    </footer>
+    <section class="about-section" id="about">
+        <div class="section-header">
+            <span class="section-badge">About Us</span>
+            <h2 class="section-title">Our Mission</h2>
+            <p>We believe in the power of human connection and the value of time spent together. Our platform facilitates meaningful relationships between seniors and volunteers, creating a supportive community for all.</p>
+        </div>
+    </section>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -362,9 +396,17 @@
                     icon.classList.replace('bx-x', 'bx-menu');
                 }
             });
+
+            // Scroll to the registration section when "Get Started" button is clicked
+            const getStartedBtn = document.querySelector('.hero a');
+            getStartedBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector('#register').scrollIntoView({ behavior: 'smooth' });
+            });
         });
     </script>
- 
-
 </body>
+</html>
+
+  </body>
 </html>
