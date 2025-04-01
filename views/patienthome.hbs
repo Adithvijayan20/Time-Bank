@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Volunteer Services</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{{backgroundImage}}') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            position: relative;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #2E7D32;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            text-align: left;
+            width: 100%;
+        }
+
+        .services-grid label {
+            display: flex;
+            align-items: center;
+            background: rgba(76, 175, 80, 0.1);
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .services-grid label:hover {
+            background: rgba(76, 175, 80, 0.3);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s ease-in-out;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #2E7D32;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #2E7D32, #1B5E20);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: rgba(241, 241, 241, 0.9);
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>{{patientName}}</h2>
+        <p>Patient ID: {{patientId}}</p>
+        <h1>{{appName}}</h1>
+    </header>
+
+    <main>
+        <h2>Select Services</h2>
+        <form action="/patient-services/{{id}}" method="post">
+            <input type="hidden" name="patientName" value="{{patientName}}">
+            <input type="hidden" name="patientId" value="{{patientId}}">
+
+            <label><strong>Choose the services you need:</strong></label>
+            <div class="services-grid">
+                <div>
+                    <label><input type="checkbox" name="patientNeeds" value="Driving"> Driving</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Cooking"> Cooking</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Laundry"> Laundry</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Talking"> Talking</label>
+                </div>
+                <div>
+                    <label><input type="checkbox" name="patientNeeds" value="Shopping"> Shopping</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Companionship"> Companionship</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Cleaning"> Cleaning</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Medication Reminder"> Medication Reminder</label>
+                </div>
+            </div>
+            
+            <label for="date"><strong>Available Date:</strong></label>
+            <input type="date" id="date" name="date" required>
+            
+            <label for="time"><strong>Available Time:</strong></label>
+            <input type="time" id="time" name="time" required>
+            
+            <button type="submit">Save</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
+    </footer>
+
+</body>
+<script src="{{scriptPath}}"></script>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer ID Card</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .id-card {
+            width: 400px;
+            height: 250px;
+            border: 2px solid #333;
+            padding: 15px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        .profile-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-top: 5px;
+        }
+        .info {
+            width: 100%;
+            text-align: left;
+            padding: 5px 15px;
+        }
+        .info p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+        .barcode {
+            margin-top: 10px;
+            width: 100%;
+            text-align: center;
+        }
+        .download-btn {
+            margin-top: 15px;
+            padding: 8px 12px;
+            font-size: 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="idCard" class="id-card">
+        <h3>Volunteer ID Card</h3>
+        <img class="profile-img" src="{{profileImageUrl}}" alt="Profile Image">
+        <div class="info">
+            <p><strong>Name:</strong> {{fullName}}</p>
+            <p><strong>Email:</strong> {{email}}</p>
+            <p><strong>Phone:</strong> {{phoneNumber}}</p>
+            <p><strong>Aadhar:</strong> {{adhar}}</p>
+        </div>
+        <svg id="barcode"></svg>
+    </div>
+
+    <button id="downloadBtn" class="download-btn">Download ID Card</button>
+
+    <script>
+        // Generate barcode using the volunteer's ID
+        JsBarcode("#barcode", "{{id}}", {
+            format: "CODE128",
+            width: 2,
+            height: 40,
+            displayValue: true
+        });
+
+        document.getElementById("downloadBtn").addEventListener("click", function () {
+            const idCard = document.getElementById("idCard");
+
+            html2canvas(idCard).then((canvas) => {
+                const image = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                link.href = image;
+                link.download = "Volunteer_ID_Card.png";
+                link.click();
+
+                // Redirect back to volunteer profile after download
+                setTimeout(() => {
+                    window.location.href = "/volunteer-profile/{{id}}";
+                }, 1500);  // Delay to ensure download is triggered
+            });
+        });
+    </script>
+
+</body>
+</html>

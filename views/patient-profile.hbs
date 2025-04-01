@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Patient Dashboard</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #9b87f5;
+            --secondary-color: #7E69AB;
+            --accent-color: #FEC6A1;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --background-gradient: linear-gradient(180deg, #f3f0ff 0%, #ffffff 50%, #f3f0ff 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--background-gradient);
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=2070&q=80');
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-icon {
+            padding: 0.75rem;
+            border-radius: 50%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .btn-ghost {
+            background: none;
+            color: var(--text-primary);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(155, 135, 245, 0.1);
+        }
+
+        .btn-outline {
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            background: none;
+        }
+
+        .btn-outline:hover {
+            background: #fee2e2;
+        }
+
+        .main-content {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .avatar-circle {
+            width: 160px;
+            height: 160px;
+            background: rgba(155, 135, 245, 0.1);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1.25rem;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .nav-button:hover, .nav-button.active {
+            background: rgba(155, 135, 245, 0.1);
+            color: var(--primary-color);
+        }
+
+        .nav-button i {
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .main-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .upload-box {
+            border: 2px dashed #e2e8f0;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        .map-container {
+            height: 400px;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .detail-item label {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .detail-item p {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">TimeBank</div>
+                <span style="font-size: 2rem; color: var(--text-secondary)">|</span>
+                <h2 style="font-size: 1.5rem; color: var(--text-secondary)">Patient Dashboard</h2>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon">
+                    <i class='bx bx-bell'></i>
+                </button>
+                <button class="btn-icon">
+                    <i class='bx bx-user-circle'></i>
+                </button>
+                
+               <form action="/logout" method="POST" style="display: inline;">
+    <button type="submit" class="btn btn-outline">
+        <i class='bx bx-log-out'></i>
+        Logout
+    </button>
+</form>
+
+                
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <aside class="sidebar">
+         <div class="profile-card">
+    {{#if profileImageUrl}}
+        <img src="{{profileImageUrl}}" alt="Profile Picture" style="width: 160px; height: 160px; border-radius: 50%;">
+    {{else}}
+        <div class="avatar-circle">
+            <i class='bx bx-user'></i>
+        </div>
+    {{/if}}
+    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Welcome, {{fullName}}</h3>
+    <p style="color: var(--text-secondary); font-size: 1.25rem;">Patient</p>
+</div>
+
+
+            <nav class="nav-menu">
+                <button class="nav-button active" data-section="dashboard">
+                    <i class='bx bx-home'></i>
+                    Dashboard
+                </button>
+                <button class="nav-button" data-section="profile">
+                    <i class='bx bx-user'></i>
+                    Complete Profile
+                </button>
+                <a href="/patient-rating/{{id}}" style="text-decoration: none;">
+    <button class="nav-button">
+        <i class='bx bx-star'></i>
+Rating
+    </button>
+                
+                
+
+<button class="nav-button" >
+                    <i class='bx bx-bell'></i>
+                    <a href="/elderly-news/">NEWS</a>
+                    </button>
+<!-- New button for redirecting to volunteerhome -->
+<a href="/patienthome/{{id}}" style="text-decoration: none;">
+    <button class="nav-button">
+        <i class='bx bx-home'></i>
+    Request Service
+    </button>
+</a>
+<a href="/insitution/{{id}}" style="text-decoration: none;">
+    <button class="nav-button">
+        <i class='bx bx-home'></i>
+    insitution Request
+    </button>
+</a>
+
+
+
+            </nav>
+        </aside>
+
+        <div class="main-panel">
+            <section id="dashboard" class="section active">
+                <h3 style="font-size: 1.75rem; margin-bottom: 2rem;">patient Details</h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <label>Full Name</label>
+                        <p>{{fullName}}</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Email</label>
+                        <p>{{email}}</p>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>Phone Number</label>
+                        <p>{{phoneNumber}}</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Address</label>
+                        <p>{{address}}</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Date of Birth</label>
+                        <p>{{dob}}</p>
+                    </div>
+                     <div class="detail-item">
+                        <label>Gender</label>
+                        <p>{{gender}}</p>
+                    </div>
+                    <div class="detail-item">
+                        <label>Aadhaar Number</label>
+                        <p>{{adhar}}</p>
+                    </div>
+                </div>
+            </section>
+            
+          <section id="profile" class="section">
+    <h3 style="font-size: 1.75rem; margin-bottom: 2rem; text-align: center;">Complete Your Profile</h3>
+    <form id="profileForm" action="/patient-profile/{{id}}" method="POST" enctype="multipart/form-data">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" value="{{fullName}}" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{email}}" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Mobile Number</label>
+                <input type="tel" id="phone" name="phoneNumber" value="{{phoneNumber}}" required>
+            </div>
+            <div class="form-group">
+                <label for="aadhaar">Aadhaar Number</label>
+                <input type="text" id="aadhaar" name="adhar" value="{{adhar}}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" rows="4">{{address}}</textarea>
+        </div>
+
+        <div class="upload-box">
+            <h4 style="font-size: 1.25rem; margin-bottom: 1rem;">Upload Your Profile Picture</h4>
+            <input type="file" id="profileImage" name="profileImage">
+        </div>
+
+        <div class="map-container">
+            <h4 style="font-size: 1.5rem;">Your Location on Map</h4>
+            <input type="hidden" id="latitude" name="latitude" value="{{latitude}}">
+            <input type="hidden" id="longitude" name="longitude" value="{{longitude}}">
+            <div id="map" style="width: 100%; height: 300px; border: 1px solid #ccc;"></div>
+            <button type="button" onclick="getLocation()">Use My Current Location</button>
+        </div>
+
+        <button type="submit" class="btn" style="margin-top: 2rem;">Save Changes</button>
+    </form>
+</section>
+<section id="rate" class="section">
+    <h3 style="font-size: 1.75rem; margin-bottom: 2rem; text-align: center;">Rate Patient Behavior</h3>
+    <form id="ratingForm" action="/matches/{{id}}" method="POST">
+        <div class="form-group" style="text-align: center;">
+            <label for="rating">Select Rating:</label>
+            <div class="star-rating" style="font-size: 2rem;">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <input type="hidden" id="rating" name="rating" value="">
+        </div>
+        
+        <div class="form-group">
+            <label for="comments">Additional Comments:</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Leave a comment..."></textarea>
+        </div>
+
+        <button type="submit" class="btn" style="margin-top: 2rem;">Submit Rating</button>
+    </form>
+</section>
+
+
+<script>
+    function initMap() {
+        let lat = parseFloat(document.getElementById('latitude').value) || 10.8505;
+        let lng = parseFloat(document.getElementById('longitude').value) || 76.2711;
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat, lng },
+            zoom: 10,
+        });
+
+        const marker = new google.maps.Marker({
+            position: { lat, lng },
+            map,
+            draggable: true
+        });
+
+        // Update hidden fields when marker is dragged
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                document.getElementById('latitude').value = position.coords.latitude;
+                document.getElementById('longitude').value = position.coords.longitude;
+                initMap();
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5MQdwuxFIG6Msf_At0bV2vPXuFwEkVkI" async defer></script>
+
+    </main>
+
+    <script>
+        document.querySelectorAll('.nav-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                document.querySelectorAll('.nav-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                const sectionId = button.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+                button.classList.add('active');
+            });
+        });
+
+
+
+        document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', function() {
+            let rating = this.getAttribute('data-value');
+            document.getElementById('rating').value = rating;
+            document.querySelectorAll('.star').forEach(s => s.style.color = '#ccc');
+            for (let i = 0; i < rating; i++) {
+                document.querySelectorAll('.star')[i].style.color = '#FFD700';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

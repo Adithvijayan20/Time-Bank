@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Volunteer Services</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{{backgroundImage}}') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(135deg, #A78BFA, #6B7280); /* Purple to Dark Gray */
+            color: #ffffff;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        header h1, header h2 {
+            margin: 0;
+        }
+        main {
+            padding: 3rem;
+            max-width: 850px;
+            margin: 3rem auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+        h2 {
+            font-size: 2rem;
+            color: #6B7280;
+            margin-bottom: 1.5rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        .services-grid label {
+            display: flex;
+            align-items: center;
+            background: #EDE9FE;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .services-grid label:hover {
+            background: #D8B4FE;
+        }
+        input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+        button {
+            background: linear-gradient(135deg, #8B5CF6, #4B5563);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #4B5563;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: rgba(241, 241, 241, 0.9);
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>{{fullName}}</h2>
+        <h1>{{appName}}</h1>
+    </header>
+    <main>
+        <h2>Services Provided</h2>
+        <p>Volunteer ID: {{id}}</p> 
+        <form action="/volunteer-services" method="post">
+            <input type="hidden" name="fullName" value="{{fullName}}">
+            <input type="hidden" name="id" value="{{id}}">
+            <label>Select Services:</label>
+            <div class="services-grid">
+                <div>
+                    <label><input type="checkbox" name="patientNeeds" value="Driving"> Driving</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Cooking"> Cooking</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Laundry"> Laundry</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Talking"> Talking</label>
+                </div>
+                <div>
+                    <label><input type="checkbox" name="patientNeeds" value="Shopping"> Shopping</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Companionship"> Companionship</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Cleaning"> Cleaning</label>
+                    <label><input type="checkbox" name="patientNeeds" value="Medication Reminder"> Medication Reminder</label>
+                </div>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
+    </footer>
+    <script src="{{scriptPath}}"></script>
+</body>
+</html>

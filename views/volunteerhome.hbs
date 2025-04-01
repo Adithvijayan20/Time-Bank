@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Job Notifications</title>
+    <script>
+        function initMap() {
+            document.querySelectorAll(".map-container").forEach((container) => {
+                const lat = parseFloat(container.dataset.lat) || 10.0000; // Default latitude
+                const lng = parseFloat(container.dataset.lng) || 76.0000; // Default longitude
+                const map = new google.maps.Map(container, {
+                    center: { lat: lat, lng: lng },
+                    zoom: 14,
+                });
+
+                new google.maps.Marker({
+                    position: { lat: lat, lng: lng },
+                    map: map,
+                    title: "Patient Location",
+                });
+            });
+        }
+        window.initMap = initMap;
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5MQdwuxFIG6Msf_At0bV2vPXuFwEkVkI&callback=initMap"></script>
+</head>
+<body>
+    <h1>Volunteer Job Notifications</h1>
+
+    {{#each availableJobs}}
+    <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px;">
+        <p><strong>Patient Name:</strong> {{patientName}}</p>
+        <p><strong>Phone Number:</strong> {{phone}}</p>
+        
+        <p><strong>Message:</strong> {{message}}</p>
+
+
+       <div class="map-container" 
+     data-lat="{{location.latitude}}" 
+     data-lng="{{location.longitude}}" 
+     style="width: 100%; height: 300px; background-color: lightblue;">
+</div>
+
+
+        <br>
+        <button onclick="handleJobAction('{{_id}}', 'accept')" style="background: green; color: white; padding: 8px;">✅ Accept</button>
+        <button onclick="handleJobAction('{{_id}}', 'reject')" style="background: red; color: white; padding: 8px;">❌ Reject</button>
+    </div>
+    {{/each}}
+
+   
+     <script>
+  function handleJobAction(jobId, action) {
+    fetch(`/volunteer-job/${action}/${jobId}`, { method: "POST" })
+      .then(response => response.json())
+      .then(data => {
+        if (action === "accept" && data.success) {
+          window.location.href = `/volunteer-job/start/${data.matchId}`;
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(err => console.error("Error:", err));
+  }
+</script>
+
+
+   
+</body>
+</html>

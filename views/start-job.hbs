@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Job - OTP Verification</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #A78BFA, #6B7280);
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            color: #333;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1, h2 {
+            color: #6B7280;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 1rem 0 0.5rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        button {
+            background: linear-gradient(135deg, #8B5CF6, #4B5563);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        button:hover {
+            background: #4B5563;
+        }
+        #endOtpSection {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enter OTP to Start and End Job</h1>
+        <form id="startOtpForm">
+            <input type="hidden" name="matchId" value="{{match._id}}">
+            <label for="startOtp">Enter Start OTP:</label>
+            <input type="text" id="startOtp" name="otp" required>
+            <button type="submit">Verify Start OTP</button>
+        </form>
+        <div id="endOtpSection">
+            <h2>Enter End OTP</h2>
+            <form id="endOtpForm">
+                <input type="hidden" name="matchId" value="{{match._id}}">
+                <label for="endOtp">Enter End OTP:</label>
+                <input type="text" id="endOtp" name="otp" required>
+                <button type="submit">Verify End OTP</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById("startOtpForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            fetch("/volunteer-job/start-job", {
+                method: "POST",
+                body: new URLSearchParams(formData),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Job started! End OTP sent to email.");
+                    document.getElementById("endOtpSection").style.display = "block";
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+
+        document.getElementById("endOtpForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            fetch("/volunteer-job/end-job", {
+                method: "POST",
+                body: new URLSearchParams(formData),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Job completed successfully!");
+                    window.location.href = `/volunteer-profile/{{match.volunteerId}}`;
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+</body>
+</html>

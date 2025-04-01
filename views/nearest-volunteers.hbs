@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nearest Volunteers</title>
+  <!-- Include Boxicons CSS for star icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    .volunteer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .volunteer-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      width: 250px;
+      text-align: center;
+    }
+    .profile-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin: 0 auto;
+      display: block;
+    }
+    .volunteer-rating {
+      margin-top: 5px;
+      font-size: 1.2em;
+    }
+    .volunteer-rating i {
+      margin-right: 2px;
+    }
+    .rating-text {
+      font-size: 0.9em;
+      color: #333;
+      margin-top: 3px;
+    }
+    button {
+      padding: 8px 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Nearest Volunteers for {{patient.fullName}}</h2>
+
+  {{#if volunteers.length}}
+    <div class="volunteer-list">
+      {{#each volunteers}}
+        <div class="volunteer-card">
+          <img src="{{this.profilePic}}" alt="Volunteer Image" class="profile-image" />
+
+          <!-- Volunteer rating container:
+               The avgRating is stored in a data attribute and the precomputed star HTML is inserted.
+               If no stars exist, the script below will set the text to "New Member". -->
+          <div class="volunteer-rating" data-rating="{{avgRating}}">
+            {{{starHtml}}}
+            <div class="rating-text"></div>
+          </div>
+          
+          <div class="volunteer-info">
+            <div class="volunteer-name"><b>{{this.fullName}}</b></div>
+            <div class="volunteer-distance">{{toFixed this.distance 2}} km away</div>
+          </div>
+          <div class="volunteer-meta">
+            📍 <em>{{this.address}}</em><br/>
+            📞 {{this.phoneNumber}}
+          </div>
+
+          <!-- Form for selecting a volunteer -->
+          <form action="/select-volunteer/{{this.volunteerId}}" method="POST">
+            <input type="hidden" name="volunteerId" value="{{this.volunteerId}}" />
+            <input type="hidden" name="patientId" value="{{this.patientId}}" />
+            <button type="submit">Select</button>
+          </form>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <p>No nearby volunteers found.</p>
+  {{/if}}
+
+  <!-- Script to set text rating.
+       If avgRating is 0, it displays "New Member", otherwise it displays "bad", "normal", "good", or "excellent". -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const ratingElements = document.querySelectorAll('.volunteer-rating');
+      ratingElements.forEach(elem => {
+        const avgRating = parseFloat(elem.getAttribute('data-rating'));
+        let textRating = '';
+        if (avgRating === 0) {
+          textRating = 'New Member';
+        } else if (avgRating < 2) {
+          textRating = 'Rating:bad';
+        } else if (avgRating < 3) {
+          textRating = 'Rating:normal';
+        } else if (avgRating < 4) {
+          textRating = 'Rating:good';
+        } else {
+          textRating = 'Rating:excellent';
+        }
+        const ratingTextElem = elem.querySelector('.rating-text');
+        if (ratingTextElem) {
+          ratingTextElem.innerText = textRating;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
