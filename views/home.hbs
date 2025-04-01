@@ -571,7 +571,7 @@
         });
     </script>
 
-     <script>
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
     const chatIcon = document.getElementById('chat-icon');
@@ -617,9 +617,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const data = await response.json();
-                // Add bot response
-                addBotMessage(data.answer);
+
+                // If there's an error, display a fallback message
+                if (data.error) {
+                    addBotMessage("Sorry, I'm having trouble connecting. Please try again later.");
+                } else {
+                    // Add bot's response
+                    addBotMessage(data.response);
+                }
             } catch (error) {
+                // Display fallback message on error
                 console.error('Error:', error);
                 addBotMessage("Sorry, I'm having trouble connecting. Please try again later.");
             }

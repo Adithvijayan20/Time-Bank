@@ -52,33 +52,4 @@
 // module.exports = router;
 
 
-const express = require('express');
-const router = express.Router();
-const axios = require('axios');
 
-// Route to render the chatbot interface
-router.get('/', (req, res) => {
-    res.render('chatbot');
-});
-
-// API route to send message to Jemini
-router.post('/api/message', async (req, res) => {
-    try {
-        const { message } = req.body;
-        
-        // Forward the message to Jemini API
-        const response = await axios.post('http://jemini-api.com/predict', {
-            message: message
-        });
-        
-        // Respond with Jemini's response
-        res.json({
-            response: response.data.response
-        });
-    } catch (error) {
-        console.error('Error communicating with Jemini:', error);
-        res.status(500).json({ error: 'Failed to get response from chatbot' });
-    }
-});
-
-module.exports = router;

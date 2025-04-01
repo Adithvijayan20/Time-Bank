@@ -6,18 +6,38 @@
     <title>Chatbot</title>
     <script>
         async function sendMessage() {
-            const message = document.getElementById('messageInput').value;
-            
-            const response = await fetch('/api/message', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ message })
-            });
+            const messageInput = document.getElementById('messageInput');
+            const chatResponse = document.getElementById('chatResponse');
 
-            const data = await response.json();
-            document.getElementById('chatResponse').innerText = 'Bot: ' + data.response;
+            const message = messageInput.value.trim();
+            if (!message) {
+                chatResponse.innerText = "Please enter a message before sending.";
+                return;
+            }
+
+            // Send request to chatbot API
+            try {
+                const response = await fetch('/api/message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Server error, please try again.');
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    chatResponse.innerText = "Sorry, I'm having trouble connecting. Please try again later.";
+                } else {
+                    chatResponse.innerText = 'Bot: ' + data.response;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                chatResponse.innerText = "Sorry, I'm having trouble connecting. Please try again later.";
+            }
         }
     </script>
 </head>
@@ -27,6 +47,6 @@
         <input type="text" id="messageInput" placeholder="Type your message" />
         <button onclick="sendMessage()">Send</button>
     </div>
-    <p id="chatResponse">{{response}}</p> <!-- Dynamic content, if needed -->
+    <p id="chatResponse"></p> <!-- Handlebars removed, now managed by JavaScript -->
 </body>
 </html>

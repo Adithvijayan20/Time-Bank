@@ -16,7 +16,7 @@ var db=require('./config/connection')
 const session = require('express-session');
 const hbs = require('hbs');
 const InstitutionRouter = require('./routes/institution');
-
+//var chatbotRouter = require('./routes/chatbot');
 
 const exphbs = require('express-handlebars');
 
@@ -40,13 +40,18 @@ const handlebars = exphbs.create({
     includes: function(array, value) {
       return array.includes(value);
     }
+    
+  },
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true, // ✅ Fix Handlebars "Access Denied" error
+    allowProtoMethodsByDefault: true
   }
 });
 
 app.engine('hbs', handlebars.engine);
 
 
-//var chatbotRouter = require('./routes/chatbot');
+
 
 //hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 
@@ -107,7 +112,7 @@ app.use('/', matchRouter);
 app.use('/users', usersRouter);
 app.use('/institution', InstitutionRouter);
 //app.use('/chatbot', chatbotRouter);
-app.use(express.urlencoded({ extended: true }));
+//app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: 'isjkajskakshajh',
     resave: false,
