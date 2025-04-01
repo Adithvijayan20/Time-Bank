@@ -413,7 +413,7 @@ router.get('/pending-service', ensureAuthenticated, checkRole('admin'), async (r
             return {
                 volunteerName: volunteer ? volunteer.fullName : "Unknown Volunteer",
                 patientName: patient ? patient.fullName : "Unknown Patient",
-                services: notif.services || [],
+                services: notif.patientNeeds || [],
                 createdAt: notif.createdAt,
                 // Add any other relevant fields from the notification if needed
             };
