@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nearest Institutions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .institution-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .institution-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .institution-card:hover {
+            transform: scale(1.05);
+        }
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+        .institution-info {
+            margin-bottom: 15px;
+        }
+        .select-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .select-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nearest Institutions for {{patient.fullName}}</h1>
+    
+    {{#if institutions.length}}
+        <div class="institution-list">
+            {{#each institutions}}
+                <div class="institution-card">
+                    <img src="{{this.profileImage}}" alt="Institution Image" class="profile-image" />
+                    
+                    <div class="institution-info">
+                        <h2>{{this.fullName}}</h2>
+                        <p>{{toFixed this.distance 2}} km away</p>
+                        <p>📍 {{this.address}}</p>
+                        <p>📞 {{this.phone}}</p>
+                    </div>
+
+                    <form action="/select-institution/{{../requestId}}" method="POST">
+                        <input type="hidden" name="institutionId" value="{{this._id}}" />
+                        <button type="submit" class="select-button">Select Institution</button>
+                    </form>
+                </div>
+            {{/each}}
+        </div>
+    {{else}}
+        <p>No nearby institutions found that match your service needs.</p>
+    {{/if}}
+</body>
+</html>
