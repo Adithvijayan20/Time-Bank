@@ -626,8 +626,9 @@ router.get('/volunteer-patient-rating', ensureAuthenticated, checkRole('voluntee
         if (!volunteerId) {
             return res.redirect('/login');
         }
+        const database = db.get();
         // Fetch matches where the job is complete and the volunteerId matches the current volunteer
-        const matches = await db.get().collection(collection.MATCHES_COLLECTION)
+        const matches = await database.collection(collection.MATCHES_COLLECTION)
             .find({ volunteerId: volunteerId, isComplete: true })
             .toArray();
 
@@ -635,10 +636,23 @@ router.get('/volunteer-patient-rating', ensureAuthenticated, checkRole('voluntee
         const patientIdSet = new Set(matches.map(match => match.patientId.toString()));
         const patientIds = Array.from(patientIdSet).map(id => new ObjectId(id));
 
+        // Fetch ratings made by this volunteer to determine which patients have been rated
+        const ratedRatings = await database.collection(collection.RATING_COLLECTION)
+            .find({ volunteerId: volunteerId })
+            .toArray();
+
+        // Extract rated patient IDs (ensure that patientId exists)
+        const ratedPatientIds = ratedRatings
+            .filter(r => r.patientId)
+            .map(r => r.patientId.toString());
+
         // Fetch patient details from the USER_COLLECTION
-        const patients = await db.get().collection(collection.USER_COLLECTION)
+        const allPatients = await database.collection(collection.USER_COLLECTION)
             .find({ _id: { $in: patientIds } })
             .toArray();
+
+        // Filter out patients that have already been rated by this volunteer
+        const patients = allPatients.filter(patient => !ratedPatientIds.includes(patient._id.toString()));
 
         // Render a view (e.g., patient-rating.hbs) listing the patients for rating
         res.render('patient-rating', { patients, volunteerId });

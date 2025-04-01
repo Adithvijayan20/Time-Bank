@@ -259,22 +259,27 @@ router.get('/patient-rating/:id', ensureAuthenticated, checkRole('patient'), asy
             console.error('Database is not initialized');
             return res.status(500).send('Internal Server Error');
         }
+
         // Fetch completed matches for this patient from the matches collection
         const completedMatches = await database.collection(collection.MATCH_COLLECTION)
             .find({ patientId: patientId, isComplete: true })
             .toArray();
-        
-        // Fetch all ratings that have been stored for this patient from the rating collection
+
+        // Fetch all ratings for this patient from the rating collection
         const ratedRatings = await database.collection(collection.RATING_COLLECTION)
             .find({ patientId: patientId })
             .toArray();
-        
-        // Extract matchIds from rated records and convert them to strings for comparison
-        const ratedMatchIds = ratedRatings.map(r => r.matchId.toString());
-        
+
+        // Extract matchIds from rated records, filtering out any records where matchId is undefined
+        const ratedMatchIds = ratedRatings
+            .filter(r => r.matchId)
+            .map(r => r.matchId.toString());
+
         // Filter out matches that already have a rating
-        const unratedMatches = completedMatches.filter(match => !ratedMatchIds.includes(match._id.toString()));
-        
+        const unratedMatches = completedMatches.filter(match => 
+            !ratedMatchIds.includes(match._id.toString())
+        );
+
         // Render the view with only unrated matches
         res.render('rating', { 
             patientId,
@@ -285,6 +290,8 @@ router.get('/patient-rating/:id', ensureAuthenticated, checkRole('patient'), asy
         res.status(500).send('Error fetching ratings');
     }
 });
+
+
 
 
 // POST route to submit a rating for a specific match record
