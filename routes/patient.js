@@ -470,5 +470,229 @@ router.post('/emergency-call', ensureAuthenticated, async (req, res) => {
 
 
 
+// **************************************************************************************************************gg function
+router.get('/instiution-request/:id', ensureAuthenticated, checkRole('patient'), (req, res) => {
+    const patientId = req.params.id; 
+    res.render('instiution-request', {
+        title: 'Service Request',
+        user: req.session.user, 
+        patientName: req.session.user.fullName,
+        patientId: patientId,
+        appName: 'Patient Care Services',
+        currentYear: new Date().getFullYear(),
+        backgroundImage: '/path/to/background/image.jpg',
+        scriptPath: '/path/to/script.js'
+    });
+});
+
+router.post('/institution-request', ensureAuthenticated, checkRole('patient'), async (req, res) => {
+    try {
+        // Normalize patient needs
+        const normalizedPatientNeeds = Array.isArray(req.body.patientNeeds)
+            ? req.body.patientNeeds
+            : [req.body.patientNeeds].filter(Boolean);
+
+        // Prepare patient data
+        const patientData = {
+            patientName: req.session.user.fullName,
+            patientId: req.session.user._id,
+            patientNeeds: normalizedPatientNeeds,
+            date: req.body.date,
+            time: req.body.time,
+            requestedTo: 'institution',
+            status: 'pending',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+
+        // Add institution request
+        const requestResult = await userHelpers.addInstitutionRequest(patientData);
+
+        // Redirect to select institution page with the new request ID
+        res.redirect(`/select-institution/${requestResult.insertedId}`);
+    } catch (error) {
+        console.error('Error in institution request:', error);
+        res.status(500).render('error', { 
+            message: 'Failed to process service request',
+            error: error.message 
+        });
+    }
+});
+
+router.get('/select-institution/:requestId', ensureAuthenticated, async (req, res) => {
+    try {
+        const requestId = req.params.requestId;
+
+        // Fetch the patient request details
+        const patientRequest = await db.get()
+            .collection(collection.PATIENT_COLLECTION)
+            .findOne({ _id: new ObjectId(requestId) });
+
+        if (!patientRequest) {
+            return res.status(404).render('error', { 
+                message: "Patient request not found" 
+            });
+        }
+
+        // Fetch patient user details
+        const patientUser = await db.get()
+            .collection(collection.USER_COLLECTION)
+            .findOne({ 
+                _id: new ObjectId(patientRequest.patientId),
+                role: 'patient' 
+            });
+
+        if (!patientUser) {
+            return res.status(404).render('error', { 
+                message: "Patient user not found" 
+            });
+        }
+
+        // Function to calculate distance (you should implement this)
+        const calculateDistance = (lat1, lon1, lat2, lon2) => {
+            // Implement Haversine formula or use a library
+            // This is a placeholder implementation
+            const R = 6371; // Radius of the Earth in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        };
+
+        // Fetch institutions that can handle the patient's needs
+        const institutions = await db.get()
+            .collection(collection.USER_COLLECTION)
+            .find({
+                role: 'institution',
+                // patientNeeds: { $elemMatch: { $in: patientRequest.patientNeeds } },
+                latitude: { $exists: true },
+                longitude: { $exists: true }
+            })
+            .toArray();
+        // Enrich institutions with distance and additional details
+        const institutionsWithDetails = institutions.map(institution => ({
+            ...institution,
+            distance: calculateDistance(
+                patientUser.latitude, 
+                patientUser.longitude, 
+                institution.latitude, 
+                institution.longitude
+            ),
+            profileImage: institution.profileImageUrl || '/images/default-profile.png'
+        }))
+        .sort((a, b) => a.distance - b.distance); // Sort by distance
+
+        // Render the select-institution page
+        res.render('select-institution', {
+            patient: patientUser,
+            institutions: institutionsWithDetails,
+            requestId: requestId
+        });
+    } catch (error) {
+        console.error('Error in select institution:', error);
+        res.status(500).render('error', { 
+            message: 'Failed to fetch institutions',
+            error: error.message 
+        });
+    }
+});
+
+router.post('/select-institution/:requestId', ensureAuthenticated, async (req, res) => {
+    try {
+        const { institutionId } = req.body;
+        const requestId = req.params.requestId;
+
+        // Fetch patient request details
+        const patientRequest = await db.get()
+            .collection(collection.PATIENT_COLLECTION)
+            .findOne({ _id: new ObjectId(requestId) });
+
+        if (!patientRequest) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Patient request not found" 
+            });
+        }
+
+        // Fetch institution details
+        const institution = await db.get()
+            .collection(collection.USER_COLLECTION)
+            .findOne({ 
+                _id: new ObjectId(institutionId),
+                role: 'institution' 
+            });
+
+        if (!institution) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Institution not found" 
+            });
+        }
+
+        // Create match request
+        const matchRequest = {
+            patientId: patientRequest.patientId,
+            patientName: patientRequest.patientName,
+            institutionId: institution._id,
+            institutionName: institution.fullName,
+            patientNeeds: patientRequest.patientNeeds,
+            date: patientRequest.date,
+            time: patientRequest.time,
+            status: 'pending',
+            createdAt: new Date()
+        };
+
+        // Insert match request
+        const matchResult = await db.get()
+            .collection(collection.MATCH_COLLECTION)
+            .insertOne(matchRequest);
+
+        // Create notification for institution
+        await db.get()
+            .collection(collection.NOTIFICATIONS_COLLECTION)
+            .insertOne({
+                userId: institution._id,
+                type: 'service_request',
+                message: `New service request from ${patientRequest.patientName}`,
+                details: matchRequest,
+                status: 'unread',
+                requestedTo: 'institution',
+                patientNeeds: patientRequest.patientNeeds,
+                date: patientRequest.date,
+                time: patientRequest.time,
+                createdAt: new Date()
+            });
+
+        // Update patient request status
+        await db.get()
+            .collection(collection.PATIENT_COLLECTION)
+            .updateOne(
+                { _id: new ObjectId(requestId) },
+                { $set: { 
+                    status: 'matched', 
+                    matchedInstitutionId: institution._id,
+                    updatedAt: new Date() 
+                } }
+            );
+
+        // Redirect to patient profile
+        res.redirect(`/patient-profile/${patientRequest.patientId}`);
+    } catch (error) {
+        console.error('Error selecting institution:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to process institution selection',
+            error: error.message 
+        });
+    }
+});
+
+
+
+
 
 module.exports = router;

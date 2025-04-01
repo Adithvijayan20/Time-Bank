@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Volunteer Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+        
+        .volunteer-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 900px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+
+        .back-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        .page-header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 0 0 15px 15px;
+        }
+        #selected-skill {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 30px;
+            background-color: #f2f2f2;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        #selected-skill span {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        #selected-skill span button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .form-group.full-width {
+            flex: 0 0 100%;
+        }
+        
+        .skill-actions {
+            display: flex;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        
+        #skill {
+            flex-grow: 1;
+            margin-bottom: 0;
+        }
+        
+        #add-skill-btn {
+            width: auto;
+            padding: 10px 15px;
+        }
+        .submit-button {
+            display: inline-block;
+            background-color: rgb(95, 95, 167);
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .submit-button:hover {
+            background-color:  rgb(95, 95, 167);
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+        .map-container {
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 30px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .current-file-info {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1><i class="fas fa-user-edit"></i> Update Volunteer Details</h1>
+    </div>
+
+    <div class="container">
+        <div class="volunteer-card">
+            <form action="/institution/updateeachvolunteer/{{viewEachVolunteer._id}}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" class="form-control" value="{{viewEachVolunteer.fullName}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="age" class="form-label">Age</label>
+                    <input type="number" id="age" name="age" class="form-control" value="{{viewEachVolunteer.age}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" id="phone" name="phone" class="form-control" value="{{viewEachVolunteer.phone}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" value="{{viewEachVolunteer.email}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="aadhaar" class="form-label">Aadhaar</label>
+                    <input type="text" id="aadhaar" name="aadhaar" class="form-control" value="{{viewEachVolunteer.aadhaar}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea id="address" name="address" class="form-control" rows="4" required>{{viewEachVolunteer.address}}</textarea>
+                </div>
+                
+                 <div class="form-group">
+                    <label for="photo" class="form-label">Update Profile Photo</label>
+                    {{#if viewEachVolunteer.photoPath}}
+                    <div class="mb-2">
+                        <img src="/{{viewEachVolunteer.photoPath}}" alt="Volunteer Photo" style="max-width: 200px; max-height: 200px;">
+                    </div>
+                    {{/if}}
+                    <input type="file" id="photo" name="photo" class="form-control">
+                    <input type="hidden" name="currentPhotoPath" value="{{viewEachVolunteer.photoPath}}">
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="skill"><h4>Select Skills</h4> (You can select multiple skills)</label>
+                    <select id="skill">
+                        <option value="">-- Select a skill --</option>
+                        <option value="Driving">Driving</option>
+                        <option value="First Aid">First Aid</option>
+                        <option value="Basic Nursing Assistance">Basic Nursing Assistance</option>
+                        <option value="Triage">Triage</option>
+                        <option value="Active Listening">Active Listening</option>
+                        <option value="Mental Health Support">Mental Health Support</option>
+                        <option value="Patient Transport">Patient Transport</option>
+                        <option value="Better Communication">Better Communication</option>
+                        <option value="Logistics Coordination">Logistics Coordination</option>
+                        <option value="Problem Solving">Problem Solving</option>
+                        <option value="Safety">Safety</option>
+                        <option value="Stress Management">Stress Management</option>
+                        <option value="Awareness">Awareness</option>
+                    </select>
+                    
+                    <div class="skill-actions">
+                        <input type="text" id="skill" name="skill" value="{{viewEachVolunteer.skill}}" placeholder="Enter skills here" required>
+                        <button type="button" id="add-skill-btn">Add</button>
+                    </div>
+                    
+                    <div id="selected-skill"></div>
+                </div>
+                <div class="form-group">
+                    <label for="idProofPath" class="form-label">Update ID Proof</label>
+                    {{#if viewEachVolunteer.idProofPath}}
+                    <div class="mb-2">
+                        <img src="/{{viewEachVolunteer.idProofPath}}" alt="ID Proof" style="max-width: 200px; max-height: 200px;">
+                    </div>
+                    {{/if}}
+                    <input type="file" id="idProof" name="idProofPath" class="form-control">
+                    <input type="hidden" name="currentIdProofPath" value="{{viewEachVolunteer.idProofPath}}">
+                </div>
+
+                <div>
+                    <h3 class="section-title"><i class="fas fa-map-marked-alt"></i> Location</h3>
+                    <div id="map" class="map-container"></div>
+                    <!-- Hidden inputs to store the latitude and longitude -->
+                    <!-- Latitude -->
+                    <div class="form-group">
+                        <input type="hidden" id="latitude" name="latitude" class="form-control" value="{{viewEachVolunteer.latitude}}" required>
+                    </div>
+                    <!-- Longitude -->
+                    <div class="form-group">
+                        <input type="hidden" id="longitude" name="longitude" class="form-control" value="{{viewEachVolunteer.longitude}}" required>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary">Update Volunteer</button>
+                </div>
+            </form>
+            <div class="mt-4 text-center">
+                <a href="/institution/viewvolunteers" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Volunteers
+                </a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5MQdwuxFIG6Msf_At0bV2vPXuFwEkVkI&callback=initMap" async defer></script>
+    <script>
+        // Initialize the map when the page loads
+        function initMap() {
+            // Get the latitude and longitude from the hidden inputs
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+            
+            // Use the values from the inputs or fall back to default values
+            const latitude = latitudeInput && latitudeInput.value ? parseFloat(latitudeInput.value) : 11.832748055874513;
+            const longitude = longitudeInput && longitudeInput.value ? parseFloat(longitudeInput.value) : 75.97467324372525;
+            
+            // Create map
+            const location = { lat: latitude, lng: longitude };
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                center: location,
+                mapTypeControl: true,
+                streetViewControl: true,
+                fullscreenControl: true
+            });
+            
+            // Add marker for volunteer location
+            const marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                draggable: true,
+                title: "Volunteer Location"
+            });
+            
+            // Update latitude and longitude when marker is dragged
+            marker.addListener('dragend', function(event) {
+                document.getElementById('latitude').value = event.latLng.lat();
+                document.getElementById('longitude').value = event.latLng.lng();
+            });
+            
+            // Allow clicking on the map to set the marker position
+            map.addListener('click', function(event) {
+                marker.setPosition(event.latLng);
+                document.getElementById('latitude').value = event.latLng.lat();
+                document.getElementById('longitude').value = event.latLng.lng();
+            });
+            
+            // Add an info window
+            const infoWindow = new google.maps.InfoWindow({
+                content: `<div style="font-weight: bold; color: #3498db;">
+                            <i class="fas fa-map-marker-alt"></i> 
+                            Volunteer Location
+                          </div>`
+            });
+            
+            // Open info window when marker is clicked
+            marker.addListener('click', function() {
+                infoWindow.open(map, marker);
+            });
+        }
+
+        // Skill handling functionality
+        function initSkillsHandling() {
+            const skillsSelect = document.getElementById("skill");
+            const selectedSkillsContainer = document.getElementById("selected-skill");
+            const skillField = document.getElementById("skill");
+            const addSkillBtn = document.getElementById("add-skill-btn");
+            
+            // Update skills display on page load
+            updateSkillsDisplay();
+            
+            // Function to update the skills display and input field
+            function updateSkillsDisplay() {
+                // Get current values from the input field
+                const currentValue = skillField.value;
+                const selectedSkills = currentValue ? currentValue.split(',').map(s => s.trim()).filter(s => s) : [];
+                
+                // Update the visual representation
+                selectedSkillsContainer.innerHTML = "";
+                selectedSkills.forEach(skill => {
+                    const span = document.createElement("span");
+                    span.textContent = skill;
+                    
+                    const removeButton = document.createElement("button");
+                    removeButton.textContent = "×";
+                    removeButton.type = "button"; // Prevent form submission
+                    removeButton.addEventListener("click", function() {
+                        removeSkill(skill);
+                    });
+                    
+                    span.appendChild(removeButton);
+                    selectedSkillsContainer.appendChild(span);
+                });
+            }
+            
+            // Handle skill selection from dropdown
+            skillsSelect.addEventListener("change", function() {
+                if (this.value) {
+                    // Add the selected skill to the input field
+                    const currentSkills = skillField.value ? skillField.value.split(',').map(s => s.trim()) : [];
+                    if (!currentSkills.includes(this.value)) {
+                        if (currentSkills.length > 0 && currentSkills[0] !== "") {
+                            skillField.value = skillField.value + ", " + this.value;
+                        } else {
+                            skillField.value = this.value;
+                        }
+                        updateSkillsDisplay();
+                    }
+                    this.selectedIndex = 0; // Reset dropdown
+                }
+            });
+            
+            // Add skills manually with button click
+            addSkillBtn.addEventListener("click", function() {
+                addManualSkill();
+            });
+            
+            // Add skill when pressing Enter in the skill field
+            skillField.addEventListener("keypress", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    addManualSkill();
+                }
+            });
+            
+            // Function to add the skill from the input field
+            function addManualSkill() {
+                const manualSkill = document.getElementById("skill").value.trim();
+                if (manualSkill) {
+                    const currentSkills = skillField.value ? skillField.value.split(',').map(s => s.trim()) : [];
+                    if (!currentSkills.includes(manualSkill)) {
+                        if (currentSkills.length > 0 && currentSkills[0] !== "") {
+                            skillField.value = skillField.value + ", " + manualSkill;
+                        } else {
+                            skillField.value = manualSkill;
+                        }
+                    }
+                    document.getElementById("skill").value = ""; // Clear the input field
+                    updateSkillsDisplay();
+                }
+            }
+            
+            // Function to remove a skill
+            function removeSkill(skillToRemove) {
+                const currentSkills = skillField.value.split(',').map(s => s.trim());
+                const filteredSkills = currentSkills.filter(skill => skill !== skillToRemove);
+                skillField.value = filteredSkills.join(', ');
+                updateSkillsDisplay();
+            }
+        }
+
+        // Initialize everything when the window loads
+        window.onload = function() {
+            // Initialize skills handling
+            initSkillsHandling();
+            
+            // Map will be initialized by the Google Maps API callback
+        };
+    </script>
+</body>
+</html>

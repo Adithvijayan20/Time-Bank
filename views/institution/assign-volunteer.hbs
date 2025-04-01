@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assign Volunteer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .page-header {
+            margin-bottom: 20px;
+        }
+        .request-details {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .volunteers-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .volunteer-card {
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .volunteer-info {
+            flex-grow: 1;
+        }
+        .match-score {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .high-match {
+            background-color: #28a745;
+        }
+        .medium-match {
+            background-color: #ffc107;
+            color: black;
+        }
+        .low-match {
+            background-color: #dc3545;
+        }
+        .matching-details {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .skill-tag {
+            display: inline-block;
+            background-color: #e9ecef;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-right: 5px;
+            font-size: 0.9em;
+        }
+        .skill-tag.matched {
+            background-color: #28a745;
+            color: white;
+        }
+        .assign-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .no-volunteers {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .btn-back {
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            background-color: #6c757d;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Assign Volunteer</h1>
+        <a href="/institution/notifications/{{notification._id}}" class="btn-back">Back to Request Details</a>
+    </div>
+    
+    <div class="request-details">
+        <h2>Request Details</h2>
+        <p><strong>Message:</strong> {{notification.message}}</p>
+        
+        {{#if notification.details}}
+            {{#if notification.details.patientNeeds}}
+            <p>
+                <strong>Required Skills:</strong>
+                {{#each requiredSkills}}
+                    <span class="skill-tag">{{this}}</span>
+                {{/each}}
+            </p>
+            {{/if}}
+            {{#if patientLocation}}
+            <p><strong>Location:</strong> {{patientLocation}}</p>
+            {{/if}}
+            {{#if notification.details.date}}
+            <p><strong>Date:</strong> {{notification.details.date}}</p>
+            {{/if}}
+            {{#if notification.details.time}}
+            <p><strong>Time:</strong> {{notification.details.time}}</p>
+            {{/if}}
+        {{/if}}
+    </div>
+    
+    <div class="volunteers-container">
+        <h2>Available Volunteers</h2>
+        
+        {{#if volunteers.length}}
+            {{#each volunteers}}
+                <div class="volunteer-card">
+                    <div class="volunteer-info">
+                        <h3>Volunteer Name: {{this.fullName}}</h3>
+                        <p><strong>Contact:</strong> {{this.phone}}</p>
+                        <p><strong>Location:</strong> {{this.address}} {{#if this.locationMatch}}<span style="color: #28a745;">(Match!)</span>{{/if}}</p>
+                        
+                        <div class="matching-details">
+                            <p><strong>Skills:{{this.skill}}</strong>
+                                {{#each this.skills}}
+                                    {{#if (includes ../matchingSkills this)}}
+                                        <span class="skill-tag matched">{{this}}</span>
+                                    {{else}}
+                                        <span class="skill-tag">{{this}}</span>
+                                    {{/if}}
+                                {{/each}}
+                            </p>
+                            <p><strong>Skill Match:</strong> {{this.skillMatchPercentage}}%</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <span class="match-score {{#if (gte this.matchScore 70)}}high-match{{else if (gte this.matchScore 40)}}medium-match{{else}}low-match{{/if}}">
+                            {{this.matchScore}}%
+                        </span>
+                        
+                        <form action="/institution/assign-volunteer" method="POST">
+                            <input type="hidden" name="requestId" value="{{../notification._id}}">
+                            <input type="hidden" name="volunteerId" value="{{this._id}}">
+                            <input type="hidden" name="patientId" value="{{../notification.userId}}">
+                            <button type="submit" class="assign-btn">Assign</button>
+                        </form>
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <div class="no-volunteers">
+                <p>No volunteers available at the moment.</p>
+            </div>
+        {{/if}}
+    </div>
+</body>
+</html>

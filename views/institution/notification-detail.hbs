@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notification Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .notification-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .notification-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .notification-details {
+            margin-bottom: 15px;
+        }
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #28a745;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-card">
+        <div class="notification-header">
+            <h1>Notification Details</h1>
+        </div>
+        
+        {{#if notification}}
+        <div class="notification-details">
+            <div class="detail-item">
+                <strong>Message:</strong> {{notification.message}}
+            </div>
+            <div class="detail-item">
+                <strong>Type:</strong> {{notification.type}}
+            </div>
+            <div class="detail-item">
+                <strong>Status:</strong> {{notification.status}}
+            </div>
+            <div class="detail-item">
+                <strong>Created At:</strong> {{notification.createdAt}}
+            </div>
+            
+            {{#if notification.details}}
+                {{#if notification.details.patientNeeds}}
+                <div class="detail-item">
+                    <strong>Patient Needs:</strong> 
+                    {{#each notification.details.patientNeeds}}
+                        {{this}}{{#unless @last}}, {{/unless}}
+                    {{/each}}
+                </div>
+                {{/if}}
+                {{#if notification.details.date}}
+                <div class="detail-item">
+                    <strong>Date:</strong> {{notification.details.date}}
+                </div>
+                {{/if}}
+                {{#if notification.details.time}}
+                <div class="detail-item">
+                    <strong>Time:</strong> {{notification.details.time}}
+                </div>
+                {{/if}}
+                {{#if notification.details.location}}
+                <div class="detail-item">
+                    <strong>Location:</strong> {{notification.details.location}}
+                </div>
+                {{/if}}
+                {{#if notification.details.additionalInfo}}
+                <div class="detail-item">
+                    <strong>Additional Information:</strong> {{notification.details.additionalInfo}}
+                </div>
+                {{/if}}
+            {{/if}}
+        </div>
+        {{else}}
+        <div class="notification-details">
+            <p>Notification not found.</p>
+        </div>
+        {{/if}}
+        
+        <div class="action-buttons">
+            <a href="/institution/notifications" class="btn btn-secondary">Back to Notifications</a>
+            {{#if notification}}
+              {{#if (eq notification.status 'unread')}}
+                <a href="/institution/assign-volunteer/{{notification._id}}" class="btn btn-primary">Assign Volunteer</a>
+              {{else if (eq notification.status 'accepted')}}
+                <span class="btn" style="background-color: #6c757d;">Volunteer Assigned</span>
+              {{else}}
+                <a href="/institution/assign-volunteer/{{notification._id}}" class="btn btn-primary">Assign Volunteer</a>
+              {{/if}}
+            {{/if}}
+        </div>
+    </div>
+</body>
+</html>

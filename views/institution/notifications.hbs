@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Institution Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .notifications-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+        .notification-item:hover {
+            background-color: #f9f9f9;
+        }
+        .notification-content {
+            flex-grow: 1;
+            margin-right: 15px;
+        }
+        .notification-status {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .unread {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .view-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .empty-notifications {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notifications ({{unreadCount}} Unread)</h1>
+    <div class="page-header">
+        <button><a href="/institutionhome" class="btn btn-secondary" style="background-color: #6c757d;">Back to Dashboard</a></button>
+    </div>
+    <div class="notifications-container">
+        {{#if notifications.length}}
+            {{#each notifications}}
+                <div class="notification-item {{#if (eq this.status 'unread')}}unread{{/if}}">
+                    <div class="notification-content">
+                        <strong>{{this.message}}</strong>
+                        <div class="notification-status">
+                            Received: {{ this.createdAt}}
+                        </div>
+                    </div>
+                <a href="/institution/notifications/{{this._id}}" class="view-btn">View</a>
+                </div>
+            {{/each}}
+        {{else}}
+            <div class="empty-notifications">
+                No notifications at the moment.
+            </div>
+        {{/if}}
+    </div>
+</body>
+</html>

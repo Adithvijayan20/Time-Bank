@@ -15,6 +15,38 @@ var app = express();
 var db=require('./config/connection')
 const session = require('express-session');
 const hbs = require('hbs');
+const InstitutionRouter = require('./routes/institution');
+
+
+const exphbs = require('express-handlebars');
+
+// Create handlebars instance with all helpers
+const handlebars = exphbs.create({
+  extname: '.hbs',
+  defaultLayout: false, // This line disables the default layout requirement
+  helpers: {
+    join: function(array, separator) {
+      return array ? array.join(separator) : '';
+    },
+    toFixed: function(number, digits) {
+      return Number(number).toFixed(digits);
+    },
+    eq: function(a, b) {
+      return a === b;
+    },
+    gte: function(a, b) {
+      return a >= b;
+    },
+    includes: function(array, value) {
+      return array.includes(value);
+    }
+  }
+});
+
+app.engine('hbs', handlebars.engine);
+
+
+//var chatbotRouter = require('./routes/chatbot');
 
 //hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 
@@ -73,6 +105,8 @@ app.use('/', volunteerRouter);
 app.use('/', adminRouter);
 app.use('/', matchRouter);
 app.use('/users', usersRouter);
+app.use('/institution', InstitutionRouter);
+//app.use('/chatbot', chatbotRouter);
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: 'isjkajskakshajh',

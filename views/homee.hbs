@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="google-site-verification" content="QUhwJMeC4PDBYMpBnHttnhuEKagM0np4zi9cWmlbFNs" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TimeBank - Connecting Hearts, Sharing Time</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <style>
@@ -239,7 +238,6 @@
             backdrop-filter: blur(8px);
             position: relative;
         }
-        
 
         @keyframes fadeDown {
             from {
@@ -296,6 +294,7 @@
                 font-size: 2rem;
             }
         }
+
         /* Chatbot styles */
         .chatbot-container {
             position: fixed;
@@ -439,7 +438,6 @@
                 height: 30px;
             }
         }
-        
     </style>
 </head>
 <body>
@@ -455,7 +453,6 @@
                 <a href="/">Home</a>
                 <a href="login">Admin login</a>
                 <a href="#about">About</a>
-                <a href="#contact">Contact</a>
                 <a href="login">
                 <button class="button">Login</button>
                 </a>
@@ -501,11 +498,19 @@
                 </div>
                 <h3>Institution Registration</h3>
                 <p>Partner with us to expand our network of care and support.</p>
-                 <a href="institution" class="button">Register Now</a>
+                <a href="institution" class="button">Register Now</a>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <i class='bx bx-building-house'></i>
+                </div>
+                <h3>Admin Registration</h3>
+                <p>Intract with all user care services and terms of activity managements.</p>
+                <a href="admin" class="button">Register Now</a>
             </div>
         </div>
     </section>
-            <div class="chatbot-container" id="chatbot-container">
+        <div class="chatbot-container" id="chatbot-container">
         <div class="chatbot-header">
             <h3>Timebank Assistant</h3>
             <button id="chatbot-toggle">X</button>
@@ -529,16 +534,8 @@
             <span class="section-badge">About Us</span>
             <h2 class="section-title">Our Mission</h2>
             <p>We believe in the power of human connection and the value of time spent together. Our platform facilitates meaningful relationships between seniors and volunteers, creating a supportive community for all.</p>
-             
-             <br>
-             <section class="about-section" id="contact">
-             <span class="section-badge">Contact us</span>
-            <p>timebank.gecw@gmail.com</p>
-            </section>
         </div>
     </section>
-
-
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -570,8 +567,7 @@
             });
         });
     </script>
-
-     <script>
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
         // DOM Elements
         const chatIcon = document.getElementById('chat-icon');

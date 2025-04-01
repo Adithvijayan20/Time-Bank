@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeBank - Complete Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .form-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form-container h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .form-container form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        .form-group {
+            flex: 0 0 48%;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-container input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        #selected-skills {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 30px;
+            background-color: #f2f2f2;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        #selected-skills span {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        #selected-skills span button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .form-group.full-width {
+            flex: 0 0 100%;
+        }
+        
+        .skill-actions {
+            display: flex;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        
+        #skill {
+            flex-grow: 1;
+            margin-bottom: 0;
+        }
+        
+        #add-skill-btn {
+            width: auto;
+            padding: 10px 15px;
+        }
+        .submit-button {
+            display: inline-block;
+            background-color: rgb(95, 95, 167);
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .submit-button:hover {
+            background-color:  rgb(95, 95, 167);
+        }
+        
+        /* Add map dimensions */
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        /* Add map container inside form */
+        .map-container {
+            flex: 0 0 100%;
+            margin-bottom: 20px;
+        }
+        
+        .map-instructions {
+            margin-bottom: 10px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <a href="/institutionhome" class="submit-button">Back</a>
+        <h2>Create Your Volunteer</h2>
+        <form action="/institution/addvolunteers" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Mobile Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="aadhaar">Aadhaar Number</label>
+                <input type="text" id="aadhaar" name="aadhaar" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+
+            <!-- Skills Selection Section -->
+            <div class="form-group full-width">
+                <label for="skills">Select Skills (You can select multiple skills)</label>
+                <select id="skills">
+                    <option value="">-- Select a skill --</option>
+                    <option value="Driving">Driving</option>
+                    <option value="First Aid">First Aid</option>
+                    <option value="Basic Nursing Assistance">Basic Nursing Assistance</option>
+                    <option value="Triage">Triage</option>
+                    <option value="Active Listening">Active Listening</option>
+                    <option value="Mental Health Support">Mental Health Support</option>
+                    <option value="Patient Transport">Patient Transport</option>
+                    <option value="Better Communication">Better Communication</option>
+                    <option value="Logistics Coordination">Logistics Coordination</option>
+                    <option value="Problem Solving">Problem Solving</option>
+                    <option value="Safety">Safety</option>
+                    <option value="Stress Management">Stress Management</option>
+                    <option value="Awareness">Awareness</option>
+                </select>
+                
+                <div class="skill-actions">
+                    <input type="text" id="skill" name="skill" placeholder="Enter skills here" required>
+                    <button type="button" id="add-skill-btn">Add</button>
+                </div>
+                
+                <div id="selected-skills"></div>
+            </div>
+
+            <!-- Upload Fields -->
+            <div class="form-group">
+                <label for="idProof">Upload Valid ID Proof</label>
+                <input type="file" id="idProof" name="idProof" accept="image/*,application/pdf" required>
+            </div>
+
+            <div class="form-group">
+                <label for="photo">Upload Passport Size Photo</label>
+                <input type="file" id="photo" name="photo" accept="image/*" required>
+            </div>
+
+            <!-- Map Container with instructions -->
+            <div class="map-container">
+                <label for="map">Select Your Location</label>
+                <p class="map-instructions">Click on the map or drag the marker to set your exact location</p>
+                <div id="map"></div>
+                <input type="hidden" id="latitude" name="latitude" required>
+                <input type="hidden" id="longitude" name="longitude" required>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Load Google Maps API at the end of body -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5MQdwuxFIG6Msf_At0bV2vPXuFwEkVkI&callback=initMap" async defer></script>
+
+    <script>
+        let map, marker;
+
+        function initMap() {
+            // Default location (New Delhi)
+            const initialLocation = { lat: 28.6139, lng: 77.2090 };
+            
+            // Create map
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: initialLocation,
+                zoom: 10,
+                mapTypeControl: true,
+                streetViewControl: true,
+                fullscreenControl: true
+            });
+
+            // Create marker
+            marker = new google.maps.Marker({
+                position: initialLocation,
+                map: map,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                title: "Drag to set location"
+            });
+
+            // Update latitude and longitude fields on marker drag
+            marker.addListener("dragend", function () {
+                const position = marker.getPosition();
+                document.getElementById("latitude").value = position.lat();
+                document.getElementById("longitude").value = position.lng();
+            });
+
+            // Set the initial values
+            document.getElementById("latitude").value = initialLocation.lat;
+            document.getElementById("longitude").value = initialLocation.lng;
+
+            // Allow clicking on the map to move the marker
+            map.addListener("click", function (event) {
+                marker.setPosition(event.latLng);
+                document.getElementById("latitude").value = event.latLng.lat();
+                document.getElementById("longitude").value = event.latLng.lng();
+            });
+            
+            // Try HTML5 geolocation to get user's current position
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        
+                        // Center map on user's location
+                        map.setCenter(userLocation);
+                        map.setZoom(14);
+                        
+                        // Move marker to user's location
+                        marker.setPosition(userLocation);
+                        
+                        // Update form fields
+                        document.getElementById("latitude").value = userLocation.lat;
+                        document.getElementById("longitude").value = userLocation.lng;
+                    },
+                    () => {
+                        // If geolocation fails, keep default location
+                        console.log("Geolocation failed or was denied");
+                    }
+                );
+            }
+        }
+
+        // Initialize skills handling
+        function initSkillsHandling() {
+            const skillsSelect = document.getElementById("skills");
+            const selectedSkillsContainer = document.getElementById("selected-skills");
+            const skillField = document.getElementById("skill");
+            const addSkillBtn = document.getElementById("add-skill-btn");
+            
+            // Parse initial skills if any exist in the field
+            let selectedSkills = [];
+            
+            // Function to update the skills display and input field
+            function updateSkillsDisplay() {
+                // Get current values from the input field
+                const currentValue = skillField.value;
+                selectedSkills = currentValue ? currentValue.split(',').map(s => s.trim()).filter(s => s) : [];
+                
+                // Update the visual representation
+                selectedSkillsContainer.innerHTML = "";
+                selectedSkills.forEach(skill => {
+                    const span = document.createElement("span");
+                    span.textContent = skill;
+                    
+                    const removeButton = document.createElement("button");
+                    removeButton.textContent = "×";
+                    removeButton.type = "button"; // Prevent form submission
+                    removeButton.addEventListener("click", function() {
+                        removeSkill(skill);
+                    });
+                    
+                    span.appendChild(removeButton);
+                    selectedSkillsContainer.appendChild(span);
+                });
+            }
+            
+            // Handle skill selection from dropdown
+            skillsSelect.addEventListener("change", function() {
+                if (this.value) {
+                    // Add the selected skill to the input field
+                    const currentSkills = skillField.value ? skillField.value.split(',').map(s => s.trim()) : [];
+                    if (!currentSkills.includes(this.value)) {
+                        if (currentSkills.length > 0 && currentSkills[0] !== "") {
+                            skillField.value = skillField.value + ", " + this.value;
+                        } else {
+                            skillField.value = this.value;
+                        }
+                        updateSkillsDisplay();
+                    }
+                    this.selectedIndex = 0; // Reset dropdown
+                }
+            });
+            
+            // Add skills manually with button click
+            addSkillBtn.addEventListener("click", function() {
+                addManualSkill();
+            });
+            
+            // Add skill when pressing Enter in the skill field
+            skillField.addEventListener("keypress", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    addManualSkill();
+                }
+            });
+            
+            // Function to add the skill from the input field
+            function addManualSkill() {
+                const skillValue = skillField.value.trim();
+                if (skillValue) {
+                    updateSkillsDisplay();
+                }
+            }
+            
+            // Function to remove a skill
+            function removeSkill(skillToRemove) {
+                const currentSkills = skillField.value.split(',').map(s => s.trim());
+                const filteredSkills = currentSkills.filter(skill => skill !== skillToRemove);
+                skillField.value = filteredSkills.join(', ');
+                updateSkillsDisplay();
+            }
+            
+            // Initialize the skills display
+            updateSkillsDisplay();
+        }
+        
+        // Initialize skills handling when document is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            initSkillsHandling();
+        });
+    </script>
+</body>
+</html>

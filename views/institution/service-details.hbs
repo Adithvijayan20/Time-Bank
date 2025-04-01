@@ -1,0 +1,820 @@
+{{!-- service-details.hbs --}}
+
+<div class="service-details-container">
+    <div class="service-details-header">
+        <h1>Service Details</h1>
+        <div class="service-details-status {{ServiceDetails.status}}">
+            <span class="status-indicator"></span>
+            {{ServiceDetails.status}}
+        </div>
+    </div>
+
+    <div class="service-details-grid">
+        <!-- Service Request Card -->
+        <div class="service-card">
+            <div class="card-header">
+                <h2>Service Request Information</h2>
+            </div>
+            <div class="card-content">
+                <div class="info-row">
+                    <span class="info-label">Request ID:</span>
+                    <span class="info-value">{{ServiceDetails._id}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value status-badge {{ServiceDetails.status}}">{{ServiceDetails.status}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value">{{ServiceDetails.requestDetails.date}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Time:</span>
+                    <span class="info-value">{{ServiceDetails.requestDetails.time}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Assigned Date:</span>
+                    <span class="info-value">{{#if ServiceDetails.assignedDate}}{{ ServiceDetails.assignedDate}}{{else}}Not assigned yet{{/if}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Completed Date:</span>
+                    <span class="info-value">{{#if ServiceDetails.completedDate}}{{ ServiceDetails.completedDate}}{{else}}Not completed yet{{/if}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Card -->
+        <div class="service-card">
+            <div class="card-header">
+                <h2>Patient Information</h2>
+            </div>
+            <div class="card-content">
+                <div class="info-row">
+                    <span class="info-label">Patient Name:</span>
+                    <span class="info-value">{{ServiceDetails.requestDetails.patientName}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Patient ID:</span>
+                    <span class="info-value">{{ServiceDetails.requestDetails.patientId}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Volunteer Card -->
+        <div class="service-card">
+            <div class="card-header">
+                <h2>Volunteer Information</h2>
+                <button id="viewVolunteerProfile" class="action-button" data-id="{{ServiceDetails.volunteerId}}">
+                    <i class="fas fa-user-circle"></i> View Profile
+                </button>
+            </div>
+            <div class="card-content">
+                <div class="info-row">
+                    <span class="info-label">Volunteer ID:</span>
+                    <span class="info-value">{{ServiceDetails.volunteerId}}</span>
+                </div>
+                <div class="info-row" id="volunteer-name-container">
+                    <span class="info-label">Volunteer Name:</span>
+                    <span class="info-value volunteer-name" id="volunteer-name">
+                        <div class="loading-spinner"></div>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Institution Card -->
+        <div class="service-card">
+            <div class="card-header">
+                <h2>Institution Information</h2>
+            </div>
+            <div class="card-content">
+                <div class="info-row">
+                    <span class="info-label">Institution Name:</span>
+                    <span class="info-value">{{ServiceDetails.requestDetails.institutionName}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Institution ID:</span>
+                    <span class="info-value">{{ServiceDetails.institutionId}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Needs Card -->
+        <div class="service-card full-width">
+            <div class="card-header">
+                <h2>Patient Needs</h2>
+            </div>
+            <div class="card-content">
+                <div class="needs-list">
+                    {{#if ServiceDetails.requestDetails.patientNeeds}}
+                        {{#each ServiceDetails.requestDetails.patientNeeds}}
+                            <div class="need-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>{{this}}</span>
+                            </div>
+                        {{/each}}
+                    {{else}}
+                        <p class="no-needs">No specific needs recorded.</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Card -->
+        <div class="service-card full-width">
+            <div class="card-header">
+                <h2>Actions</h2>
+            </div>
+            <div class="card-content action-buttons">
+                {{#if (eq ServiceDetails.status "assigned")}}
+                    <button id="markCompleted" class="action-button success" data-id="{{ServiceDetails._id}}">
+                        <i class="fas fa-check-circle"></i> Mark as Completed
+                    </button>
+                {{/if}}
+                
+                {{#if (eq ServiceDetails.status "pending")}}
+                    <button id="assignVolunteer" class="action-button primary" data-id="{{ServiceDetails._id}}">
+                        <i class="fas fa-user-plus"></i> Assign Volunteer
+                    </button>
+                {{/if}}
+                
+                <button id="contactVolunteer" class="action-button info" data-id="{{ServiceDetails.volunteerId}}">
+                    <i class="fas fa-envelope"></i> Contact Volunteer
+                </button>
+                
+                <button id="generateReport" class="action-button warning" data-id="{{ServiceDetails._id}}">
+                    <i class="fas fa-file-pdf"></i> Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="hidden">
+    <div class="loader"></div>
+</div>
+
+<!-- Success Modal -->
+<div id="success-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close-modal">&times;</span>
+            <h2>Success</h2>
+        </div>
+        <div class="modal-body">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <p id="success-message">Operation completed successfully!</p>
+        </div>
+        <div class="modal-footer">
+            <button id="confirm-modal" class="action-button success">OK</button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Variables */
+:root {
+    --primary-color: #4a6bdf;
+    --primary-light: #eef2ff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --dark-color: #343a40;
+    --light-color: #f8f9fa;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --hover-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+    --transition-speed: 0.3s;
+    --border-radius: 12px;
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Base Styles */
+body {
+    font-family: var(--font-main);
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.service-details-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.service-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.service-details-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin: 0;
+}
+
+.service-details-status {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.service-details-status.assigned {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #d6a100;
+}
+
+.service-details-status.completed {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: #1a8735;
+}
+
+.service-details-status.pending {
+    background-color: rgba(108, 117, 125, 0.15);
+    color: #5a6268;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.service-details-status.assigned .status-indicator {
+    background-color: #ffc107;
+}
+
+.service-details-status.completed .status-indicator {
+    background-color: #28a745;
+}
+
+.service-details-status.pending .status-indicator {
+    background-color: #6c757d;
+}
+
+/* Grid Layout */
+.service-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Cards */
+.service-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+.card-header {
+    padding: 20px;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #fafbfc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.card-content {
+    padding: 20px;
+}
+
+/* Information Rows */
+.info-row {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-label {
+    font-size: 12px;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 16px;
+    color: var(--dark-color);
+    font-weight: 500;
+    word-break: break-word;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.assigned {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #d6a100;
+}
+
+.status-badge.completed {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: #1a8735;
+}
+
+.status-badge.pending {
+    background-color: rgba(108, 117, 125, 0.15);
+    color: #5a6268;
+}
+
+/* Patient Needs List */
+.needs-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.need-item {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.need-item i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+.no-needs {
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.action-button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: all 0.2s ease;
+    min-width: 160px;
+}
+
+.action-button i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.action-button.primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.action-button.success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.action-button.danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.action-button.warning {
+    background-color: var(--warning-color);
+    color: var(--dark-color);
+}
+
+.action-button.info {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    filter: brightness(1.05);
+}
+
+.action-button:active {
+    transform: translateY(0);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Loading Overlay */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#loading-overlay.hidden {
+    display: none;
+}
+
+.loader {
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid var(--primary-color);
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: white;
+    margin: auto;
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+    animation: modalFadeIn 0.3s ease;
+    overflow: hidden;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+    padding: 15px 20px;
+    background-color: #fafbfc;
+    border-bottom: 1px solid #eaeaea;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.close-modal {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: var(--dark-color);
+}
+
+.modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 60px;
+    color: var(--success-color);
+    margin-bottom: 20px;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eaeaea;
+    text-align: right;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .service-details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-details-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .service-details-status {
+        margin-top: 10px;
+    }
+    
+    .info-row {
+        flex-direction: column;
+    }
+    
+    .action-button {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Get volunteer name
+    fetchVolunteerName();
+    
+    // Add event listeners to buttons
+    setupButtonListeners();
+    
+    // Setup modals
+    setupModals();
+});
+
+// Fetch volunteer name function
+function fetchVolunteerName() {
+    const volunteerId = "{{ServiceDetails.volunteerId}}";
+    const volunteerNameElement = document.getElementById('volunteer-name');
+    
+    if (!volunteerId || volunteerId === 'null') {
+        volunteerNameElement.textContent = 'Not assigned yet';
+        return;
+    }
+    
+    // Simulate API call (replace with actual API call)
+    fetch(`/api/volunteers/${volunteerId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            volunteerNameElement.textContent = data.fullName || 'Unknown';
+        })
+        .catch(error => {
+            console.error('Error fetching volunteer name:', error);
+            // Simulate a name for demo purposes (remove in production)
+            setTimeout(() => {
+                volunteerNameElement.textContent = 'John Doe';
+            }, 1000);
+        });
+}
+
+// Setup button event listeners
+function setupButtonListeners() {
+    // Mark as completed button
+    const completedBtn = document.getElementById('markCompleted');
+    if (completedBtn) {
+        completedBtn.addEventListener('click', function() {
+            const serviceId = this.getAttribute('data-id');
+            handleMarkAsCompleted(serviceId);
+        });
+    }
+    
+    // Assign volunteer button
+    const assignBtn = document.getElementById('assignVolunteer');
+    if (assignBtn) {
+        assignBtn.addEventListener('click', function() {
+            const serviceId = this.getAttribute('data-id');
+            window.location.href = `/assign-volunteer/${serviceId}`;
+        });
+    }
+    
+    // Contact volunteer button
+    const contactBtn = document.getElementById('contactVolunteer');
+    if (contactBtn) {
+        contactBtn.addEventListener('click', function() {
+            const volunteerId = this.getAttribute('data-id');
+            window.location.href = `/contact-volunteer/${volunteerId}`;
+        });
+    }
+    
+    // Generate report button
+    const reportBtn = document.getElementById('generateReport');
+    if (reportBtn) {
+        reportBtn.addEventListener('click', function() {
+            const serviceId = this.getAttribute('data-id');
+            handleGenerateReport(serviceId);
+        });
+    }
+    
+    // View volunteer profile button
+    const viewProfileBtn = document.getElementById('viewVolunteerProfile');
+    if (viewProfileBtn) {
+        viewProfileBtn.addEventListener('click', function() {
+            const volunteerId = this.getAttribute('data-id');
+            window.location.href = `/volunteer-profile/${volunteerId}`;
+        });
+    }
+}
+
+// Handle mark as completed action
+function handleMarkAsCompleted(serviceId) {
+    showLoadingOverlay();
+    
+    // Simulate API call (replace with actual API call)
+    setTimeout(() => {
+        hideLoadingOverlay();
+        showSuccessModal('Service has been marked as completed successfully!');
+        
+        // In a real implementation, you would update the UI after a successful API call
+        // For demo, we're directly updating UI
+        updateServiceStatus('completed');
+    }, 1500);
+    
+    // In a real implementation, you would make an API call like:
+    /*
+    fetch(`/api/services/${serviceId}/complete`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoadingOverlay();
+        showSuccessModal('Service has been marked as completed successfully!');
+        updateServiceStatus('completed');
+    })
+    .catch(error => {
+        hideLoadingOverlay();
+        console.error('Error:', error);
+        // Show error modal
+    });
+    */
+}
+
+// Handle generate report action
+function handleGenerateReport(serviceId) {
+    showLoadingOverlay();
+    
+    // Simulate API call (replace with actual API call)
+    setTimeout(() => {
+        hideLoadingOverlay();
+        showSuccessModal('Report has been generated and is ready for download.');
+        
+        // In a real implementation, you would redirect to the report or trigger a download
+    }, 1500);
+}
+
+// Update service status in UI
+function updateServiceStatus(newStatus) {
+    // Update status badges
+    const statusElements = document.querySelectorAll('.service-details-status, .status-badge');
+    statusElements.forEach(element => {
+        element.classList.remove('assigned', 'pending', 'completed');
+        element.classList.add(newStatus);
+        if (element.textContent.trim()) {
+            element.textContent = newStatus;
+        }
+    });
+    
+    // Update action buttons
+    const actionButtons = document.querySelector('.action-buttons');
+    if (newStatus === 'completed') {
+        const completedBtn = document.getElementById('markCompleted');
+        if (completedBtn) {
+            completedBtn.remove();
+        }
+    }
+}
+
+// Loading overlay functions
+function showLoadingOverlay() {
+    document.getElementById('loading-overlay').classList.remove('hidden');
+}
+
+function hideLoadingOverlay() {
+    document.getElementById('loading-overlay').classList.add('hidden');
+}
+
+// Modal functions
+function setupModals() {
+    // Close modal when clicking close button
+    const closeButtons = document.querySelectorAll('.close-modal');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', closeModal);
+    });
+    
+    // Close modal when clicking OK button
+    const confirmButtons = document.querySelectorAll('#confirm-modal');
+    confirmButtons.forEach(button => {
+        button.addEventListener('click', closeModal);
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    });
+}
+
+function showSuccessModal(message) {
+    const modal = document.getElementById('success-modal');
+    const messageElement = document.getElementById('success-message');
+    
+    messageElement.textContent = message;
+    modal.classList.add('active');
+}
+
+function closeModal() {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.classList.remove('active');
+    });
+}
+
+// Add smooth animations on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.service-card');
+    
+    // Animate cards in sequence
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100 * index);
+    });
+});
+</script>

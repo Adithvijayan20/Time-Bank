@@ -100,7 +100,7 @@ router.post('/login', async (req, res) => {
     try {
         const loginResponse = await userHelpers.doLogin(req.body);
         if (loginResponse.status) {
-            if ((loginResponse.user.role === 'volunteer' || loginResponse.user.role === 'patient') && !loginResponse.user.isActive) {
+            if ((loginResponse.user.role === 'volunteer' || loginResponse.user.role === 'patient'|| loginResponse.user.role === 'institution') && !loginResponse.user.isActive) {
                 return res.render('login', { message: "Contact admin" }); 
             }
             
@@ -118,6 +118,9 @@ router.post('/login', async (req, res) => {
                 res.redirect(`/patient-profile/${loginResponse.user._id}`);
             } else if (loginResponse.user.role === 'admin') {
                 res.redirect('/admin');
+            }
+            else if (loginResponse.user.role === 'institution') {
+                    res.redirect('/institutionhome');
                  // Redirect to admin dashboard
             } else {
                 res.status(400).send('Invalid user role');
@@ -401,6 +404,45 @@ router.get("/elderly-news", async (req, res) => {
 //     res.status(500).json({ success: false, message: "Error making emergency call." });
 //   }
 // });
+
+
+
+
+//gg function *********************************************************************************************************************************
+
+router.get('/institution', (req, res) => {
+    res.render('institution', { title: 'Express' });
+});
+router.post('/institution', async (req, res) => {
+    req.body.role = 'institution'; 
+    await userHelpers.doInstitution(req.body);
+    res.redirect('/institutionhome');
+});
+
+
+router.get('/institutionhome', ensureAuthenticated, checkRole('institution'), async (req, res) => {
+    try {
+      userId = req.session.user._id;
+      const dashboardStats = await userHelpers.getDashboardStats(userId);
+      const unreadNotificationCount = await userHelpers.getUnreadNotificationCount(req.session.user._id);
+      res.render('institutionhome', {
+        user: req.session.user,
+        institutionName: req.session.user.fullName,
+        institutionId: req.session.user._id.toString(),
+        dashboardStats,
+        unreadNotificationCount,
+        totalVolunteers: dashboardStats.totalVolunteers || 0, // Add this line
+        appName: "Time Bank"
+      });
+      console.log(dashboardStats);
+    } catch (error) {
+      console.error('Error rendering institution home:', error);
+      res.status(500).send('An error occurred while loading the dashboard');
+    }
+  });
+
+
+
 
 
 module.exports = router;
