@@ -694,6 +694,41 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 //**********************************************
+// router.post('/select-volunteer/:id', async (req, res) => {
+//     try {
+//         const { volunteerId, patientId } = req.body;
+
+//         if (!volunteerId || !patientId) {
+//             return res.status(400).json({ success: false, message: "Volunteer ID and Patient ID are required." });
+//         }
+
+//         // ✅ Ensure the NOTIFICATIONS_COLLECTION is correctly referenced
+//         if (!collection.NOTIFICATIONS_COLLECTION) {
+//             console.error("❌ ERROR: NOTIFICATIONS_COLLECTION is undefined!");
+//             return res.status(500).json({ success: false, message: "Server error: Notification collection is missing." });
+//         }
+
+//         // ✅ Store notification in database
+//         await db.get().collection(collection.NOTIFICATIONS_COLLECTION).insertOne({
+//             volunteerId,
+//             patientId,
+//             message: `You have been selected to assist a patient. Contact them for details.`,
+//             status: "unread",
+//             timestamp: new Date()
+//         });
+
+//         console.log(`📩 Notification sent to Volunteer ${volunteerId}`);
+
+//         // ✅ Redirect to patient profile
+//         res.redirect(`/patient-profile/${patientId}`);
+
+//     } catch (error) {
+//         console.error("❌ Error selecting volunteer:", error);
+//         res.status(500).json({ success: false, message: "Server error" });
+//     }
+// });
+
+
 router.post('/select-volunteer/:id', async (req, res) => {
     try {
         const { volunteerId, patientId } = req.body;
@@ -708,10 +743,22 @@ router.post('/select-volunteer/:id', async (req, res) => {
             return res.status(500).json({ success: false, message: "Server error: Notification collection is missing." });
         }
 
-        // ✅ Store notification in database
+        // Fetch patient record from patient collection to get patientNeeds, date, and time
+        const patientRecord = await db.get().collection(collection.PATIENT_COLLECTION)
+            .findOne({ patientId: patientId });
+        
+        if (!patientRecord) {
+            console.error("❌ ERROR: Patient record not found!");
+            return res.status(404).json({ success: false, message: "Patient record not found." });
+        }
+
+        // ✅ Store notification in database, including patientNeeds, date, and time from the patient record
         await db.get().collection(collection.NOTIFICATIONS_COLLECTION).insertOne({
             volunteerId,
             patientId,
+            patientNeeds: patientRecord.patientNeeds,
+            date: patientRecord.date,
+            time: patientRecord.time,
             message: `You have been selected to assist a patient. Contact them for details.`,
             status: "unread",
             timestamp: new Date()
@@ -721,7 +768,6 @@ router.post('/select-volunteer/:id', async (req, res) => {
 
         // ✅ Redirect to patient profile
         res.redirect(`/patient-profile/${patientId}`);
-
     } catch (error) {
         console.error("❌ Error selecting volunteer:", error);
         res.status(500).json({ success: false, message: "Server error" });

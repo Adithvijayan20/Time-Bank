@@ -139,17 +139,56 @@ module.exports = {
         
     
 
+    // addPatientHome: (patientData) => {
+    //     return new Promise(async (resolve, reject) => {
+    //         try {
+    //             patientData.patientId = patientData.patientId || new ObjectId(); // Ensure unique ID
+    //             let result = await db.get().collection(collection.PATIENT_COLLECTION).insertOne(patientData);
+    //             resolve(result);
+    //         } catch (error) {
+    //             reject(error);
+    //         }
+    //     });
+    // },
     addPatientHome: (patientData) => {
         return new Promise(async (resolve, reject) => {
             try {
-                patientData.patientId = patientData.patientId || new ObjectId(); // Ensure unique ID
-                let result = await db.get().collection(collection.PATIENT_COLLECTION).insertOne(patientData);
+                // Ensure we have a patientId (either from session or a new one if missing)
+                patientData.patientId = patientData.patientId || new ObjectId();
+    
+                // Define the fields to update.
+                // You can adjust which fields should be overwritten or merged.
+                const updateFields = {
+                    // Overwrite/refresh these fields every time
+                    patientNeeds: patientData.patientNeeds,
+                    time: patientData.time,
+                    date: patientData.date,
+                    // Include any other fields you want to update as needed
+                };
+    
+                // Perform the upsert: update if exists, insert if not.
+                let result = await db.get().collection(collection.PATIENT_COLLECTION)
+                    .updateOne(
+                        { patientId: patientData.patientId }, // Filter by patientId
+                        { $set: updateFields },               // Set new values
+                        { upsert: true }                      // Create if document doesn't exist
+                    );
                 resolve(result);
             } catch (error) {
                 reject(error);
             }
         });
     },
+     
+
+
+
+
+
+
+
+
+
     getVolunteerDetails: async (volunteerId) => {
         try {
             const volunteer = await User.findById(volunteerId);

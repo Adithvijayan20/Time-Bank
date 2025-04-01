@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-     <meta name="google-site-verification" content="QUhwJMeC4PDBYMpBnHttnhuEKagM0np4zi9cWmlbFNs" />
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="QUhwJMeC4PDBYMpBnHttnhuEKagM0np4zi9cWmlbFNs" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volunteer Job Notifications</title>
     <script>
         function initMap() {
@@ -33,16 +33,16 @@
     <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px;">
         <p><strong>Patient Name:</strong> {{patientName}}</p>
         <p><strong>Phone Number:</strong> {{phone}}</p>
-        
+        <p><strong>Patient Needs:</strong> {{patientNeeds}}</p>
+        <p><strong>Date:</strong> {{date}}</p>
+        <p><strong>Time:</strong> {{time}}</p>
         <p><strong>Message:</strong> {{message}}</p>
 
-
-       <div class="map-container" 
-     data-lat="{{location.latitude}}" 
-     data-lng="{{location.longitude}}" 
-     style="width: 100%; height: 300px; background-color: lightblue;">
-</div>
-
+        <div class="map-container" 
+             data-lat="{{location.latitude}}" 
+             data-lng="{{location.longitude}}" 
+             style="width: 100%; height: 300px; background-color: lightblue;">
+        </div>
 
         <br>
         <button onclick="handleJobAction('{{_id}}', 'accept')" style="background: green; color: white; padding: 8px;">✅ Accept</button>
@@ -50,23 +50,19 @@
     </div>
     {{/each}}
 
-   
-     <script>
-  function handleJobAction(jobId, action) {
-    fetch(`/volunteer-job/${action}/${jobId}`, { method: "POST" })
-      .then(response => response.json())
-      .then(data => {
-        if (action === "accept" && data.success) {
-          window.location.href = `/volunteer-job/start/${data.matchId}`;
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch(err => console.error("Error:", err));
-  }
-</script>
-
-
-   
+    <script>
+      function handleJobAction(jobId, action) {
+        fetch(`/volunteer-job/${action}/${jobId}`, { method: "POST" })
+          .then(response => response.json())
+          .then(data => {
+            if (action === "accept" && data.success) {
+              window.location.href = `/volunteer-job/start/${data.matchId}`;
+            } else {
+              alert(data.message);
+            }
+          })
+          .catch(err => console.error("Error:", err));
+      }
+    </script>
 </body>
 </html>

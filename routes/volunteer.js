@@ -41,6 +41,70 @@ router.get('/volunteerhome', ensureAuthenticated, checkRole('volunteer'), (req, 
 
 
 
+// router.get('/volunteer-job/:id', async (req, res) => {
+//     try {
+//         const volunteerId = req.query.volunteerId || req.session.volunteerId;
+//         if (!volunteerId) {
+//             return res.status(400).render('error', { message: "Volunteer ID is required." });
+//         }
+
+//         const availableJobs = await db.get()
+//             .collection(collection.NOTIFICATIONS_COLLECTION)
+//             .find({ status: "unread", volunteerId: volunteerId }) // Ensure matching volunteerId
+//             .toArray();
+
+//         if (!availableJobs || availableJobs.length === 0) {
+//             return res.render('volunteerhome', { availableJobs: [], message: "No new job notifications available." });
+//         }
+
+//         // Fetch patient details
+//         const patientIds = availableJobs.map(job => new ObjectId(job.patientId));
+//         const patients = await db.get()
+//             .collection(collection.USER_COLLECTION)
+//             .find({ _id: { $in: patientIds } })
+//             .toArray();
+
+//         console.log("🔍 Patients from DB:", patients);
+
+//         const patientMap = {};
+//         patients.forEach(patient => {
+//             patientMap[patient._id.toString()] = {
+//                 fullName: patient.fullName,
+//                 phone: patient.phone,
+//                 location: patient.latitude && patient.longitude
+//                     ? {latitude: patient.latitude, longitude: patient.longitude}
+//                     : { latitude: 11.8356082, longitude:  0}
+//             };
+//         });
+
+//         const jobsWithPatientDetails = availableJobs.map(job => {
+//             const patient = patientMap[job.patientId] || {};
+//             console.log('patient',patient);
+            
+//             return {
+//                 ...job,
+//                 patientName: patient.fullName || "Unknown Patient",
+//                 phone: patient.phone || "Not Available",
+//                 location: patient.location
+//             };
+//         });
+        
+
+//         console.log("✅ Processed Job Data:", jobsWithPatientDetails);
+
+//         res.render('volunteerhome', { availableJobs: jobsWithPatientDetails });
+
+//     } catch (error) {
+//         console.error("❌ Error fetching job notifications:", error);
+//         res.status(500).render('error', { message: "Internal Server Error" });
+//     }
+// });
+
+
+
+
+
+
 router.get('/volunteer-job/:id', async (req, res) => {
     try {
         const volunteerId = req.query.volunteerId || req.session.volunteerId;
@@ -57,7 +121,7 @@ router.get('/volunteer-job/:id', async (req, res) => {
             return res.render('volunteerhome', { availableJobs: [], message: "No new job notifications available." });
         }
 
-        // Fetch patient details
+        // Fetch patient details from USER_COLLECTION
         const patientIds = availableJobs.map(job => new ObjectId(job.patientId));
         const patients = await db.get()
             .collection(collection.USER_COLLECTION)
@@ -72,33 +136,35 @@ router.get('/volunteer-job/:id', async (req, res) => {
                 fullName: patient.fullName,
                 phone: patient.phone,
                 location: patient.latitude && patient.longitude
-                    ? {latitude: patient.latitude, longitude: patient.longitude}
-                    : { latitude: 11.8356082, longitude:  0}
+                    ? { latitude: patient.latitude, longitude: patient.longitude }
+                    : { latitude: 11.8356082, longitude: 0 }
             };
         });
 
         const jobsWithPatientDetails = availableJobs.map(job => {
             const patient = patientMap[job.patientId] || {};
-            console.log('matte myran',patient);
+            console.log('patient', patient);
             
             return {
                 ...job,
                 patientName: patient.fullName || "Unknown Patient",
                 phone: patient.phone || "Not Available",
-                location: patient.location
+                location: patient.location,
+                patientNeeds: job.patientNeeds || "N/A",
+                date: job.date || "N/A",
+                time: job.time || "N/A"
             };
         });
         
-
         console.log("✅ Processed Job Data:", jobsWithPatientDetails);
 
         res.render('volunteerhome', { availableJobs: jobsWithPatientDetails });
-
     } catch (error) {
         console.error("❌ Error fetching job notifications:", error);
         res.status(500).render('error', { message: "Internal Server Error" });
     }
 });
+
 
 
 
