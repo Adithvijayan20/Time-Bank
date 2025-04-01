@@ -572,86 +572,85 @@
     </script>
 
      <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // DOM Elements
-        const chatIcon = document.getElementById('chat-icon');
-        const chatbotContainer = document.getElementById('chatbot-container');
-        const chatbotToggle = document.getElementById('chatbot-toggle');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const chatMessages = document.getElementById('chatMessages');
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const chatIcon = document.getElementById('chat-icon');
+    const chatbotContainer = document.getElementById('chatbot-container');
+    const chatbotToggle = document.getElementById('chatbot-toggle');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatMessages = document.getElementById('chatMessages');
 
-        // Initially hide the chatbot
+    // Initially hide the chatbot
+    chatbotContainer.style.display = 'none';
+
+    // Toggle chat window
+    chatIcon.addEventListener('click', function() {
+        chatbotContainer.style.display = 'block';
+        chatIcon.style.display = 'none';
+        addBotMessage("Hello! How can I help you with Timebank today?");
+    });
+
+    chatbotToggle.addEventListener('click', function() {
         chatbotContainer.style.display = 'none';
+        chatIcon.style.display = 'block';
+    });
 
-        // Toggle chat window
-        chatIcon.addEventListener('click', function() {
-            chatbotContainer.style.display = 'block';
-            chatIcon.style.display = 'none';
-            // Add welcome message
-            addBotMessage("Hello! How can I help you with Timebank today?");
-        });
+    // Single function to handle message sending and response
+    async function handleMessage() {
+        const message = chatInput.value.trim();
+        if (message) {
+            // Add user message to chat
+            addUserMessage(message);
 
-        chatbotToggle.addEventListener('click', function() {
-            chatbotContainer.style.display = 'none';
-            chatIcon.style.display = 'block';
-        });
+            // Clear input
+            chatInput.value = '';
 
-        // Send message
-        function sendMessage() {
-            const message = chatInput.value.trim();
-            if (message) {
-                // Add user message to chat
-                addUserMessage(message);
-                
-                // Clear input
-                chatInput.value = '';
-                
-                // Send to server and get response
-                fetch('/chatbot/api/message', {
+            try {
+                // Send the message to the backend API and get response
+                const response = await fetch('/chatbot/api/message', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ message: message }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Add bot response
-                    addBotMessage(data.answer);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    addBotMessage("Sorry, I'm having trouble connecting. Please try again later.");
                 });
+
+                const data = await response.json();
+                // Add bot response
+                addBotMessage(data.answer);
+            } catch (error) {
+                console.error('Error:', error);
+                addBotMessage("Sorry, I'm having trouble connecting. Please try again later.");
             }
         }
+    }
 
-        // Event listeners
-        sendBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        // Helper functions
-        function addUserMessage(message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message user-message';
-            messageDiv.textContent = message;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function addBotMessage(message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message bot-message';
-            messageDiv.textContent = message;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Event listeners
+    sendBtn.addEventListener('click', handleMessage);
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleMessage();
         }
     });
-    </script>
+
+    // Helper functions
+    function addUserMessage(message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message user-message';
+        messageDiv.textContent = message;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addBotMessage(message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot-message';
+        messageDiv.textContent = message;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+});
+</script>
 </body>
 </html>
