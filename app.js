@@ -126,6 +126,13 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+// Handle 404 errors for undefined routes
+app.use((req, res, next) => {
+  res.status(404).render("404", { message: "Page Not Found" });
+});
+
+app.use(express.static("public"));
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development

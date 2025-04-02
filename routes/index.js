@@ -24,7 +24,7 @@ const getPatientVolunteerMatches = require('../helpers/helper'); // Ensure the c
  const bcrypt = require('bcrypt')
  const twilio = require('twilio');
 
-
+ const puppeteer = require('puppeteer');
 const { ObjectId } = require('mongodb');
 const { Collection } = require('mongoose');
 const axios = require('axios'); // Import Axios
@@ -232,6 +232,53 @@ router.post('/logout', (req, res) => {
 // })();
 
 
+async function fetchKeralaHealthNews() {
+    try {
+        console.log("🔎 Fetching Kerala Health News...");
+        const url = "https://www.manoramaonline.com/health.html"; // Use direct health section
+        const response = await axios.get(url, {
+            headers: { 
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            }
+        });
+
+        const $ = cheerio.load(response.data);
+        let healthNews = [];
+
+        $(".story-card a, .news-item a, h2 a, h3 a").each((index, element) => {
+            let title = $(element).text().trim();
+            let link = $(element).attr("href");
+            
+            if (title.length > 10 && link) {
+                healthNews.push({
+                    title,
+                    url: link.startsWith("http") ? link : `https://www.manoramaonline.com${link}`
+                });
+            }
+        });
+
+        if (healthNews.length === 0) {
+            console.warn("⚠️ No health news found!");
+            return [];
+        }
+
+        console.log(`✅ Found ${healthNews.length} health articles.`);
+        return healthNews.slice(0, 5); // Limit to top 5 news
+
+    } catch (error) {
+        console.error("❌ Error fetching health news:", error.message);
+        return [];
+    }
+}
+
+// Route to serve health news
+router.get("/elderly-news", async (req, res) => {
+    const healthNews = await fetchKeralaHealthNews();
+    res.render("elderly-news", { articles: healthNews });
+});
+
+
+
 
 
 //******************************
@@ -288,54 +335,108 @@ router.post('/logout', (req, res) => {
 
 
 
-async function fetchHealthcareNews() {
-    try {
-        const apiKey = process.env.NEWS_API_KEY; // Use environment variable
-        if (!apiKey) throw new Error("API key is missing! Set it in Render.");
+// async function fetchHealthcareNews() {
+//     try {
+//         const apiKey = process.env.NEWS_API_KEY; // Use environment variable
+//         if (!apiKey) throw new Error("API key is missing! Set it in Render.");
 
-        const url = `https://newsapi.org/v2/everything?q=healthcare OR medical OR hospital OR disease OR treatment OR wellness&language=en&sortBy=publishedAt&apiKey=${apiKey}`;
+//         const url = `https://newsapi.org/v2/everything?q=healthcare OR medical OR hospital OR disease OR treatment OR wellness&language=en&sortBy=publishedAt&apiKey=${apiKey}`;
 
-        const response = await axios.get(url);
-        let articles = response.data.articles || [];
+//         const response = await axios.get(url);
+//         let articles = response.data.articles || [];
 
-        if (articles.length === 0) {
-            console.warn("⚠️ No healthcare news found!");
-            return [];
-        }
+//         if (articles.length === 0) {
+//             console.warn("⚠️ No healthcare news found!");
+//             return [];
+//         }
 
-        const indianSources = new Set([
-            "The Times of India", "Hindustan Times", "NDTV", "The Hindu",
-            "Indian Express", "India Today", "Deccan Herald", "The Quint",
-            "Scroll.in", "Mathrubhumi", "Malayala Manorama", "The New Indian Express Kerala"
-        ]);
+//         const indianSources = new Set([
+//             "The Times of India", "Hindustan Times", "NDTV", "The Hindu",
+//             "Indian Express", "India Today", "Deccan Herald", "The Quint",
+//             "Scroll.in", "Mathrubhumi", "Malayala Manorama", "The New Indian Express Kerala"
+//         ]);
 
-        articles = articles.filter(article => article.source?.name && indianSources.has(article.source.name));
+//         articles = articles.filter(article => article.source?.name && indianSources.has(article.source.name));
 
-        return articles.slice(0, 5).map(article => ({
-            title: article.title,
-            description: article.description || "No description available.",
-            url: article.url,
-            source: article.source.name,
-            publishedAt: new Date(article.publishedAt).toLocaleString()
-        }));
+//         return articles.slice(0, 5).map(article => ({
+//             title: article.title,
+//             description: article.description || "No description available.",
+//             url: article.url,
+//             source: article.source.name,
+//             publishedAt: new Date(article.publishedAt).toLocaleString()
+//         }));
 
-    } catch (error) {
-        console.error("❌ Error fetching news:", error.message);
-        return [];
-    }
-}
+//     } catch (error) {
+//         console.error("❌ Error fetching news:", error.message);
+//         return [];
+//     }
+// }
 
-// Express Route for Elderly News Page
-router.get("/elderly-news", async (req, res) => {
-    try {
-        const healthcareNews = await fetchHealthcareNews();
-        res.render("elderly-news", { articles: healthcareNews });
-    } catch (error) {
-        console.error("❌ Error rendering page:", error.message);
-        res.render("elderly-news", { articles: [] });
-    }
-});
+// // Express Route for Elderly News Page
+// router.get("/elderly-news", async (req, res) => {
+//     try {
+//         const healthcareNews = await fetchHealthcareNews();
+//         res.render("elderly-news", { articles: healthcareNews });
+//     } catch (error) {
+//         console.error("❌ Error rendering page:", error.message);
+//         res.render("elderly-news", { articles: [] });
+//     }
+// });
 
+
+// async function fetchHealthcareNews() {
+//     try {
+//         const apiKey = process.env.NEWS_API_KEY; // Use environment variable
+//         if (!apiKey) {
+//             console.error("API key is missing! Set it in Render.");
+//             throw new Error("API key is missing! Set it in Render.");
+//         }
+
+//         // Encode the query to avoid issues with spaces and operators
+//         const query = encodeURIComponent("healthcare OR medical OR hospital OR disease OR treatment OR wellness");
+//         const url = `https://newsapi.org/v2/everything?q=${query}&language=en&sortBy=publishedAt&apiKey=${apiKey}`;
+        
+//         console.log("Fetching news from URL:", url);
+
+//         const response = await axios.get(url);
+//         let articles = response.data.articles || [];
+
+//         if (articles.length === 0) {
+//             console.warn("⚠️ No healthcare news found!");
+//             return [];
+//         }
+
+//         const indianSources = new Set([
+//             "The Times of India", "Hindustan Times", "NDTV", "The Hindu",
+//             "Indian Express", "India Today", "Deccan Herald", "The Quint",
+//             "Scroll.in", "Mathrubhumi", "Malayala Manorama", "The New Indian Express Kerala"
+//         ]);
+
+//         // Filter for Indian news sources
+//         articles = articles.filter(article => article.source?.name && indianSources.has(article.source.name));
+
+//         return articles.slice(0, 5).map(article => ({
+//             title: article.title,
+//             description: article.description || "No description available.",
+//             url: article.url,
+//             source: article.source.name,
+//             publishedAt: new Date(article.publishedAt).toLocaleString()
+//         }));
+
+//     } catch (error) {
+//         console.error("❌ Error fetching news:", error.message);
+//         return [];
+//     }
+// }
+// router.get("/elderly-news", async (req, res) => {
+//         try {
+//             const healthcareNews = await fetchHealthcareNews();
+//             res.render("elderly-news", { articles: healthcareNews });
+//         } catch (error) {
+//             console.error("❌ Error rendering page:", error.message);
+//             res.render("elderly-news", { articles: [] });
+//         }
+//     });
 
 
 

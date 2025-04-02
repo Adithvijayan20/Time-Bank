@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="google-site-verification" content="QUhwJMeC4PDBYMpBnHttnhuEKagM0np4zi9cWmlbFNs" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elderly News</title>
-    <link rel="stylesheet" href="/styles.css">
+    <title>Kerala Health News</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: #008080; }
+        .news-list { list-style: none; padding: 0; }
+        .news-list li { margin-bottom: 15px; }
+        .news-list a { text-decoration: none; color: #007bff; font-weight: bold; }
+        .news-list a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
-    <h1>Latest Elderly-Related News</h1>
+    <h1> News</h1>
     {{#if articles.length}}
-        <ul>
+        <ul class="news-list">
             {{#each articles}}
-                <li>
-                    <h2><a href="{{this.url}}" target="_blank">{{this.title}}</a></h2>
-                    <p>{{this.description}}</p>
-                    <p><small>Source: {{this.source}} | {{this.publishedAt}}</small></p>
-                </li>
+                <li><a href="{{this.url}}" target="_blank">{{this.title}}</a></li>
             {{/each}}
         </ul>
     {{else}}
-        <p style="color: red;">No elderly news found!</p>
+        <p>No health news available at the moment.</p>
     {{/if}}
 </body>
 </html>

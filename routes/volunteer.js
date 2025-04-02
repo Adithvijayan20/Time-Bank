@@ -627,35 +627,42 @@ router.get('/volunteer-patient-rating', ensureAuthenticated, checkRole('voluntee
             return res.redirect('/login');
         }
         const database = db.get();
-        // Fetch matches where the job is complete and the volunteerId matches the current volunteer
+        
+        // Fetch completed matches for the current volunteer
         const matches = await database.collection(collection.MATCHES_COLLECTION)
             .find({ volunteerId: volunteerId, isComplete: true })
             .toArray();
 
-        // Extract unique patient IDs from these matches
-        const patientIdSet = new Set(matches.map(match => match.patientId.toString()));
-        const patientIds = Array.from(patientIdSet).map(id => new ObjectId(id));
-
-        // Fetch ratings made by this volunteer to determine which patients have been rated
+        // Fetch ratings already submitted for each match (assume rating doc now includes matchId)
         const ratedRatings = await database.collection(collection.RATING_COLLECTION)
             .find({ volunteerId: volunteerId })
             .toArray();
+        const ratedMatchIds = ratedRatings.map(r => r.matchId?.toString());
 
-        // Extract rated patient IDs (ensure that patientId exists)
-        const ratedPatientIds = ratedRatings
-            .filter(r => r.patientId)
-            .map(r => r.patientId.toString());
+        // Filter out matches that have already been rated
+        const unratedMatches = matches.filter(match => !ratedMatchIds.includes(match._id.toString()));
 
-        // Fetch patient details from the USER_COLLECTION
-        const allPatients = await database.collection(collection.USER_COLLECTION)
+        // Get the unique patient IDs from the matches
+        const patientIds = unratedMatches.map(match => new ObjectId(match.patientId));
+
+        // Fetch patient details
+        const patients = await database.collection(collection.USER_COLLECTION)
             .find({ _id: { $in: patientIds } })
             .toArray();
 
-        // Filter out patients that have already been rated by this volunteer
-        const patients = allPatients.filter(patient => !ratedPatientIds.includes(patient._id.toString()));
+        // Create a map for quick lookup
+        const patientMap = {};
+        patients.forEach(patient => {
+            patientMap[patient._id.toString()] = patient;
+        });
 
-        // Render a view (e.g., patient-rating.hbs) listing the patients for rating
-        res.render('patient-rating', { patients, volunteerId });
+        // Enhance each match with patient details
+        const matchesWithPatientDetails = unratedMatches.map(match => ({
+            ...match,
+            patient: patientMap[match.patientId] || { fullName: "Unknown", email: "", phoneNumber: "" }
+        }));
+
+        res.render('patient-rating', { matches: matchesWithPatientDetails, volunteerId });
     } catch (error) {
         console.error("Error fetching patient ratings:", error);
         res.status(500).send("Internal Server Error");
@@ -663,27 +670,36 @@ router.get('/volunteer-patient-rating', ensureAuthenticated, checkRole('voluntee
 });
 
 // Add new route to submit a rating for a patient
-router.post('/volunteer-patient-rating/:patientId', ensureAuthenticated, checkRole('volunteer'), async (req, res) => {
+router.post('/volunteer-patient-rating/:matchId', ensureAuthenticated, checkRole('volunteer'), async (req, res) => {
     try {
         const volunteerId = req.session.volunteerId;
-        const patientId = req.params.patientId;
-        const rating = req.body.rating;  // Expected to be provided in the form submission
+        const matchId = req.params.matchId;
+        const rating = req.body.rating;  // Expected from form submission
 
         if (!rating) {
             return res.status(400).send("Rating is required");
         }
         
-        // Fetch patient details to get the name
+        // Fetch the match to get patient info
+        const match = await db.get().collection(collection.MATCHES_COLLECTION)
+            .findOne({ _id: new ObjectId(matchId) });
+        if (!match) {
+            return res.status(404).send("Match not found");
+        }
+        
+        // Fetch patient details
         const patient = await db.get().collection(collection.USER_COLLECTION)
-            .findOne({ _id: new ObjectId(patientId) });
+            .findOne({ _id: new ObjectId(match.patientId) });
         if (!patient) {
             return res.status(404).send("Patient not found");
         }
 
+        // Create a rating document that is linked to the match.
         const ratingDoc = {
             volunteerId: volunteerId,
-            patientId: patientId,
-            patientName: patient.fullName, // Store the patient's name
+            matchId: matchId,               // new field to uniquely identify each rated work
+            patientId: patient._id.toString(),
+            patientName: patient.fullName,
             rating: parseInt(rating),
             createdAt: new Date()
         };
