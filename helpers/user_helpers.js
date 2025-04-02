@@ -258,28 +258,24 @@ addMatchRequest: (matchData) => {
 },
 
 // Add these functions to your user_helpers.js
-getInstitutionNotifications: (institutionId) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!ObjectId.isValid(institutionId)) {
-                return reject(new Error('Invalid institution ID'));
-            }
-
-            const notifications = await db.get()
-                .collection(collection.NOTIFICATIONS_COLLECTION)
-                .find({
-                    userId: new ObjectId(institutionId),
-                    requestedTo: 'institution'
-                })
-                .sort({ createdAt: -1 })
-                .toArray();
-
-            resolve(notifications);
-        } catch (error) {
-            reject(error);
-        }
-    });
-},
+ getInstitutionNotifications: async (institutionId) => {
+    if (!ObjectId.isValid(institutionId)) {
+      throw new Error('Invalid institution ID');
+    }
+  
+    const notifications = await db.get()
+      .collection(collection.NOTIFICATIONS_COLLECTION)
+      .find({
+        userId: new ObjectId(institutionId),
+        requestedTo: 'institution',
+        status: { $ne: 'accepted' }
+      })
+      .sort({ createdAt: -1 })
+      .toArray();
+  
+    return notifications;
+  },
+  
 getEachInstiNotifications: (notificationId) => {
     return new Promise(async (resolve, reject) => {
         try {
