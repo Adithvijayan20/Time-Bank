@@ -1,0 +1,523 @@
+2025-04-03 00:46:07,218 - chat - INFO - Using device: cpu
+2025-04-03 00:46:07,221 - chat - INFO - Loading intents from: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\intents.json
+2025-04-03 00:46:07,224 - chat - INFO - Loaded intents with 9 categories
+2025-04-03 00:46:07,225 - chat - INFO -   - greeting: 4 patterns, 3 responses
+2025-04-03 00:46:07,225 - chat - INFO -   - services: 3 patterns, 2 responses
+2025-04-03 00:46:07,233 - chat - INFO -   - pricing: 3 patterns, 2 responses
+2025-04-03 00:46:07,239 - chat - INFO -   - goodbye: 4 patterns, 3 responses
+2025-04-03 00:46:07,243 - chat - INFO -   - thanks: 3 patterns, 3 responses
+2025-04-03 00:46:07,244 - chat - INFO -   - care_request: 3 patterns, 2 responses
+2025-04-03 00:46:07,245 - chat - INFO -   - medical_assistance: 3 patterns, 2 responses
+2025-04-03 00:46:07,246 - chat - INFO -   - volunteer: 2 patterns, 2 responses
+2025-04-03 00:46:07,248 - chat - INFO -   - companionship: 3 patterns, 2 responses
+2025-04-03 00:46:07,249 - chat - INFO - Looking for model file at: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\data.pth
+2025-04-03 00:46:07,250 - chat - INFO - File exists: True
+2025-04-03 00:46:07,269 - chat - INFO - Loaded model with weights_only=True
+2025-04-03 00:46:07,269 - chat - INFO - Model dimensions: input=54, hidden=8, output=7
+2025-04-03 00:46:07,270 - chat - INFO - Number of tags in model: 7
+2025-04-03 00:46:07,270 - chat - INFO - Available tags: ['delivery', 'funny', 'goodbye', 'greeting', 'items', 'payments', 'thanks']
+2025-04-03 00:46:07,279 - chat - INFO - Model loaded and set to evaluation mode
+2025-04-03 00:46:07,306 - __main__ - INFO - Starting Flask server...
+2025-04-03 00:46:07,396 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.19:5000
+2025-04-03 00:46:07,397 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-03 00:46:07,439 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2025-04-03 00:46:25,949 - chat - INFO - Using device: cpu
+2025-04-03 00:46:25,950 - chat - INFO - Loading intents from: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\intents.json
+2025-04-03 00:46:25,951 - chat - INFO - Loaded intents with 9 categories
+2025-04-03 00:46:25,951 - chat - INFO -   - greeting: 4 patterns, 3 responses
+2025-04-03 00:46:25,951 - chat - INFO -   - services: 3 patterns, 2 responses
+2025-04-03 00:46:25,952 - chat - INFO -   - pricing: 3 patterns, 2 responses
+2025-04-03 00:46:25,952 - chat - INFO -   - goodbye: 4 patterns, 3 responses
+2025-04-03 00:46:25,952 - chat - INFO -   - thanks: 3 patterns, 3 responses
+2025-04-03 00:46:25,953 - chat - INFO -   - care_request: 3 patterns, 2 responses
+2025-04-03 00:46:25,953 - chat - INFO -   - medical_assistance: 3 patterns, 2 responses
+2025-04-03 00:46:25,953 - chat - INFO -   - volunteer: 2 patterns, 2 responses
+2025-04-03 00:46:25,954 - chat - INFO -   - companionship: 3 patterns, 2 responses
+2025-04-03 00:46:25,954 - chat - INFO - Looking for model file at: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\data.pth
+2025-04-03 00:46:25,955 - chat - INFO - File exists: True
+2025-04-03 00:46:25,963 - chat - INFO - Loaded model with weights_only=True
+2025-04-03 00:46:25,963 - chat - INFO - Model dimensions: input=54, hidden=8, output=7
+2025-04-03 00:46:25,964 - chat - INFO - Number of tags in model: 7
+2025-04-03 00:46:25,964 - chat - INFO - Available tags: ['delivery', 'funny', 'goodbye', 'greeting', 'items', 'payments', 'thanks']
+2025-04-03 00:46:25,969 - chat - INFO - Model loaded and set to evaluation mode
+2025-04-03 00:46:25,975 - __main__ - INFO - Starting Flask server...
+2025-04-03 00:46:26,010 - werkzeug - WARNING -  * Debugger is active!
+2025-04-03 00:46:26,024 - werkzeug - INFO -  * Debugger PIN: 768-276-011
+2025-04-03 00:46:35,760 - __main__ - INFO - Using device: cpu
+2025-04-03 00:46:35,761 - __main__ - INFO - Loading intents from: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\intents.json
+2025-04-03 00:46:35,762 - __main__ - INFO - Loaded intents with 9 categories
+2025-04-03 00:46:35,763 - __main__ - INFO -   - greeting: 4 patterns, 3 responses
+2025-04-03 00:46:35,765 - __main__ - INFO -   - services: 3 patterns, 2 responses
+2025-04-03 00:46:35,765 - __main__ - INFO -   - pricing: 3 patterns, 2 responses
+2025-04-03 00:46:35,766 - __main__ - INFO -   - goodbye: 4 patterns, 3 responses
+2025-04-03 00:46:35,767 - __main__ - INFO -   - thanks: 3 patterns, 3 responses
+2025-04-03 00:46:35,768 - __main__ - INFO -   - care_request: 3 patterns, 2 responses
+2025-04-03 00:46:35,770 - __main__ - INFO -   - medical_assistance: 3 patterns, 2 responses
+2025-04-03 00:46:35,770 - __main__ - INFO -   - volunteer: 2 patterns, 2 responses
+2025-04-03 00:46:35,771 - __main__ - INFO -   - companionship: 3 patterns, 2 responses
+2025-04-03 00:46:35,773 - __main__ - INFO - Looking for model file at: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\data.pth
+2025-04-03 00:46:35,776 - __main__ - INFO - File exists: True
+2025-04-03 00:46:35,786 - __main__ - INFO - Loaded model with weights_only=True
+2025-04-03 00:46:35,791 - __main__ - INFO - Model dimensions: input=54, hidden=8, output=7
+2025-04-03 00:46:35,794 - __main__ - INFO - Number of tags in model: 7
+2025-04-03 00:46:35,796 - __main__ - INFO - Available tags: ['delivery', 'funny', 'goodbye', 'greeting', 'items', 'payments', 'thanks']
+2025-04-03 00:46:35,803 - __main__ - INFO - Model loaded and set to evaluation mode
+2025-04-03 00:46:41,311 - __main__ - INFO - Processing input: 'hi'
+2025-04-03 00:46:41,317 - __main__ - ERROR - Error processing response: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+Traceback (most recent call last):
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\chat.py", line 88, in get_response
+    sentence = tokenize(msg)
+               ^^^^^^^^^^^^^
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\nltk_utils.py", line 25, in tokenize
+    return nltk.word_tokenize(sentence.lower())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 142, in word_tokenize
+    sentences = [text] if preserve_line else sent_tokenize(text, language)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 119, in sent_tokenize
+    tokenizer = _get_punkt_tokenizer(language)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 105, in _get_punkt_tokenizer
+    return PunktTokenizer(language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1744, in __init__
+    self.load_lang(lang)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1749, in load_lang
+    lang_dir = find(f"tokenizers/punkt_tab/{lang}/")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\data.py", line 579, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+
+2025-04-03 00:46:56,683 - __main__ - INFO - Processing input: 'innee'
+2025-04-03 00:46:56,689 - __main__ - ERROR - Error processing response: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+Traceback (most recent call last):
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\chat.py", line 88, in get_response
+    sentence = tokenize(msg)
+               ^^^^^^^^^^^^^
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\nltk_utils.py", line 25, in tokenize
+    return nltk.word_tokenize(sentence.lower())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 142, in word_tokenize
+    sentences = [text] if preserve_line else sent_tokenize(text, language)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 119, in sent_tokenize
+    tokenizer = _get_punkt_tokenizer(language)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 105, in _get_punkt_tokenizer
+    return PunktTokenizer(language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1744, in __init__
+    self.load_lang(lang)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1749, in load_lang
+    lang_dir = find(f"tokenizers/punkt_tab/{lang}/")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\data.py", line 579, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+
+2025-04-03 00:46:59,287 - __main__ - INFO - Processing input: 'bhc'
+2025-04-03 00:46:59,294 - __main__ - ERROR - Error processing response: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+Traceback (most recent call last):
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\chat.py", line 88, in get_response
+    sentence = tokenize(msg)
+               ^^^^^^^^^^^^^
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\nltk_utils.py", line 25, in tokenize
+    return nltk.word_tokenize(sentence.lower())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 142, in word_tokenize
+    sentences = [text] if preserve_line else sent_tokenize(text, language)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 119, in sent_tokenize
+    tokenizer = _get_punkt_tokenizer(language)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 105, in _get_punkt_tokenizer
+    return PunktTokenizer(language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1744, in __init__
+    self.load_lang(lang)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1749, in load_lang
+    lang_dir = find(f"tokenizers/punkt_tab/{lang}/")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\data.py", line 579, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+
+2025-04-03 00:47:01,212 - __main__ - INFO - Processing input: 'dccd'
+2025-04-03 00:47:01,218 - __main__ - ERROR - Error processing response: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+Traceback (most recent call last):
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\chat.py", line 88, in get_response
+    sentence = tokenize(msg)
+               ^^^^^^^^^^^^^
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\nltk_utils.py", line 25, in tokenize
+    return nltk.word_tokenize(sentence.lower())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 142, in word_tokenize
+    sentences = [text] if preserve_line else sent_tokenize(text, language)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 119, in sent_tokenize
+    tokenizer = _get_punkt_tokenizer(language)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 105, in _get_punkt_tokenizer
+    return PunktTokenizer(language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1744, in __init__
+    self.load_lang(lang)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1749, in load_lang
+    lang_dir = find(f"tokenizers/punkt_tab/{lang}/")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\data.py", line 579, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+
+2025-04-03 00:48:10,194 - __main__ - INFO - Using device: cpu
+2025-04-03 00:48:10,195 - __main__ - INFO - Loading intents from: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\intents.json
+2025-04-03 00:48:10,196 - __main__ - INFO - Loaded intents with 9 categories
+2025-04-03 00:48:10,196 - __main__ - INFO -   - greeting: 4 patterns, 3 responses
+2025-04-03 00:48:10,197 - __main__ - INFO -   - services: 3 patterns, 2 responses
+2025-04-03 00:48:10,198 - __main__ - INFO -   - pricing: 3 patterns, 2 responses
+2025-04-03 00:48:10,199 - __main__ - INFO -   - goodbye: 4 patterns, 3 responses
+2025-04-03 00:48:10,200 - __main__ - INFO -   - thanks: 3 patterns, 3 responses
+2025-04-03 00:48:10,201 - __main__ - INFO -   - care_request: 3 patterns, 2 responses
+2025-04-03 00:48:10,202 - __main__ - INFO -   - medical_assistance: 3 patterns, 2 responses
+2025-04-03 00:48:10,203 - __main__ - INFO -   - volunteer: 2 patterns, 2 responses
+2025-04-03 00:48:10,204 - __main__ - INFO -   - companionship: 3 patterns, 2 responses
+2025-04-03 00:48:10,205 - __main__ - INFO - Looking for model file at: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\data.pth
+2025-04-03 00:48:10,208 - __main__ - INFO - File exists: True
+2025-04-03 00:48:10,220 - __main__ - INFO - Loaded model with weights_only=True
+2025-04-03 00:48:10,227 - __main__ - INFO - Model dimensions: input=54, hidden=8, output=7
+2025-04-03 00:48:10,229 - __main__ - INFO - Number of tags in model: 7
+2025-04-03 00:48:10,230 - __main__ - INFO - Available tags: ['delivery', 'funny', 'goodbye', 'greeting', 'items', 'payments', 'thanks']
+2025-04-03 00:48:10,234 - __main__ - INFO - Model loaded and set to evaluation mode
+2025-04-03 00:48:13,517 - __main__ - INFO - Processing input: 'hi'
+2025-04-03 00:48:13,524 - __main__ - ERROR - Error processing response: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+Traceback (most recent call last):
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\chat.py", line 88, in get_response
+    sentence = tokenize(msg)
+               ^^^^^^^^^^^^^
+  File "D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\nltk_utils.py", line 25, in tokenize
+    return nltk.word_tokenize(sentence.lower())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 142, in word_tokenize
+    sentences = [text] if preserve_line else sent_tokenize(text, language)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 119, in sent_tokenize
+    tokenizer = _get_punkt_tokenizer(language)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\__init__.py", line 105, in _get_punkt_tokenizer
+    return PunktTokenizer(language)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1744, in __init__
+    self.load_lang(lang)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\tokenize\punkt.py", line 1749, in load_lang
+    lang_dir = find(f"tokenizers/punkt_tab/{lang}/")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\site-packages\nltk\data.py", line 579, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource [93mpunkt_tab[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('punkt_tab')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mtokenizers/punkt_tab/english/[0m
+
+  Searched in:
+    - 'C:\\Users\\HP/nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\share\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\lib\\nltk_data'
+    - 'C:\\Users\\HP\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+    - 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_data'
+**********************************************************************
+
+2025-04-03 00:49:12,492 - werkzeug - INFO -  * Detected change in 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\_pytest\\cacheprovider.py', reloading
+2025-04-03 00:49:12,887 - werkzeug - INFO -  * Detected change in 'C:\\Users\\HP\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\_pytest\\fixtures.py', reloading
+2025-04-03 00:49:13,977 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2025-04-03 00:49:24,200 - chat - INFO - Using device: cpu
+2025-04-03 00:49:24,201 - chat - INFO - Loading intents from: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\intents.json
+2025-04-03 00:49:24,202 - chat - INFO - Loaded intents with 9 categories
+2025-04-03 00:49:24,203 - chat - INFO -   - greeting: 4 patterns, 3 responses
+2025-04-03 00:49:24,203 - chat - INFO -   - services: 3 patterns, 2 responses
+2025-04-03 00:49:24,204 - chat - INFO -   - pricing: 3 patterns, 2 responses
+2025-04-03 00:49:24,204 - chat - INFO -   - goodbye: 4 patterns, 3 responses
+2025-04-03 00:49:24,204 - chat - INFO -   - thanks: 3 patterns, 3 responses
+2025-04-03 00:49:24,205 - chat - INFO -   - care_request: 3 patterns, 2 responses
+2025-04-03 00:49:24,206 - chat - INFO -   - medical_assistance: 3 patterns, 2 responses
+2025-04-03 00:49:24,206 - chat - INFO -   - volunteer: 2 patterns, 2 responses
+2025-04-03 00:49:24,206 - chat - INFO -   - companionship: 3 patterns, 2 responses
+2025-04-03 00:49:24,207 - chat - INFO - Looking for model file at: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\data.pth
+2025-04-03 00:49:24,207 - chat - INFO - File exists: True
+2025-04-03 00:49:24,215 - chat - INFO - Loaded model with weights_only=True
+2025-04-03 00:49:24,215 - chat - INFO - Model dimensions: input=54, hidden=8, output=7
+2025-04-03 00:49:24,215 - chat - INFO - Number of tags in model: 7
+2025-04-03 00:49:24,216 - chat - INFO - Available tags: ['delivery', 'funny', 'goodbye', 'greeting', 'items', 'payments', 'thanks']
+2025-04-03 00:49:24,219 - chat - INFO - Model loaded and set to evaluation mode
+2025-04-03 00:49:24,223 - __main__ - INFO - Starting Flask server...
+2025-04-03 00:49:24,259 - werkzeug - WARNING -  * Debugger is active!
+2025-04-03 00:49:24,278 - werkzeug - INFO -  * Debugger PIN: 768-276-011
+2025-04-03 00:49:25,292 - werkzeug - INFO -  * Detected change in 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\model.py', reloading
+2025-04-03 00:49:25,293 - werkzeug - INFO -  * Detected change in 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\model.py', reloading
+2025-04-03 00:49:25,996 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2025-04-03 00:49:35,170 - chat - INFO - Using device: cpu
+2025-04-03 00:49:35,170 - chat - INFO - Loading intents from: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\intents.json
+2025-04-03 00:49:35,172 - chat - INFO - Loaded intents with 9 categories
+2025-04-03 00:49:35,172 - chat - INFO -   - greeting: 4 patterns, 3 responses
+2025-04-03 00:49:35,172 - chat - INFO -   - services: 3 patterns, 2 responses
+2025-04-03 00:49:35,173 - chat - INFO -   - pricing: 3 patterns, 2 responses
+2025-04-03 00:49:35,173 - chat - INFO -   - goodbye: 4 patterns, 3 responses
+2025-04-03 00:49:35,174 - chat - INFO -   - thanks: 3 patterns, 3 responses
+2025-04-03 00:49:35,174 - chat - INFO -   - care_request: 3 patterns, 2 responses
+2025-04-03 00:49:35,175 - chat - INFO -   - medical_assistance: 3 patterns, 2 responses
+2025-04-03 00:49:35,178 - chat - INFO -   - volunteer: 2 patterns, 2 responses
+2025-04-03 00:49:35,181 - chat - INFO -   - companionship: 3 patterns, 2 responses
+2025-04-03 00:49:35,182 - chat - INFO - Looking for model file at: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\data.pth
+2025-04-03 00:49:35,183 - chat - INFO - File exists: True
+2025-04-03 00:49:35,197 - chat - INFO - Loaded model with weights_only=True
+2025-04-03 00:49:35,197 - chat - INFO - Model dimensions: input=54, hidden=8, output=7
+2025-04-03 00:49:35,197 - chat - INFO - Number of tags in model: 7
+2025-04-03 00:49:35,198 - chat - INFO - Available tags: ['delivery', 'funny', 'goodbye', 'greeting', 'items', 'payments', 'thanks']
+2025-04-03 00:49:35,202 - chat - INFO - Model loaded and set to evaluation mode
+2025-04-03 00:49:35,209 - __main__ - INFO - Starting Flask server...
+2025-04-03 00:49:35,255 - werkzeug - WARNING -  * Debugger is active!
+2025-04-03 00:49:35,272 - werkzeug - INFO -  * Debugger PIN: 768-276-011
+2025-04-03 00:49:47,815 - werkzeug - INFO -  * Detected change in 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_utils.py', reloading
+2025-04-03 00:49:47,816 - werkzeug - INFO -  * Detected change in 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\nltk_utils.py', reloading
+2025-04-03 00:49:49,598 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2025-04-03 00:49:58,564 - chat - INFO - Using device: cpu
+2025-04-03 00:49:58,564 - chat - INFO - Loading intents from: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\intents.json
+2025-04-03 00:49:58,566 - chat - INFO - Loaded intents with 9 categories
+2025-04-03 00:49:58,566 - chat - INFO -   - greeting: 4 patterns, 3 responses
+2025-04-03 00:49:58,567 - chat - INFO -   - services: 3 patterns, 2 responses
+2025-04-03 00:49:58,567 - chat - INFO -   - pricing: 3 patterns, 2 responses
+2025-04-03 00:49:58,567 - chat - INFO -   - goodbye: 4 patterns, 3 responses
+2025-04-03 00:49:58,568 - chat - INFO -   - thanks: 3 patterns, 3 responses
+2025-04-03 00:49:58,568 - chat - INFO -   - care_request: 3 patterns, 2 responses
+2025-04-03 00:49:58,568 - chat - INFO -   - medical_assistance: 3 patterns, 2 responses
+2025-04-03 00:49:58,569 - chat - INFO -   - volunteer: 2 patterns, 2 responses
+2025-04-03 00:49:58,569 - chat - INFO -   - companionship: 3 patterns, 2 responses
+2025-04-03 00:49:58,569 - chat - INFO - Looking for model file at: D:\DEVELOP\Time-Bank-development\Time-Bank-development\chatbot-deployment\data.pth
+2025-04-03 00:49:58,571 - chat - INFO - File exists: True
+2025-04-03 00:49:58,580 - chat - INFO - Loaded model with weights_only=True
+2025-04-03 00:49:58,580 - chat - INFO - Model dimensions: input=54, hidden=8, output=7
+2025-04-03 00:49:58,580 - chat - INFO - Number of tags in model: 7
+2025-04-03 00:49:58,581 - chat - INFO - Available tags: ['delivery', 'funny', 'goodbye', 'greeting', 'items', 'payments', 'thanks']
+2025-04-03 00:49:58,588 - chat - INFO - Model loaded and set to evaluation mode
+2025-04-03 00:49:58,594 - __main__ - INFO - Starting Flask server...
+2025-04-03 00:49:58,639 - werkzeug - WARNING -  * Debugger is active!
+2025-04-03 00:49:58,655 - werkzeug - INFO -  * Debugger PIN: 768-276-011
+2025-04-03 00:51:44,899 - werkzeug - INFO -  * Detected change in 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\chat.py', reloading
+2025-04-03 00:51:44,904 - werkzeug - INFO -  * Detected change in 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\chat.py', reloading
+2025-04-03 00:51:44,908 - werkzeug - INFO -  * Detected change in 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\chat.py', reloading
+2025-04-03 00:51:44,924 - werkzeug - INFO -  * Detected change in 'D:\\DEVELOP\\Time-Bank-development\\Time-Bank-development\\chatbot-deployment\\chat.py', reloading
+2025-04-03 00:51:45,836 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2025-04-03 00:52:21,883 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)
+2025-04-03 00:52:35,673 - werkzeug - INFO -  * Restarting with watchdog (windowsapi)

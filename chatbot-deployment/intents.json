@@ -1,0 +1,691 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hey",
+        "How are you",
+        "Is anyone there?",
+        "Hello",
+        "Good day",
+        "Good morning",
+        "Good evening",
+        "Hi there",
+        "Hello there",
+        "Anyone available?",
+        "Can someone help me?",
+        "Are you open?",
+        "I need assistance"
+      ],
+      "responses": [
+        "Hello! Welcome to TimeBank elderly care services. How can I help you today?",
+        "Hi there! I'm your TimeBank assistant. How may I assist you?",
+        "Good day! Thanks for reaching out to TimeBank. How can we help you?",
+        "Hello! I'm here to help you with any elderly care needs. What can I do for you?",
+        "Welcome to TimeBank! I'm happy to assist with any questions about our elderly care services."
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Bye", 
+        "See you later", 
+        "Goodbye", 
+        "I have to go", 
+        "Take care", 
+        "I'm leaving now", 
+        "That's all I needed", 
+        "Thanks, bye", 
+        "End conversation",
+        "I'm done for now"
+      ],
+      "responses": [
+        "Thank you for contacting TimeBank. Have a wonderful day!",
+        "Goodbye! Feel free to reach out anytime you need assistance.",
+        "Take care! Remember we're here 24/7 for all your elderly care needs.",
+        "Wishing you and your loved ones well. Goodbye!",
+        "Thank you for using TimeBank services. We're always here to help!"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "Thanks", 
+        "Thank you", 
+        "That's helpful", 
+        "Thank's a lot!", 
+        "I appreciate it", 
+        "That's great", 
+        "You've been helpful", 
+        "Thanks for the info", 
+        "That solves my problem", 
+        "You're a lifesaver"
+      ],
+      "responses": [
+        "Happy to help! Is there anything else I can assist you with?",
+        "It's my pleasure to assist. TimeBank is committed to quality elderly care.",
+        "You're very welcome! Let us know if you need anything else.",
+        "Glad I could help! Don't hesitate to reach out for any other assistance.",
+        "You're welcome! Your satisfaction with our elderly care services is our priority."
+      ]
+    },
+    {
+      "tag": "Care_Request",
+      "patterns": [
+        "I need care", 
+        "I want volunteer help", 
+        "Is any driver here? I need help",
+        "Can I get a volunteer help",
+        "I need someone to assist my parent",
+        "Looking for elderly care",
+        "Need help for my elderly mother",
+        "My father needs assistance",
+        "I need home care services",
+        "Looking for caregiver",
+        "I need help with an elderly person",
+        "Can someone help my grandparent?"
+      ],
+      "responses": [
+        "We'll be happy to arrange care services for you. Could you please specify what type of assistance you need?",
+        "TimeBank offers various volunteer services for elderly care. Would you prefer medical assistance, companionship, or transportation help?",
+        "We have qualified volunteers ready to help. Please provide more details about the care needed and we'll match you with suitable assistance.",
+        "We can connect you with trained caregivers. What specific help do you need for the elderly person?",
+        "Our volunteers are trained in elderly care. Please share more details about your requirements so we can find the best match."
+      ]
+    },
+    {
+      "tag": "medical_assistance",
+      "patterns": [
+        "Need help with medication",
+        "Medicine administration help",
+        "Nurse assistance needed",
+        "Help with medical care",
+        "Need someone with medical training",
+        "Looking for nurse volunteer",
+        "Medicine reminder help",
+        "Need help with health monitoring",
+        "Blood pressure check assistance",
+        "Help with medical devices",
+        "Need diabetes care help",
+        "Someone to check vitals"
+      ],
+      "responses": [
+        "We have trained volunteers who can assist with medication management. When would you need this service?",
+        "Our medical assistance volunteers can help with medicine administration and basic health monitoring. Shall I arrange this for you?",
+        "TimeBank has qualified volunteers who can assist with basic medical care. Please provide the specific requirements and timing.",
+        "We can arrange for a volunteer with medical training to help. Could you specify the frequency and type of medical assistance needed?",
+        "Our volunteers can help with medication reminders and basic health checks. Please let us know the schedule that works for you."
+      ]
+    },
+    {
+      "tag": "volunteer",
+      "patterns": ["Is there any volunteer?", "Can I get help?"],
+      "responses": ["Yes, we have volunteers available.", "Our volunteers are here to assist you."]
+  },
+    {
+      "tag": "companionship",
+      "patterns": [
+        "Need someone to talk to",
+        "Looking for companionship",
+        "Elderly person feels lonely",
+        "Need conversation partner",
+        "Someone to keep company",
+        "Volunteer for socialization",
+        "My parent needs a friend",
+        "Someone to visit regularly",
+        "Need companion for elderly",
+        "Looking for friendly visitor",
+        "Someone to read books",
+        "Need social interaction help"
+      ],
+      "responses": [
+        "We have wonderful volunteers who can provide companionship. How often would you like someone to visit?",
+        "Our companionship volunteers are great at conversation and can help reduce loneliness. What days work best for visits?",
+        "TimeBank offers regular companionship visits to elderly persons. Would you prefer morning or afternoon visits?",
+        "We can arrange for a friendly volunteer to visit and provide social interaction. What interests does the elderly person have?",
+        "Companionship is one of our most popular services. We'll match your loved one with a compatible volunteer who shares similar interests."
+      ]
+    },
+    {
+      "tag": "transportation",
+      "patterns": [
+        "Need transportation help",
+        "Looking for driver assistance",
+        "Need ride to doctor appointment",
+        "Transportation to grocery store",
+        "Help getting to pharmacy",
+        "Driver for medical visits",
+        "Need help with errands",
+        "Ride to community center",
+        "Transportation for elderly",
+        "Need volunteer driver",
+        "Help getting to church",
+        "Regular rides needed"
+      ],
+      "responses": [
+        "We have volunteer drivers who can provide transportation. When and where do you need to go?",
+        "Our transportation volunteers can help with rides to appointments, shopping, and other errands. How far in advance do you need this service?",
+        "TimeBank offers reliable transportation services for elderly individuals. Could you provide details about the destination and timing?",
+        "We can arrange a volunteer driver to help with transportation needs. Is this a one-time need or recurring?",
+        "Our drivers are available to help elderly individuals get to important appointments. Please let us know the date, time, and destination."
+      ]
+    },
+    {
+      "tag": "housekeeping",
+      "patterns": [
+        "Need cleaning help",
+        "Housekeeping assistance",
+        "Help with household chores",
+        "Need help around the house",
+        "Looking for cleaning volunteer",
+        "Help with laundry",
+        "Assistance with home maintenance",
+        "Help organizing home",
+        "Light housework help",
+        "Need house cleaning volunteer",
+        "Help with dishes and cleaning",
+        "Need tidying assistance"
+      ],
+      "responses": [
+        "Our volunteers can assist with basic housekeeping tasks. What specific cleaning help do you need?",
+        "TimeBank offers housekeeping assistance for elderly individuals. How often would you need this service?",
+        "We can arrange for volunteers to help with household chores. Which tasks do you need assistance with?",
+        "Our volunteers provide light housekeeping services. Would you prefer weekly or biweekly assistance?",
+        "We have volunteers who can help keep the home tidy and comfortable. Please share specific housekeeping needs."
+      ]
+    },
+    {
+      "tag": "meal_assistance",
+      "patterns": [
+        "Need help with meals",
+        "Looking for meal preparation",
+        "Help with cooking",
+        "Meal delivery service",
+        "Food preparation assistance",
+        "Need help planning meals",
+        "Grocery shopping help",
+        "Assistance with nutrition",
+        "Help with feeding",
+        "Need meals cooked",
+        "Help with special diet",
+        "Regular meal assistance"
+      ],
+      "responses": [
+        "Our volunteers can assist with meal preparation. Do you have any dietary restrictions we should know about?",
+        "TimeBank offers meal assistance services including grocery shopping and cooking. How often would you need this help?",
+        "We can arrange for volunteers to prepare healthy meals. Would you prefer meals prepared at your home or delivered?",
+        "Our meal assistance volunteers can help ensure proper nutrition. What kind of meals would you like assistance with?",
+        "We have volunteers who can help with everything from grocery shopping to meal preparation. Please let us know your specific needs."
+      ]
+    },
+    {
+      "tag": "emergency_response",
+      "patterns": [
+        "Emergency help needed",
+        "Urgent assistance required",
+        "Need immediate help",
+        "Emergency situation",
+        "Need help now",
+        "Critical situation",
+        "Emergency care needed",
+        "Urgent medical situation",
+        "Fell down need help",
+        "Medical emergency",
+        "Need ambulance",
+        "Emergency services"
+      ],
+      "responses": [
+        "If this is a medical emergency, please call 911 immediately. For urgent but non-life-threatening assistance, we'll connect you with available volunteers right away.",
+        "Your safety is our priority. For medical emergencies, please contact emergency services at 911. For urgent volunteer assistance, we'll expedite your request.",
+        "We take emergencies seriously. Please call 911 if immediate medical attention is needed. We'll also send a volunteer to assist as quickly as possible.",
+        "If you're experiencing a medical emergency, please call 911 first. TimeBank can provide follow-up support after emergency services have responded.",
+        "For emergency situations, please contact 911. Once you're safe, let us know how our volunteers can provide additional support."
+      ]
+    },
+    {
+      "tag": "respite_care",
+      "patterns": [
+        "Need break from caregiving",
+        "Looking for respite care",
+        "Temporary relief needed",
+        "Caregiver needs rest",
+        "Short-term elder care",
+        "Need time off from caregiving",
+        "Respite services",
+        "Temporary caregiving help",
+        "Few hours of relief needed",
+        "Need weekend coverage",
+        "Help for primary caregiver",
+        "Caregiver vacation coverage"
+      ],
+      "responses": [
+        "We understand caregivers need breaks too. Our respite care volunteers can provide temporary relief. When would you need this service?",
+        "TimeBank offers respite care to give primary caregivers a well-deserved break. How long would you need our volunteer's assistance?",
+        "Our volunteers can provide respite care services. Would you need a few hours of coverage or longer?",
+        "We can arrange for trained volunteers to step in while primary caregivers take a break. What level of care would the elderly person need?",
+        "Respite care is essential for caregiver wellbeing. Please let us know your schedule needs, and we'll arrange appropriate coverage."
+      ]
+    },
+    {
+      "tag": "medication_reminders",
+      "patterns": [
+        "Need help remembering medication",
+        "Medication reminder assistance",
+        "Help with pill organizer",
+        "Remind about taking medicine",
+        "Medication schedule help",
+        "Need medicine reminders",
+        "Help with medication time",
+        "Forget to take pills",
+        "Medication management",
+        "Daily medication reminders",
+        "Help organizing medicine",
+        "Prescription reminder help"
+      ],
+      "responses": [
+        "Our volunteers can help with medication reminders to ensure proper adherence to prescribed regimens. How many times per day are medications needed?",
+        "TimeBank offers medication reminder services. We can help set up pill organizers and provide regular reminders. What medication schedule needs to be followed?",
+        "We have volunteers specialized in medication management. They can help organize prescriptions and provide timely reminders. How complex is the medication regimen?",
+        "Proper medication adherence is important. Our volunteers can help establish a routine and provide reminders. Would you prefer in-person reminders or phone calls?",
+        "We can arrange for volunteers to assist with medication organization and reminders. Please share the medication schedule so we can plan accordingly."
+      ]
+    },
+    {
+      "tag": "personal_care",
+      "patterns": [
+        "Need help with bathing",
+        "Personal hygiene assistance",
+        "Help with dressing",
+        "Grooming assistance needed",
+        "Need help with showering",
+        "Personal care for elderly",
+        "Help with daily hygiene",
+        "Need assistance with toileting",
+        "Help with personal needs",
+        "Hygiene support needed",
+        "Basic care assistance",
+        "Help with morning routine"
+      ],
+      "responses": [
+        "We have qualified volunteers who can assist with personal care needs. This service requires specific training - we'll connect you with properly trained helpers.",
+        "TimeBank offers personal care assistance through specially trained volunteers. Would you need help with bathing, dressing, or other personal care?",
+        "Our personal care volunteers have received proper training to provide dignified assistance. What specific personal care needs do you have?",
+        "We understand personal care needs are sensitive. Our trained volunteers can provide respectful assistance. Please share your specific requirements.",
+        "For personal care assistance, we'll match you with volunteers who have the right training and experience. When would you need this service?"
+      ]
+    },
+    {
+      "tag": "mobility_assistance",
+      "patterns": [
+        "Help with walking",
+        "Need mobility support",
+        "Assistance with movement",
+        "Help getting around house",
+        "Support for transferring",
+        "Help with wheelchair",
+        "Mobility aid assistance",
+        "Help moving from bed to chair",
+        "Walking assistance needed",
+        "Need help with stairs",
+        "Support with balance",
+        "Help preventing falls"
+      ],
+      "responses": [
+        "Our volunteers can provide mobility assistance to help maintain safety and independence. What specific mobility challenges are you facing?",
+        "TimeBank offers support with mobility needs including walking assistance and transfer help. Do you use any mobility aids currently?",
+        "We have volunteers trained in safe transfer techniques and mobility assistance. What level of physical support is needed?",
+        "Mobility assistance is one of our specialized services. Our volunteers can help with walking, transfers, and navigation around the home. When would you need this service?",
+        "We understand mobility challenges can impact independence. Our volunteers can provide the right level of support. Please share specific mobility needs."
+      ]
+    },
+    {
+      "tag": "social_activities",
+      "patterns": [
+        "Looking for social programs",
+        "Activities for elderly",
+        "Senior social events",
+        "Community programs for elderly",
+        "Social engagement opportunities",
+        "Group activities for seniors",
+        "Elder recreation programs",
+        "Senior center activities",
+        "Events for older adults",
+        "Community engagement for elderly",
+        "Social clubs for seniors",
+        "Where can elderly socialize"
+      ],
+      "responses": [
+        "We offer various social activities for elderly individuals through our TimeBank network. These include game nights, craft sessions, and discussion groups. Would you like more information?",
+        "TimeBank connects elderly individuals with community social programs. What kind of activities would interest you or your loved one?",
+        "Our volunteers organize regular social events for seniors including music programs, book clubs, and exercise groups. We can help find activities that match specific interests.",
+        "Social engagement is important for wellbeing. We can provide information about local senior centers, community events, and TimeBank-organized activities. What interests would you like to pursue?",
+        "We help connect elderly individuals with meaningful social opportunities. From volunteer work to hobby groups, we can recommend options based on personal interests and mobility levels."
+      ]
+    },
+    {
+      "tag": "dementia_care",
+      "patterns": [
+        "Help with dementia patient",
+        "Alzheimer's care assistance",
+        "Memory care help",
+        "Dementia support needed",
+        "Help with confused parent",
+        "Cognitive impairment care",
+        "Dementia specialized care",
+        "Alzheimer's trained volunteer",
+        "Memory loss assistance",
+        "Help with repetitive behaviors",
+        "Dementia wandering concerns",
+        "Cognitive stimulation help"
+      ],
+      "responses": [
+        "We have volunteers specifically trained in dementia care approaches. They understand the unique challenges and can provide appropriate support. What specific concerns do you have?",
+        "TimeBank offers specialized assistance for individuals with dementia or Alzheimer's. Our trained volunteers use best practices in memory care. What type of support do you need?",
+        "Dementia care requires specialized knowledge. Our volunteers receive training in communication techniques and safety considerations. Please share the specific challenges you're facing.",
+        "We understand the unique needs of individuals with memory impairments. Our volunteers can provide cognitive stimulation activities and companionship adapted for dementia care. When would you need assistance?",
+        "Our dementia care volunteers focus on dignity, safety, and engagement. They can help with routine activities while providing appropriate cognitive support. Please let us know your specific needs."
+      ]
+    },
+    {
+      "tag": "service_hours",
+      "patterns": [
+        "When are volunteers available?",
+        "What are your hours?",
+        "Service timing question",
+        "Weekend availability",
+        "Night time assistance",
+        "Early morning help available?",
+        "Do you provide 24/7 care?",
+        "Evening care availability",
+        "What days do you operate?",
+        "How late can I get help?",
+        "Volunteer hours question",
+        "Overnight assistance"
+      ],
+      "responses": [
+        "TimeBank volunteers are generally available 7 days a week from 7am to 9pm. Specific availability depends on volunteer schedules. When would you need assistance?",
+        "Our volunteers provide services throughout the week, including weekends. Most services are available between 7am and 9pm, though some volunteers may accommodate other hours for specific needs.",
+        "While we don't typically offer overnight care, our volunteers can provide assistance from early morning to evening hours. For 24/7 care needs, we can recommend professional services.",
+        "TimeBank volunteer hours are flexible and based on individual volunteer availability. Morning and afternoon slots tend to have the most coverage. What hours would you require assistance?",
+        "Volunteer availability varies by day and service type. We have the most volunteers available on weekdays between 9am and 6pm, but can often accommodate other times as well."
+      ]
+    },
+    {
+      "tag": "cost",
+      "patterns": [
+        "How much do services cost?",
+        "Are these services free?",
+        "Pricing information",
+        "Fee for volunteers",
+        "Do I need to pay?",
+        "Cost of elder care",
+        "Expense for services",
+        "Price of assistance",
+        "Is there a charge?",
+        "Membership fee question",
+        "Do volunteers get paid?",
+        "Service rates inquiry"
+      ],
+      "responses": [
+        "TimeBank operates on a time-exchange system. Volunteers provide their time and skills, and you can either 'pay it forward' by volunteering yourself or use time credits. There's no direct financial cost for basic services.",
+        "Our services are provided through volunteer time exchange, not direct payment. We do have a small membership fee that helps cover operational costs, but the services themselves are exchanged through time credits.",
+        "TimeBank uses time as currency - volunteers give their time to help others. While there's no hourly charge for services, we do have a modest annual membership fee to support our coordination efforts.",
+        "Unlike traditional care services, TimeBank doesn't charge hourly rates. We use a time-exchange model where volunteer hours are tracked as credits. There is a small membership fee to join our network.",
+        "Our volunteer services are provided through a time-exchange system rather than financial payment. We do ask for a modest membership contribution, but the actual services are exchanged through volunteer hours."
+      ]
+    },
+    {
+      "tag": "volunteer_qualifications",
+      "patterns": [
+        "Are volunteers trained?",
+        "Volunteer screening process?",
+        "Volunteer qualifications",
+        "Are volunteers certified?",
+        "Background check question",
+        "Are volunteers experienced?",
+        "How are volunteers selected?",
+        "Volunteer training inquiry",
+        "Are volunteers professional?",
+        "Caregiver qualifications",
+        "Volunteer credentials",
+        "Safety of volunteers"
+      ],
+      "responses": [
+        "All TimeBank volunteers undergo background checks and receive basic training in elderly care. Volunteers providing specialized services (like medical assistance) have relevant qualifications or professional experience.",
+        "We carefully screen all volunteers through background checks, interviews, and reference verification. Volunteers receive training specific to the services they provide, and many bring professional experience.",
+        "Volunteer safety is our priority. All volunteers complete a comprehensive screening process including criminal background checks. They receive orientation training and additional training for specialized services.",
+        "Our volunteers range from trained professionals to compassionate community members. All undergo background verification and basic training. For medical or personal care, we match elderly individuals with appropriately qualified volunteers.",
+        "TimeBank maintains high standards for volunteers. All complete background checks and training. Many of our volunteers have professional caregiving experience or relevant certifications, especially those providing specialized care."
+      ]
+    },
+    {
+      "tag": "service_area",
+      "patterns": [
+        "Where do you provide services?",
+        "Do you serve my area?",
+        "Service location question",
+        "Geographic coverage area",
+        "How far do volunteers travel?",
+        "Service boundaries question",
+        "Do you serve rural areas?",
+        "Service availability in my town",
+        "Coverage area inquiry",
+        "Distance limitations",
+        "Travel radius for volunteers",
+        "Remote location services"
+      ],
+      "responses": [
+        "TimeBank currently serves within a 25-mile radius of the city center. Can you share your location so I can confirm if you're within our service area?",
+        "Our volunteer services are available throughout the metropolitan area and some surrounding communities. Please provide your city or zip code, and I'll check if we have coverage there.",
+        "We have volunteers throughout the region, but coverage may vary in rural areas. Where are you located? I can verify if we have active volunteers nearby.",
+        "TimeBank services are concentrated in the greater metropolitan area, with some coverage in nearby suburbs and towns. What area are you inquiring about?",
+        "Our service area includes the main city and surrounding communities within approximately 25 miles. Rural areas may have limited volunteer availability. What location needs service?"
+      ]
+    },
+    {
+      "tag": "scheduling",
+      "patterns": [
+        "How to schedule help?",
+        "Booking process",
+        "Make an appointment",
+        "Schedule a volunteer",
+        "How far in advance to book?",
+        "Reserve assistance time",
+        "Scheduling question",
+        "How quickly can I get help?",
+        "Advance notice needed?",
+        "Book recurring visits",
+        "Change appointment time",
+        "Scheduling flexibility"
+      ],
+      "responses": [
+        "To schedule volunteer assistance, you can use our website, mobile app, or call our coordinator. For routine services, we recommend booking 3-5 days in advance to ensure availability.",
+        "Scheduling is simple! You can request services through your TimeBank account, specifying the date, time, and type of assistance needed. Our system will match you with available volunteers.",
+        "We recommend scheduling routine services at least 72 hours in advance. For urgent needs, we do our best to find available volunteers on shorter notice, though this isn't always possible.",
+        "You can schedule assistance through our online portal or by contacting a coordinator. Regular services can be set up on a recurring schedule. How frequently would you need assistance?",
+        "To arrange for volunteer help, simply submit a request through your TimeBank account or call our office. Please provide the service type, date, time, and any special requirements."
+      ]
+    },
+    {
+      "tag": "cancellation_policy",
+      "patterns": [
+        "How to cancel service?",
+        "Cancellation policy",
+        "Need to reschedule",
+        "Cancel appointment",
+        "Change service time",
+        "Volunteer didn't show up",
+        "What if I'm not home?",
+        "Late cancellation",
+        "Missed appointment",
+        "Rescheduling policy",
+        "No-show policy",
+        "Emergency cancellation"
+      ],
+      "responses": [
+        "You can cancel or reschedule services through your TimeBank account or by calling our coordinator. We ask for at least 24 hours' notice for routine cancellations to respect our volunteers' time.",
+        "To cancel a scheduled service, please notify us as soon as possible - preferably at least 24 hours in advance. Last-minute cancellations may impact your priority for future requests.",
+        "We understand circumstances change. You can reschedule through our system or by contacting the office. If a volunteer doesn't arrive as scheduled, please contact us immediately so we can follow up.",
+        "Cancellations can be made through your account or by phone. We request at least 24 hours' notice for non-emergency cancellations. For emergencies, please notify us as soon as possible.",
+        "Our cancellation policy asks for 24 hours' notice. This allows us to reassign volunteers to help others in need. Frequent last-minute cancellations may affect future scheduling priority."
+      ]
+    },
+    {
+      "tag": "registration",
+      "patterns": [
+        "How to register",
+        "Sign up process",
+        "Become a member",
+        "Registration procedure",
+        "How to join",
+        "Enrollment question",
+        "Create an account",
+        "Membership process",
+        "Application procedure",
+        "How to get started",
+        "Signing up for services",
+        "New member registration"
+      ],
+      "responses": [
+        "To register for TimeBank services, visit our website or call our office. You'll complete a brief application, participate in an orientation, and meet with a coordinator to discuss your specific needs.",
+        "Registration is simple! You can sign up online or visit our office. The process includes a needs assessment to ensure we understand how best to assist you or your loved one.",
+        "To join TimeBank, complete the application form on our website or contact our office for assistance. Once registered, a coordinator will help set up your service profile and explain how our system works.",
+        "Becoming a TimeBank member involves completing an application, providing emergency contact information, and participating in a brief orientation. Would you like me to guide you through the online registration?",
+        "Registration begins with an application that helps us understand your needs. This is followed by an orientation to our services. The entire process typically takes 2-3 business days to complete."
+      ]
+    },
+    {
+      "tag": "documents_needed",
+      "patterns": [
+        "What documents do I need?",
+        "Required paperwork",
+        "Documentation for services",
+        "ID requirements",
+        "Medical information needed",
+        "Forms to complete",
+        "What information is required?",
+        "Application documents",
+        "Paperwork for enrollment",
+        "Required forms",
+        "Health information needs",
+        "Emergency contact information"
+      ],
+      "responses": [
+        "To register for TimeBank services, you'll need a valid ID, emergency contact information, and basic health information including allergies and medications. For medical services, a doctor's note may be required.",
+        "Required documents include identification, emergency contacts, and any relevant health information. If specific medical assistance is needed, we may request a healthcare provider's recommendations.",
+        "We require basic documentation: photo ID, address verification, emergency contacts, and relevant health information. This helps us provide appropriate care and respond effectively in emergencies.",
+        "To enroll in our services, please prepare: identification, proof of address, emergency contacts, relevant medical information, and details about medications or allergies. This ensures we can provide safe, effective assistance.",
+        "Documentation requirements include: ID, emergency contact information, health conditions, medications, allergies, and mobility considerations. This information helps us match you with appropriate volunteers."
+      ]
+    },
+    {
+      "tag": "about_timebank",
+      "patterns": [
+        "What is TimeBank?",
+        "How does TimeBank work?",
+        "Tell me about your organization",
+        "TimeBank explanation",
+        "Who runs TimeBank?",
+        "Is TimeBank non-profit?",
+        "TimeBank mission",
+        "Organization information",
+        "About your service",
+        "TimeBank history",
+        "How long have you operated?",
+        "TimeBank vs traditional care"
+      ],
+      "responses": [
+        "TimeBank is a community exchange system where people share their time and skills. For elderly care, we connect seniors with volunteers who provide various assistance services. Our mission is to foster community care and support.",
+        "TimeBank operates on a time-exchange principle - people help others and can receive help in return. Our elderly care program specifically focuses on providing volunteer assistance to seniors in our community.",
+        "We're a non-profit organization that coordinates volunteer services for elderly community members. TimeBank differs from traditional care services by building community connections while meeting practical needs.",
+        "TimeBank was established in 2015 to address gaps in community support for seniors. We operate as a non-profit, coordinating volunteers who provide companionship, transportation, and assistance to elderly individuals.",
+        "We're a community-based organization that connects volunteers with elderly individuals needing various forms of assistance. Unlike commercial services, we focus on building relationships while providing practical help."
+      ]
+    },
+    {
+      "tag": "volunteer_opportunities",
+      "patterns": [
+        "How can I volunteer?",
+        "Become a volunteer",
+        "Want to help seniors",
+        "Volunteer application",
+        "Give back to community",
+        "Volunteer requirements",
+        "How to offer my time",
+        "Volunteer positions available",
+        "Can I help elderly people?",
+        "Volunteer training provided?",
+        "Time commitment for volunteers",
+        "Volunteer driver opportunity"
+      ],
+      "responses": [
+        "We're always looking for compassionate volunteers! You can apply through our website or office. Volunteers undergo background checks and training. What skills or interests would you like to contribute?",
+        "To become a TimeBank volunteer, complete our online application, attend orientation, and specify your availability and skills. Volunteers can help with companionship, transportation, meal preparation, and more.",
+        "Volunteering with TimeBank is rewarding! The process includes an application, background check, and training. Volunteers can choose their availability and types of service they're comfortable providing.",
+        "We welcome volunteers who want to help seniors! You can apply online or in person. After screening and training, you'll be matched with opportunities that fit your schedule and preferences.",
+        "TimeBank volunteers are vital to our mission! To join, submit an application, complete a background check, attend orientation, and specify your skills and availability. We match volunteers with opportunities that suit their preferences."
+      ]
+    },
+    {
+      "tag": "emergency_contacts",
+      "patterns": [
+        "Update emergency contact",
+        "Change emergency information",
+        "Add family contact",
+        "Emergency notification process",
+        "Contact in case of emergency",
+        "Who to call in emergency",
+        "Update contact information",
+        "Emergency procedures",
+        "Family notification process",
+        "Communication during emergency",
+        "Contact list update",
+        "Primary contact change"
+      ],
+      "responses": [
+        "You can update emergency contacts through your TimeBank account or by contacting our office. We recommend having at least two emergency contacts and keeping this information current.",
+        "Emergency contact information can be updated at any time through your online profile or by calling our coordinator. In emergencies, we follow your specified notification sequence.",
+        "To modify emergency contacts, log into your account or submit the changes to our office. We'll ensure your current contacts are notified in case of any emergency situation.",
+        "We maintain emergency contact information for all members. You can update this through your profile or by contacting us directly. We recommend reviewing this information quarterly.",
+        "Emergency contact updates can be made through your TimeBank account settings or by submitting a form to our office. For urgent changes, please call us directly so we can update our records immediately."
+      ]
+    },
+    {
+      "tag": "feedback",
+      "patterns": [
+        "How to give feedback",
+        "Rate volunteer service",
+        "Share my experience",
+        "Compliment a volunteer",
+        "Service complaint",
+        "Suggestion for improvement",
+        "Report a problem",
+        "Volunteer was excellent",
+        "Service quality issue",
+        "Feedback process",
+        "Recognize good service",
+        "Issues with assistance"
+      ],
+      "responses": [
+        "We value your feedback! You can rate services after each visit through your TimeBank account, email our coordinator, or call our office. Your input helps us improve and recognize outstanding volunteers.",
+        "Feedback is important to us. After each service, you'll receive a prompt to rate your experience. You can also provide detailed feedback through our website or by contacting a coordinator.",
+        "To share feedback about your experience, use the rating system in your account, contact our office, or complete the feedback card left by your volunteer. We review all feedback to maintain quality services.",
+        "We welcome all feedback! You can rate services, recognize outstanding volunteers, or suggest improvements through your online account or by contacting our office directly.",
+        "Your experience matters to us. Please share feedback through your account, by email, or by phone. Both positive comments and improvement suggestions help us provide better service."
+      ]
+    },
+    {
+      "tag": "funny",
+      "patterns": [
+        "Tell me a joke!",
+        "Tell me something funny!",
+        "Do you know a joke?"
+      ],
+      "responses": [
+        "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
+        "What did the buffalo say when his son left for college? Bison."
+      ]
+    }
+  ]
+}

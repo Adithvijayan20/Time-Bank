@@ -16,7 +16,7 @@ var db=require('./config/connection')
 const session = require('express-session');
 const hbs = require('hbs');
 const InstitutionRouter = require('./routes/institution');
-//var chatbotRouter = require('./routes/chatbot');
+var chatbotRouter = require('./routes/chatbot');
 
 const exphbs = require('express-handlebars');
 
@@ -111,7 +111,7 @@ app.use('/', adminRouter);
 app.use('/', matchRouter);
 app.use('/users', usersRouter);
 app.use('/institution', InstitutionRouter);
-//app.use('/chatbot', chatbotRouter);
+app.use('/chatbot', chatbotRouter);
 //app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: 'isjkajskakshajh',

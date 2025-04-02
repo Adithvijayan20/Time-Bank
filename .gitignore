@@ -1,1 +1,5 @@
 node_modules/
+venv/
+*.pyd
+*.lib
+*.dll
