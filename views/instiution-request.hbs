@@ -1,147 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}} - Volunteer Services</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('{{backgroundImage}}') no-repeat center center fixed;
-            background-size: cover;
-            color: #333333;
-            position: relative;
-        }
-        header {
-            background-color: rgba(76, 175, 80, 0.9);
-            color: #ffffff;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-        header .button-group {
-            display: flex;
-            gap: 1rem;
-        }
-        header .button-group a {
-            background-color: #ffffff;
-            color: #4CAF50;
-            border: 2px solid #4CAF50;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        header .button-group a:hover {
-            background-color: #4CAF50;
-            color: #000000;
-        }
-        main {
-            padding: 2rem;
-            max-width: 800px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        .services-grid label {
-            display: flex;
-            align-items: center;
-        }
-        label {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-        input, select, textarea {
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 0.7rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: rgba(241, 241, 241, 0.9);
-            margin-top: 2rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} - Volunteer Services</title>
+  <style>
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('{{ backgroundImage }}') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    /* Header */
+    header {
+      background-color: rgba(33, 150, 243, 0.9);
+      padding: 1rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #fff;
+    }
+    header h1 {
+      margin: 0.5rem 0;
+      font-size: 2rem;
+    }
+    header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: normal;
+    }
+    /* Main Content */
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    main h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #2196F3;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .services-grid label {
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      background: #f5f5f5;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+    .services-grid label:hover {
+      background: #e0e0e0;
+    }
+    input, select, textarea {
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button, .back-button {
+      background-color: #2196F3;
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-align: center;
+    }
+    button:hover, .back-button:hover {
+      background-color: #1976D2;
+    }
+    .back-button {
+      display: inline-block;
+      margin-top: 1rem;
+    }
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: rgba(240, 240, 240, 0.9);
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-    <header>
-         <h2> {{appName}}</h2>
-    <h2>Patient Name: {{patientName}}</h2>
-    <h1>{{appName}}</h1>
- 
-        
-    </header>
-    <main>
-        <h2> Select Services </h2>
-        <form action="/institution-request/{{id}}" method="post">
-        <input type="hidden" name="patientName" value="{{patientName}}">
-            <input type="hidden" name="patientId" value="{{patientId}}">
-            <label>Select Services:</label>
-            <div class="services-grid">
-                <div>
-                    <label><input type="checkbox" name="patientNeeds" value="Driving"> Driving</label>
-                    <label><input type="checkbox" name="patientNeeds" value="Cooking"> Cooking</label>
-                    <label><input type="checkbox" name="patientNeeds" value="Laundry"> Laundry</label>
-                    <label><input type="checkbox" name="patientNeeds" value="Talking"> Talking</label>
-                </div>
-                <div>
-                    <label><input type="checkbox" name="patientNeeds" value="Shopping"> Shopping</label>
-                    <label><input type="checkbox" name="patientNeeds" value="Companionship"> Companionship</label>
-                    <label><input type="checkbox" name="patientNeeds" value="Cleaning"> Cleaning</label>
-                    <label><input type="checkbox" name="patientNeeds" value="Medication Reminder"> Medication Reminder</label>
-                </div>
-            </div>
-            
-            <label for="date">Available Date:</label>
-            <input type="date" id="date" name="date" required>
-            
-            <label for="time">Available Time:</label>
-            <input type="time" id="time" name="time" required>
-            
-            <button type="submit">Save</button>
-<a href="/patient-profile/{{patientId}}" style="display: inline-flex; justify-content: center; align-items: center; padding: 12px 24px; font-size: 18px; background-color: skyblue; color: white; text-decoration: none; border-radius: 8px; transition: 0.3s; height: 50px; width: 150px; text-align: center;">BACK</a>
-        </form>
-    </main>
-    <footer>
-        <p>&copy; {{currentYear}} {{appName}}. All rights reserved.</p>
-    </footer>
+  <header>
+    <h1>{{ appName }}</h1>
+    <h2>Patient Name: {{ patientName }}</h2>
+  </header>
+  <main>
+    <h2>Select Services</h2>
+    <form action="/institution-request/{{ id }}" method="post">
+      <input type="hidden" name="patientName" value="{{ patientName }}">
+      <input type="hidden" name="patientId" value="{{ patientId }}">
+      
+      <label>Select Services:</label>
+      <div class="services-grid">
+        <label><input type="checkbox" name="patientNeeds" value="Driving"> Driving</label>
+        <label><input type="checkbox" name="patientNeeds" value="Cooking"> Cooking</label>
+        <label><input type="checkbox" name="patientNeeds" value="Laundry"> Laundry</label>
+        <label><input type="checkbox" name="patientNeeds" value="Talking"> Talking</label>
+        <label><input type="checkbox" name="patientNeeds" value="Shopping"> Shopping</label>
+        <label><input type="checkbox" name="patientNeeds" value="Companionship"> Companionship</label>
+        <label><input type="checkbox" name="patientNeeds" value="Cleaning"> Cleaning</label>
+        <label><input type="checkbox" name="patientNeeds" value="Medication Reminder"> Medication Reminder</label>
+      </div>
+      
+      <label for="date">Available Date:</label>
+      <input type="date" id="date" name="date" required>
+      
+      <label for="time">Available Time:</label>
+      <input type="time" id="time" name="time" required>
+      
+      <button type="submit">Save</button>
+      <a href="/patient-profile/{{ patientId }}" class="back-button">Back</a>
+    </form>
+  </main>
+  <footer>
+    <p>&copy; {{ currentYear }} {{ appName }}. All rights reserved.</p>
+  </footer>
+  <script src="{{ scriptPath }}"></script>
 </body>
-<script src="{{scriptPath}}"></script>
 </html>
